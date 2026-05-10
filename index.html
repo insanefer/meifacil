@@ -2522,13 +2522,14 @@ function renderAgenda(){
   }
 
   // Agrupar parcelas
-  var grupos={};var listaFinal=[];var gruposAdicionados={};
+  var listaFinal=[];var gruposAdicionados={};
   items.forEach(function(item){
     if(item.rec==='parcelado'&&item.grupoId){
       if(!gruposAdicionados[item.grupoId]){
         gruposAdicionados[item.grupoId]=true;
         var todasParcelas=S.agenda.filter(function(a){return a.grupoId===item.grupoId;});
-        listaFinal.push({tipo:'grupo',grupoId:item.grupoId,items:todasParcelas});
+        // Parcela a destacar: a do mês filtrado (item atual) ou próxima não paga
+        listaFinal.push({tipo:'grupo',grupoId:item.grupoId,items:todasParcelas,parcelaDestaque:item});
       }
     } else {listaFinal.push({tipo:'item',item:item});}
   });
@@ -2561,31 +2562,36 @@ function renderAgenda(){
       var gr=entry.items; // todas as parcelas do grupo
       var total=gr.length;
       var pagas=gr.filter(function(p){return p.pago;}).length;
-      var prox=gr.find(function(p){return!p.pago;}); // próxima não paga
+      // Usa a parcela do mês filtrado como destaque
+      var destaque=entry.parcelaDestaque;
+      var prox=gr.find(function(p){return!p.pago;}); // próxima não paga (para quitar tudo)
       var nomeBase=gr[0].desc.replace(/ \(\d+\/\d+\)/,'');
-      var st=prox?statusAgenda(prox):'paga';
-      var dias=prox?diasParaVencer(prox.vencimento):0;
+      var st=destaque?statusAgenda(destaque):'paga';
+      var dias=destaque?diasParaVencer(destaque.vencimento):0;
       var corVal=gr[0].tipo==='pagar'?'r':'b';
       var sinalVal=gr[0].tipo==='pagar'?'-':'+';
-      // Usa numParcela salvo em cada parcela — garante número correto por mês
-      var numAtual=prox&&prox.numParcela?prox.numParcela:pagas+1;
+      // Número da parcela vem do campo numParcela salvo
+      var numAtual=destaque&&destaque.numParcela?destaque.numParcela:(pagas+1);
       var labelParcela=prox?'Parcela '+numAtual+'/'+total:'Todas '+total+' pagas ✅';
+      var dataDest=destaque?new Date(destaque.vencimento+'T00:00:00').toLocaleDateString('pt-BR'):'';
       return'<div class="ag-item '+st+'" style="border-left:3px solid var(--roxo)">'+
         '<div class="ag-top">'+
           '<div style="flex:1"><div class="ag-desc">'+nomeBase+
             ' <span style="font-size:.65rem;color:var(--roxo);font-weight:700">'+labelParcela+'</span></div>'+
           (prox?'<div class="ag-meta" style="margin-top:.3rem">'+
             '<span class="ag-status '+st+'">'+labelStatus(st,dias)+'</span>'+
-            '<span class="ag-data">📅 '+new Date(prox.vencimento+'T00:00:00').toLocaleDateString('pt-BR')+'</span>'+
+            '<span class="ag-data">📅 '+dataDest+'</span>'+
           '</div>':'<div class="ag-meta" style="margin-top:.3rem"><span class="ag-status paga">✅ Quitado!</span></div>')+
           '</div>'+
           '<div class="ag-val '+corVal+'" style="margin-left:.5rem">'+sinalVal+fmt(gr[0].val)+'/parc</div>'+
         '</div>'+
         '<div class="ag-btns">'+
-          (prox?'<button class="ag-btn pagar" onclick="marcarPago('+prox.id+')">✅ Pagar parcela '+numAtual+'</button>':'<button class="ag-btn pago" disabled>✅ Quitado</button>')+
+          (prox&&destaque&&!destaque.pago?
+            '<button class="ag-btn pagar" onclick="marcarPago('+destaque.id+')">✅ Pagar parcela '+numAtual+'</button>':
+            '<button class="ag-btn pago" disabled>✅ '+(prox?'Paga':'Quitado')+'</button>')+
           (prox?'<button class="ag-btn" style="background:rgba(176,107,255,.15);color:var(--roxo);flex:1" onclick="quitarTudo('+entry.grupoId+')">💜 Quitar tudo</button>':'')+
           (!prox?'<button class="ag-btn del" onclick="excluirGrupoPago('+entry.grupoId+')">🗑 Excluir</button>':
-                 '<button class="ag-btn del" onclick="excluirAgenda('+prox.id+')">🗑</button>')+
+                 '<button class="ag-btn del" onclick="excluirAgenda('+destaque.id+')">🗑</button>')+
         '</div></div>';
     }
   }).join('');
