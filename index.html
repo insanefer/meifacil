@@ -2558,19 +2558,18 @@ function renderAgenda(){
           '<button class="ag-btn del" onclick="'+(item.pago?'excluirAgendaPago('+item.id+')':'excluirAgenda('+item.id+')')+'">🗑</button>'+
         '</div></div>';
     } else {
-      var gr=entry.items;
-      var pagas=gr.filter(function(p){return p.pago;}).length;
+      var gr=entry.items; // todas as parcelas do grupo
       var total=gr.length;
-      var prox=gr.find(function(p){return!p.pago;});
+      var pagas=gr.filter(function(p){return p.pago;}).length;
+      var prox=gr.find(function(p){return!p.pago;}); // próxima não paga
       var nomeBase=gr[0].desc.replace(/ \(\d+\/\d+\)/,'');
       var st=prox?statusAgenda(prox):'paga';
       var dias=prox?diasParaVencer(prox.vencimento):0;
       var corVal=gr[0].tipo==='pagar'?'r':'b';
       var sinalVal=gr[0].tipo==='pagar'?'-':'+';
-      // Parcela atual = pagas + 1
-      var numAtual=pagas+1;
-      // Label correto: "Parcela X/Y"
-      var labelParcela=prox?'Parcela '+numAtual+'/'+total:'Quitado';
+      // Usa numParcela salvo em cada parcela — garante número correto por mês
+      var numAtual=prox&&prox.numParcela?prox.numParcela:pagas+1;
+      var labelParcela=prox?'Parcela '+numAtual+'/'+total:'Todas '+total+' pagas ✅';
       return'<div class="ag-item '+st+'" style="border-left:3px solid var(--roxo)">'+
         '<div class="ag-top">'+
           '<div style="flex:1"><div class="ag-desc">'+nomeBase+
@@ -2578,7 +2577,7 @@ function renderAgenda(){
           (prox?'<div class="ag-meta" style="margin-top:.3rem">'+
             '<span class="ag-status '+st+'">'+labelStatus(st,dias)+'</span>'+
             '<span class="ag-data">📅 '+new Date(prox.vencimento+'T00:00:00').toLocaleDateString('pt-BR')+'</span>'+
-          '</div>':'<div class="ag-meta" style="margin-top:.3rem"><span class="ag-status paga">✅ Todas as '+total+' parcelas pagas!</span></div>')+
+          '</div>':'<div class="ag-meta" style="margin-top:.3rem"><span class="ag-status paga">✅ Quitado!</span></div>')+
           '</div>'+
           '<div class="ag-val '+corVal+'" style="margin-left:.5rem">'+sinalVal+fmt(gr[0].val)+'/parc</div>'+
         '</div>'+
@@ -2586,7 +2585,7 @@ function renderAgenda(){
           (prox?'<button class="ag-btn pagar" onclick="marcarPago('+prox.id+')">✅ Pagar parcela '+numAtual+'</button>':'<button class="ag-btn pago" disabled>✅ Quitado</button>')+
           (prox?'<button class="ag-btn" style="background:rgba(176,107,255,.15);color:var(--roxo);flex:1" onclick="quitarTudo('+entry.grupoId+')">💜 Quitar tudo</button>':'')+
           (!prox?'<button class="ag-btn del" onclick="excluirGrupoPago('+entry.grupoId+')">🗑 Excluir</button>':
-                 '<button class="ag-btn del" onclick="excluirAgenda('+(prox.id)+')">🗑</button>')+
+                 '<button class="ag-btn del" onclick="excluirAgenda('+prox.id+')">🗑</button>')+
         '</div></div>';
     }
   }).join('');
