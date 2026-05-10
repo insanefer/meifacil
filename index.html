@@ -1062,50 +1062,51 @@ async function carregarDadosUsuario(){
   if(carregando)return;
   carregando=true;
   showLoad('Carregando seus dados...');
-  var{data:perfil}=await supa.from('perfis').select('*').eq('id',usuarioAtual.id).single();
-  if(perfil){
-    // Usuário já fez onboarding — carrega tudo
-    S.nome=perfil.nome||'';
-    S.tipo=perfil.tipo_mei||'comum';
-    S.negocio=perfil.negocio||'servico';
-    S.dataAbertura=perfil.data_abertura?new Date(perfil.data_abertura+'T00:00:00'):null;
-    S.outrasVal=perfil.outras_rendas||0;
-    // Carregar lançamentos
-    var{data:lancs}=await supa.from('lancamentos').select('*').eq('user_id',usuarioAtual.id);
-    S.lancs=(lancs||[]).map(function(l){return{id:l.id,cart:l.cart,tipo:l.tipo,desc:l.descricao,val:parseFloat(l.valor),mes:l.mes,ano:l.ano,data:l.data_lanc?new Date(l.data_lanc+'T00:00:00').toLocaleDateString('pt-BR'):'',cat:l.categoria||''};});
-    // Carregar documentos
-    var{data:docs}=await supa.from('documentos').select('*').eq('user_id',usuarioAtual.id);
-    S.docs={cnpj:[],cpf:[]};
-    (docs||[]).forEach(function(d){
-      if(S.docs[d.carteira])S.docs[d.carteira].push({
-        id:d.id,
-        nome:d.nome,
-        data:d.mes?MESES_NOMES[d.mes]+'/'+(d.data_upload?d.data_upload.substring(0,4):new Date().getFullYear()):
-             (d.data_upload?new Date(d.data_upload+'T00:00:00').toLocaleDateString('pt-BR'):''),
-        caminho:d.caminho||'',
-        mes:d.mes||''
-      });
-    });
-    document.getElementById('auth').style.display='none';
-    document.getElementById('onboarding').style.display='none';
-    document.getElementById('app').style.display='block';
-    document.getElementById('h-nome').textContent=S.nome;
-    document.getElementById('d-nome').textContent=S.nome;
-    // Pequeno delay para garantir que o DOM está pronto antes de atualizar
-    setTimeout(function(){
-      atualizarGuiaNF();
-      renderMeses();
-      inicializarRelAno();
-      atualizar();
-      hideLoad();
-      carregando=false;
-    }, 100);
-  } else {
-    // Novo usuário — vai para onboarding
+  // Timeout de segurança — se demorar mais de 10s, limpa o loading
+  var tSeg=setTimeout(function(){
     hideLoad();
     carregando=false;
-    document.getElementById('auth').style.display='none';
-    document.getElementById('onboarding').style.display='flex';
+  },10000);
+  try{
+    var{data:perfil}=await supa.from('perfis').select('*').eq('id',usuarioAtual.id).single();
+    if(perfil){
+      S.nome=perfil.nome||'';
+      S.tipo=perfil.tipo_mei||'comum';
+      S.negocio=perfil.negocio||'servico';
+      S.dataAbertura=perfil.data_abertura?new Date(perfil.data_abertura+'T00:00:00'):null;
+      S.outrasVal=perfil.outras_rendas||0;
+      var{data:lancs}=await supa.from('lancamentos').select('*').eq('user_id',usuarioAtual.id);
+      S.lancs=(lancs||[]).map(function(l){return{id:l.id,cart:l.cart,tipo:l.tipo,desc:l.descricao,val:parseFloat(l.valor),mes:l.mes,ano:l.ano,data:l.data_lanc?new Date(l.data_lanc+'T00:00:00').toLocaleDateString('pt-BR'):'',cat:l.categoria||''};});
+      var{data:docs}=await supa.from('documentos').select('*').eq('user_id',usuarioAtual.id);
+      S.docs={cnpj:[],cpf:[]};
+      (docs||[]).forEach(function(d){
+        if(S.docs[d.carteira])S.docs[d.carteira].push({
+          id:d.id,nome:d.nome,
+          data:d.mes?MESES_NOMES[d.mes]+'/'+(d.data_upload?d.data_upload.substring(0,4):new Date().getFullYear()):(d.data_upload?new Date(d.data_upload+'T00:00:00').toLocaleDateString('pt-BR'):''),
+          caminho:d.caminho||'',mes:d.mes||''
+        });
+      });
+      clearTimeout(tSeg);
+      document.getElementById('auth').style.display='none';
+      document.getElementById('onboarding').style.display='none';
+      document.getElementById('app').style.display='block';
+      document.getElementById('h-nome').textContent=S.nome;
+      document.getElementById('d-nome').textContent=S.nome;
+      atualizarGuiaNF();renderMeses();inicializarRelAno();atualizar();
+      hideLoad();
+      carregando=false;
+    } else {
+      clearTimeout(tSeg);
+      hideLoad();
+      carregando=false;
+      document.getElementById('auth').style.display='none';
+      document.getElementById('onboarding').style.display='flex';
+    }
+  } catch(err){
+    clearTimeout(tSeg);
+    hideLoad();
+    carregando=false;
+    console.error('Erro ao carregar dados:',err);
   }
 }
 
@@ -1208,9 +1209,7 @@ function entrar(){
   document.getElementById('app').style.display='block';
   document.getElementById('h-nome').textContent=S.nome;
   document.getElementById('d-nome').textContent=S.nome;
-  setTimeout(function(){
-    atualizarGuiaNF();renderMeses();inicializarRelAno();atualizar();
-  },100);
+  atualizarGuiaNF();renderMeses();inicializarRelAno();atualizar();
 }
 
 function inicializarRelAno(){
@@ -1219,14 +1218,9 @@ function inicializarRelAno(){
   var wrap=document.getElementById('rel-anos');
   if(!wrap)return;
   wrap.innerHTML='';
-  wrap.style.display='grid';
-  wrap.style.gridTemplateColumns='1fr 1fr 1fr';
-  wrap.style.gap='.5rem';
-  wrap.style.marginBottom='.9rem';
   [a-2,a-1,a].forEach(function(yr){
-    var sel=yr===relAno;
     var el=document.createElement('button');
-    el.style.cssText='padding:.8rem .5rem;border-radius:10px;font-weight:800;font-size:1rem;cursor:pointer;border:2px solid '+(sel?'var(--verde)':'var(--borda)')+';background:'+(sel?'rgba(0,196,140,.15)':'var(--card)')+';color:'+(sel?'var(--verde)':'var(--texto2)')+';width:100%;';
+    el.style.cssText='flex:1;padding:.7rem;border-radius:10px;font-weight:800;font-size:.9rem;cursor:pointer;border:2px solid '+(yr===relAno?'var(--verde)':'var(--borda)')+';background:'+(yr===relAno?'rgba(0,196,140,.15)':'var(--card)')+';color:'+(yr===relAno?'var(--verde)':'var(--texto2)')+';';
     el.textContent=yr;
     el.onclick=function(){
       relAno=yr;
