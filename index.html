@@ -1411,8 +1411,14 @@ function setDTab(t){
   document.getElementById('doc-cw').classList.toggle('hidden',t!=='cnpj');
   document.getElementById('doc-pw').classList.toggle('hidden',t!=='cpf');
 }
+function limparNomeArquivo(nome){
+  return nome
+    .normalize('NFD').replace(/[\u0300-\u036f]/g,'') // remove acentos
+    .replace(/[^a-zA-Z0-9._-]/g,'_') // substitui caracteres especiais por _
+    .replace(/__+/g,'_'); // remove underscores duplos
+}
+
 function simUpload(c){
-  // Abre o seletor de arquivo real
   var input=document.createElement('input');
   input.type='file';
   input.accept='.pdf,.jpg,.jpeg,.png,.webp';
@@ -1422,19 +1428,18 @@ function simUpload(c){
     if(file.size>5*1024*1024){alert('Arquivo muito grande! Máximo 5MB.');return;}
     if(!usuarioAtual){alert('Você precisa estar logado!');return;}
     showLoad('Enviando documento...');
-    var caminho=usuarioAtual.id+'/'+c+'/'+Date.now()+'_'+file.name;
+    var nomeSeguro=limparNomeArquivo(file.name);
+    var caminho=usuarioAtual.id+'/'+c+'/'+Date.now()+'_'+nomeSeguro;
     var{error}=await supa.storage.from('documentos').upload(caminho,file);
     if(error){hideLoad();alert('Erro ao enviar: '+error.message);return;}
-    // Salvar referência no banco
     var hoje=new Date().toISOString().split('T')[0];
     await supa.from('documentos').insert({
       user_id:usuarioAtual.id,
-      nome:file.name,
+      nome:file.name, // guarda nome original para exibir
       carteira:c,
       data_upload:hoje,
       caminho:caminho
     });
-    // Atualizar lista na tela
     S.docs[c].push({nome:file.name,data:new Date().toLocaleDateString('pt-BR'),caminho:caminho});
     renderDocs(c);
     hideLoad();
