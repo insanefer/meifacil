@@ -1971,9 +1971,12 @@ function baixarPDF(){
 
 // ── GUIAS ──
 function atualizarGuiaNF(){
+  var t=document.getElementById('g-nf-t');
+  var d=document.getElementById('g-nf-d');
+  if(!t||!d)return; // elementos não existem mais nos novos guias
   var g={servico:{t:'Emitir NFS-e (Nota de Serviço)',d:'Para prestadores — guia no portal da prefeitura'},comercio:{t:'Emitir NF-e (Nota de Produto)',d:'Para comércio — emissão via SEFAZ com DANFE'},industria:{t:'Emitir NF-e Industrial',d:'Para indústria — ICMS/IPI via SEFAZ'},transporte:{t:'Emitir CT-e',d:'Para transportadores — documento específico de frete'},saude:{t:'Emitir NFS-e para Saúde',d:'Para saúde — nota de serviço com atenção ao ISS'},alimentacao:{t:'Emitir NFC-e ou NFS-e',d:'NFC-e para consumidor ou NFS-e para empresas'}};
   var info=g[S.negocio]||g['servico'];
-  document.getElementById('g-nf-t').textContent=info.t;document.getElementById('g-nf-d').textContent=info.d;
+  t.textContent=info.t;d.textContent=info.d;
 }
 function tG(card){card.querySelector('.gcont').classList.toggle('op');}
 function fmt(v){return'R$ '+v.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});}
