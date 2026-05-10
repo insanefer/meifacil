@@ -1192,7 +1192,15 @@ async function carregarDadosUsuario(){
       });
       // Carregar agenda
       var{data:agendaDB}=await supa.from('agenda').select('*').eq('user_id',usuarioAtual.id);
-      S.agenda=(agendaDB||[]).map(function(a){return{id:a.id,cart:a.cart,tipo:a.tipo,desc:a.descricao,val:parseFloat(a.valor),vencimento:a.vencimento,cat:a.categoria||'📦 Outros',rec:a.recorrencia||'unica',pago:a.pago||false};});
+      S.agenda=(agendaDB||[]).map(function(a){return{
+        id:a.id,cart:a.cart,tipo:a.tipo,desc:a.descricao,
+        val:parseFloat(a.valor),vencimento:a.vencimento,
+        cat:a.categoria||'📦 Outros',rec:a.recorrencia||'unica',
+        pago:a.pago||false,
+        grupoId:a.grupo_id||null,
+        totalParcelas:a.total_parcelas||null,
+        numParcela:a.num_parcela||null
+      };});
       clearTimeout(tSeg);
       document.getElementById('auth').style.display='none';
       document.getElementById('onboarding').style.display='none';
@@ -2321,21 +2329,38 @@ async function marcarPago(id){
 
 async function quitarTudo(grupoId){
   var parcelas=S.agenda.filter(function(a){return a.grupoId===grupoId&&!a.pago;});
-  if(!parcelas.length)return;
-  if(!confirm('Quitar todas as '+parcelas.length+' parcelas restantes de "'+parcelas[0].desc.replace(/ \(\d+\/\d+\)/,'')+'"?\n\nSerá lançada uma despesa por parcela automaticamente!'))return;
-  showLoad('Quitando parcelas...');
+  if(!parcelas.length){alert('Todas as parcelas já foram quitadas!');return;}
+  var nomeBase=parcelas[0].desc.replace(/ \(\d+\/\d+\)/,'');
+  var totalVal=parcelas.reduce(function(s,p){return s+p.val;},0);
+  if(!confirm('💜 Quitar todas as '+parcelas.length+' parcelas restantes de "'+nomeBase+'"?\n\nValor total: '+fmt(totalVal)+'\n\nCada parcela será lançada no mês do seu vencimento.\n\nOK = Quitar tudo\nCancelar = Voltar'))return;
+  showLoad('Quitando '+parcelas.length+' parcelas...');
   for(var i=0;i<parcelas.length;i++){
-    var item=parcelas[i];item.pago=true;
+    var item=parcelas[i];
+    item.pago=true;
+    // Lança no mês do vencimento da parcela
     var dataLanc=new Date(item.vencimento+'T00:00:00');
-    var novoLanc={id:Date.now()+i,cart:item.cart,tipo:'saida',desc:item.desc+' (Quitado)',
-      val:item.val,mes:dataLanc.getMonth(),ano:dataLanc.getFullYear(),
-      data:dataLanc.toLocaleDateString('pt-BR'),cat:item.cat,dataISO:item.vencimento};
+    var novoLanc={
+      id:Date.now()+i,
+      cart:item.cart,
+      tipo:item.tipo==='pagar'?'saida':'entrada',
+      desc:item.desc+' (Quitado)',
+      val:item.val,
+      mes:dataLanc.getMonth(),
+      ano:dataLanc.getFullYear(),
+      data:dataLanc.toLocaleDateString('pt-BR'),
+      cat:item.cat,
+      dataISO:item.vencimento
+    };
     S.lancs.push(novoLanc);
     salvarLancamentoDB(novoLanc);
     await supa.from('agenda').update({pago:true}).eq('id',item.id).eq('user_id',usuarioAtual.id);
   }
-  hideLoad();renderAgenda();atualizar();
-  setTimeout(function(){alert('✅ Todas as parcelas quitadas!\n\n📁 Guarde os comprovantes em Documentos!');},300);
+  hideLoad();
+  renderAgenda();
+  atualizar();
+  setTimeout(function(){
+    alert('✅ Todas as '+parcelas.length+' parcelas quitadas!\nTotal lançado: '+fmt(totalVal)+'\n\n📁 Guarde os comprovantes em Documentos → '+(parcelas[0].cart==='cnpj'?'CNPJ':'CPF')+'!');
+  },300);
 }
 
 async function excluirAgenda(id){
