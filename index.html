@@ -641,8 +641,73 @@ input[type=date]{color-scheme:dark;}
       <div class="doc-tab acg" id="doc-tc" onclick="setDTab('cnpj')">🏪 CNPJ</div>
       <div class="doc-tab" id="doc-tp" onclick="setDTab('cpf')">👤 CPF</div>
     </div>
-    <div id="doc-cw"><div class="ib"><div class="ibt">🏪 Documentos do CNPJ</div><div class="ibx">Guarde: notas fiscais, comprovantes de DAS, recibos de clientes, comprovantes de despesas. Esses docs comprovam seus custos e aumentam o lucro isento de IR!</div></div><div class="up-area" onclick="simUpload('cnpj')"><div class="ui">📤</div><div class="ul">Enviar documento CNPJ</div><div class="us">NF, DAS, recibo, comprovante...</div></div><div id="docs-cnpj"><div class="empty">Nenhum documento salvo ainda.</div></div></div>
-    <div id="doc-pw" class="hidden"><div class="ib"><div class="ibt">👤 Documentos do CPF</div><div class="ibx">Guarde: recibos médicos, educação, dependentes, extratos pessoais, comprovantes de IR. Garantem suas deduções no IRPF!</div></div><div class="up-area" onclick="simUpload('cpf')"><div class="ui">📤</div><div class="ul">Enviar documento CPF</div><div class="us">Recibo médico, educação, IR...</div></div><div id="docs-cpf"><div class="empty">Nenhum documento salvo ainda.</div></div></div>
+    <div id="doc-cw">
+      <div class="ib">
+        <div class="ibt">🏪 Documentos do CNPJ</div>
+        <div class="ibx">Guarde: notas fiscais, comprovantes de DAS, recibos de clientes, comprovantes de despesas. Esses docs comprovam seus custos e aumentam o lucro isento de IR!</div>
+      </div>
+      <div class="ib" style="background:rgba(75,139,245,.06);border-color:rgba(75,139,245,.18)">
+        <div class="ibt" style="color:var(--azul)">💡 Dica de nomenclatura</div>
+        <div class="ibx">Nomeie seus arquivos de forma clara para facilitar na hora de enviar ao contador:<br>
+        <strong>DAS_Janeiro_2025.pdf</strong><br>
+        <strong>NF_Cliente_Joao_Fev2025.pdf</strong><br>
+        <strong>Despesa_Internet_Marco2025.pdf</strong><br>
+        <strong>Recibo_Fornecedor_Abril2025.pdf</strong></div>
+      </div>
+      <div class="up-area" onclick="simUpload('cnpj')">
+        <div class="ui">📤</div>
+        <div class="ul">Enviar documento CNPJ</div>
+        <div class="us">NF, DAS, recibo, comprovante... (máx. 5MB)</div>
+      </div>
+      <div style="display:flex;gap:.5rem;align-items:center;margin-bottom:.7rem;flex-wrap:wrap">
+        <select id="mes-doc-cnpj" style="flex:1;background:var(--bg);border:1.5px solid var(--borda);border-radius:9px;padding:.5rem .7rem;color:var(--texto);font-size:.8rem;outline:none">
+          <option value="">Todos os meses</option>
+          <option value="Janeiro">Janeiro</option><option value="Fevereiro">Fevereiro</option>
+          <option value="Março">Março</option><option value="Abril">Abril</option>
+          <option value="Maio">Maio</option><option value="Junho">Junho</option>
+          <option value="Julho">Julho</option><option value="Agosto">Agosto</option>
+          <option value="Setembro">Setembro</option><option value="Outubro">Outubro</option>
+          <option value="Novembro">Novembro</option><option value="Dezembro">Dezembro</option>
+        </select>
+        <button onclick="baixarTodosMes('cnpj')" style="background:var(--azul);color:#fff;border:none;border-radius:9px;padding:.5rem 1rem;font-size:.78rem;font-weight:700;cursor:pointer;white-space:nowrap">⬇️ Baixar todos do mês</button>
+        <button onclick="renderDocs('cnpj')" style="background:var(--card);color:var(--texto2);border:1px solid var(--borda);border-radius:9px;padding:.5rem .7rem;font-size:.78rem;cursor:pointer">🔍 Filtrar</button>
+      </div>
+      <div id="docs-cnpj"><div class="empty">Nenhum documento salvo ainda.</div></div>
+    </div>
+
+    <div id="doc-pw" class="hidden">
+      <div class="ib">
+        <div class="ibt">👤 Documentos do CPF</div>
+        <div class="ibx">Guarde: recibos médicos, educação, dependentes, extratos pessoais, comprovantes de IR. Garantem suas deduções no IRPF!</div>
+      </div>
+      <div class="ib" style="background:rgba(75,139,245,.06);border-color:rgba(75,139,245,.18)">
+        <div class="ibt" style="color:var(--azul)">💡 Dica de nomenclatura</div>
+        <div class="ibx">Nomeie seus arquivos de forma clara:<br>
+        <strong>Medico_Consulta_Janeiro2025.pdf</strong><br>
+        <strong>Escola_Boleto_Fev2025.pdf</strong><br>
+        <strong>IR_Informe_Rendimentos_2024.pdf</strong><br>
+        <strong>Aluguel_Recibo_Marco2025.pdf</strong></div>
+      </div>
+      <div class="up-area" onclick="simUpload('cpf')">
+        <div class="ui">📤</div>
+        <div class="ul">Enviar documento CPF</div>
+        <div class="us">Recibo médico, educação, IR... (máx. 5MB)</div>
+      </div>
+      <div style="display:flex;gap:.5rem;align-items:center;margin-bottom:.7rem;flex-wrap:wrap">
+        <select id="mes-doc-cpf" style="flex:1;background:var(--bg);border:1.5px solid var(--borda);border-radius:9px;padding:.5rem .7rem;color:var(--texto);font-size:.8rem;outline:none">
+          <option value="">Todos os meses</option>
+          <option value="Janeiro">Janeiro</option><option value="Fevereiro">Fevereiro</option>
+          <option value="Março">Março</option><option value="Abril">Abril</option>
+          <option value="Maio">Maio</option><option value="Junho">Junho</option>
+          <option value="Julho">Julho</option><option value="Agosto">Agosto</option>
+          <option value="Setembro">Setembro</option><option value="Outubro">Outubro</option>
+          <option value="Novembro">Novembro</option><option value="Dezembro">Dezembro</option>
+        </select>
+        <button onclick="baixarTodosMes('cpf')" style="background:var(--azul);color:#fff;border:none;border-radius:9px;padding:.5rem 1rem;font-size:.78rem;font-weight:700;cursor:pointer;white-space:nowrap">⬇️ Baixar todos do mês</button>
+        <button onclick="renderDocs('cpf')" style="background:var(--card);color:var(--texto2);border:1px solid var(--borda);border-radius:9px;padding:.5rem .7rem;font-size:.78rem;cursor:pointer">🔍 Filtrar</button>
+      </div>
+      <div id="docs-cpf"><div class="empty">Nenhum documento salvo ainda.</div></div>
+    </div>
   </div>
 
   <!-- RELATÓRIO -->
@@ -1379,10 +1444,63 @@ function simUpload(c){
 
 function renderDocs(c){
   var el=document.getElementById('docs-'+c);
-  if(!S.docs[c].length){el.innerHTML='<div class="empty">Nenhum documento salvo ainda.</div>';return;}
-  el.innerHTML=S.docs[c].map(function(d){
-    return'<div class="di"><div class="dico">📄</div><div class="dnm">'+d.nome+'</div><div class="ddt">'+d.data+'</div></div>';
+  var mesFiltro=document.getElementById('mes-doc-'+c)?document.getElementById('mes-doc-'+c).value:'';
+  var lista=S.docs[c].filter(function(d){
+    if(!mesFiltro)return true;
+    // verifica se o nome do arquivo ou a data contém o mês
+    return d.nome.toLowerCase().indexOf(mesFiltro.toLowerCase())>=0||
+           (d.data&&d.data.indexOf(mesFiltro)>=0);
+  });
+  if(!lista.length){
+    el.innerHTML='<div class="empty">'+(mesFiltro?'Nenhum documento em '+mesFiltro+'.':'Nenhum documento salvo ainda.')+'</div>';
+    return;
+  }
+  el.innerHTML=lista.map(function(d){
+    return'<div class="di" style="cursor:pointer" onclick="baixarDoc(\''+encodeURIComponent(d.caminho||'')+'\',\''+encodeURIComponent(d.nome)+'\')">'+
+      '<div class="dico">📄</div>'+
+      '<div><div class="dnm">'+d.nome+'</div><div class="ddt">'+d.data+'</div></div>'+
+      '<div style="color:var(--azul);font-size:.72rem;font-weight:700;margin-left:auto">⬇️</div>'+
+      '</div>';
   }).join('');
+}
+
+async function baixarDoc(caminhoEnc,nomeEnc){
+  var caminho=decodeURIComponent(caminhoEnc);
+  var nome=decodeURIComponent(nomeEnc);
+  if(!caminho){alert('Caminho do arquivo não encontrado.');return;}
+  showLoad('Preparando download...');
+  var{data,error}=await supa.storage.from('documentos').download(caminho);
+  hideLoad();
+  if(error){alert('Erro ao baixar: '+error.message);return;}
+  var url=URL.createObjectURL(data);
+  var a=document.createElement('a');
+  a.href=url;a.download=nome;a.click();
+  URL.revokeObjectURL(url);
+}
+
+async function baixarTodosMes(c){
+  var mesFiltro=document.getElementById('mes-doc-'+c).value;
+  if(!mesFiltro){alert('Selecione um mês para baixar!');return;}
+  var lista=S.docs[c].filter(function(d){
+    return d.nome.toLowerCase().indexOf(mesFiltro.toLowerCase())>=0||
+           (d.data&&d.data.indexOf(mesFiltro)>=0);
+  });
+  if(!lista.length){alert('Nenhum documento encontrado em '+mesFiltro+'.');return;}
+  showLoad('Baixando '+lista.length+' documento(s)...');
+  for(var i=0;i<lista.length;i++){
+    var d=lista[i];
+    if(!d.caminho)continue;
+    var{data,error}=await supa.storage.from('documentos').download(d.caminho);
+    if(!error){
+      var url=URL.createObjectURL(data);
+      var a=document.createElement('a');
+      a.href=url;a.download=d.nome;a.click();
+      URL.revokeObjectURL(url);
+      // Pequena pausa entre downloads
+      await new Promise(function(r){setTimeout(r,500);});
+    }
+  }
+  hideLoad();
 }
 
 // ── RELATÓRIO ──
