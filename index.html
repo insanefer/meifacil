@@ -481,10 +481,10 @@ input[type=date]{color-scheme:dark;}
   <div id="scr-home" class="scr ac">
     <div class="greet">Olá, <span style="color:var(--verde)" id="d-nome">—</span> 👋</div>
     <div class="sub" id="d-sub">MEI Comum · 2025</div>
-    <div id="d-ag-venc" class="alerta-agenda venc hidden" onclick="goTo('agenda')"></div>
-    <div id="d-ag-prox" class="alerta-agenda prox hidden" onclick="goTo('agenda')"></div>
-    <div id="d-aw" class="alerta w hidden"></div>
-    <div id="d-ad" class="alerta d hidden"></div>
+    <div id="d-ag-venc" class="alerta-agenda venc" style="display:none" onclick="goTo('agenda')"></div>
+    <div id="d-ag-prox" class="alerta-agenda prox" style="display:none" onclick="goTo('agenda')"></div>
+    <div id="d-aw" class="alerta w" style="display:none"></div>
+    <div id="d-ad" class="alerta d" style="display:none"></div>
 
     <!-- CARD CNPJ -->
     <div class="sum-card cnpj">
@@ -1431,9 +1431,9 @@ function atualizar(){
   pb.style.width=pct+'%';pb.className='pb-fill'+(pct>=90?' d':pct>=70?' w':'');
   document.getElementById('cn-pct-lbl').textContent=pct.toFixed(1)+'% usado';
   var aw=document.getElementById('d-aw'),ad=document.getElementById('d-ad');
-  if(pct>=90){aw.classList.add('hidden');ad.classList.remove('hidden');ad.textContent='🚨 '+pct.toFixed(0)+'% do teto! Risco de desenquadramento!';}
-  else if(pct>=70){ad.classList.add('hidden');aw.classList.remove('hidden');aw.textContent='⚠️ '+pct.toFixed(0)+'% do teto anual atingido!';}
-  else{aw.classList.add('hidden');ad.classList.add('hidden');}
+  if(pct>=90){aw.style.display='none';ad.style.display='block';ad.textContent='🚨 '+pct.toFixed(0)+'% do teto! Risco de desenquadramento!';}
+  else if(pct>=70){ad.style.display='none';aw.style.display='block';aw.textContent='⚠️ '+pct.toFixed(0)+'% do teto anual atingido!';}
+  else{aw.style.display='none';ad.style.display='none';}
 
   var acumCnpj=calcSaldoAcum('cnpj',S.mes,ano);
   var eM=sumMes('cnpj','entrada',S.mes,ano);
@@ -2598,19 +2598,18 @@ function renderAgenda(){
 }
 
 function atualizarAlertasAgenda(){
-  // Gerar mensais antes de verificar alertas
   if(S.agenda.some(function(a){return a.rec==='mensal';}))gerarMensais();
   var vencidas=S.agenda.filter(function(a){return!a.pago&&diasParaVencer(a.vencimento)<0;});
   var proximas=S.agenda.filter(function(a){return!a.pago&&diasParaVencer(a.vencimento)>=0&&diasParaVencer(a.vencimento)<=5;});
   var elV=document.getElementById('d-ag-venc');
   var elP=document.getElementById('d-ag-prox');
   if(elV){
-    if(vencidas.length){elV.classList.remove('hidden');elV.textContent='🔴 '+vencidas.length+' conta(s) vencida(s)! Toque para ver →';}
-    else elV.classList.add('hidden');
+    if(vencidas.length){elV.style.display='block';elV.textContent='🔴 '+vencidas.length+' conta(s) vencida(s)! Toque para ver →';}
+    else elV.style.display='none';
   }
   if(elP){
-    if(proximas.length){elP.classList.remove('hidden');elP.textContent='🟡 '+proximas.length+' conta(s) vencendo nos próximos 5 dias → Toque para ver';}
-    else elP.classList.add('hidden');
+    if(proximas.length){elP.style.display='block';elP.textContent='🟡 '+proximas.length+' conta(s) vencendo nos próximos 5 dias → Toque para ver';}
+    else elP.style.display='none';
   }
 }
 
