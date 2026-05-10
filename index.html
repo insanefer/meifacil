@@ -893,7 +893,13 @@ async function carregarDadosUsuario(){
     // Carregar documentos
     var{data:docs}=await supa.from('documentos').select('*').eq('user_id',usuarioAtual.id);
     S.docs={cnpj:[],cpf:[]};
-    (docs||[]).forEach(function(d){if(S.docs[d.carteira])S.docs[d.carteira].push({nome:d.nome,data:d.data_upload?new Date(d.data_upload+'T00:00:00').toLocaleDateString('pt-BR'):''});});
+    (docs||[]).forEach(function(d){
+      if(S.docs[d.carteira])S.docs[d.carteira].push({
+        nome:d.nome,
+        data:d.data_upload?new Date(d.data_upload+'T00:00:00').toLocaleDateString('pt-BR'):'',
+        caminho:d.caminho||''
+      });
+    });
     hideLoad();
     document.getElementById('auth').style.display='none';
     document.getElementById('onboarding').style.display='none';
@@ -1341,10 +1347,42 @@ function setDTab(t){
   document.getElementById('doc-pw').classList.toggle('hidden',t!=='cpf');
 }
 function simUpload(c){
-  var nc=['NF Emitida','Comprovante DAS','Recibo de Cliente','NF Fornecedor','Extrato CNPJ','Comprovante Pix'];
-  var np=['Recibo Médico','Comprovante IR','Boleto Escola','Extrato CPF','Comprovante Aluguel'];
-  S.docs[c].push({nome:(c==='cnpj'?nc:np)[Math.floor(Math.random()*( c==='cnpj'?6:5))]+'.pdf',data:new Date().toLocaleDateString('pt-BR')});
-  document.getElementById('docs-'+c).innerHTML=S.docs[c].map(function(d){return'<div class="di"><div class="dico">📄</div><div class="dnm">'+d.nome+'</div><div class="ddt">'+d.data+'</div></div>';}).join('');
+  // Abre o seletor de arquivo real
+  var input=document.createElement('input');
+  input.type='file';
+  input.accept='.pdf,.jpg,.jpeg,.png,.webp';
+  input.onchange=async function(){
+    var file=input.files[0];
+    if(!file)return;
+    if(file.size>5*1024*1024){alert('Arquivo muito grande! Máximo 5MB.');return;}
+    if(!usuarioAtual){alert('Você precisa estar logado!');return;}
+    showLoad('Enviando documento...');
+    var caminho=usuarioAtual.id+'/'+c+'/'+Date.now()+'_'+file.name;
+    var{error}=await supa.storage.from('documentos').upload(caminho,file);
+    if(error){hideLoad();alert('Erro ao enviar: '+error.message);return;}
+    // Salvar referência no banco
+    var hoje=new Date().toISOString().split('T')[0];
+    await supa.from('documentos').insert({
+      user_id:usuarioAtual.id,
+      nome:file.name,
+      carteira:c,
+      data_upload:hoje,
+      caminho:caminho
+    });
+    // Atualizar lista na tela
+    S.docs[c].push({nome:file.name,data:new Date().toLocaleDateString('pt-BR'),caminho:caminho});
+    renderDocs(c);
+    hideLoad();
+  };
+  input.click();
+}
+
+function renderDocs(c){
+  var el=document.getElementById('docs-'+c);
+  if(!S.docs[c].length){el.innerHTML='<div class="empty">Nenhum documento salvo ainda.</div>';return;}
+  el.innerHTML=S.docs[c].map(function(d){
+    return'<div class="di"><div class="dico">📄</div><div class="dnm">'+d.nome+'</div><div class="ddt">'+d.data+'</div></div>';
+  }).join('');
 }
 
 // ── RELATÓRIO ──
