@@ -623,14 +623,83 @@ input[type=date]{color-scheme:dark;}
 
   <!-- GUIAS -->
   <div id="scr-guias" class="scr">
-    <div class="greet" style="font-size:1.05rem;margin-bottom:.25rem">Guias 📚</div>
-    <p style="color:var(--texto2);font-size:.78rem;margin-bottom:1rem">Toque para expandir — links diretos gov.br</p>
-    <div class="gc" onclick="tG(this)"><div class="gb">🧾 Nota Fiscal</div><div class="gh"><div style="font-size:1.2rem">📋</div><div class="gt" id="g-nf-t">Como emitir Nota Fiscal</div></div><div class="gd" id="g-nf-d">Personalizado para o seu negócio</div><div class="gcont"><div class="gs"><div class="sn">1</div><div>Pesquise: <strong>"NFS-e + [sua cidade]"</strong> para achar o portal da prefeitura</div></div><div class="gs"><div class="sn">2</div><div>Login com CNPJ e senha. Sem acesso, vá à prefeitura com RG e CNPJ</div></div><div class="gs"><div class="sn">3</div><div>Clique "Emitir NFS-e" — preencha descrição, valor e dados do tomador</div></div><div class="gs"><div class="sn">4</div><div>Confirme o CNAE correto — define o ISS cobrado</div></div><div class="gs"><div class="sn">5</div><div>Emita, salve PDF e guarde em Documentos → CNPJ!</div></div><a class="gl-btn" href="https://www.gov.br/empresas-e-negocios/pt-br/empreendedor" target="_blank">🌐 Portal do Empreendedor</a></div></div>
-    <div class="gc" onclick="tG(this)"><div class="gb">📅 DAS Mensal</div><div class="gh"><div style="font-size:1.2rem">💳</div><div class="gt">Como pagar o DAS — vence dia 20</div></div><div class="gd">Gere e pague sua guia mensal do MEI</div><div class="gcont"><div class="gs"><div class="sn">1</div><div>Acesse <strong>gov.br/mei</strong> e faça login</div></div><div class="gs"><div class="sn">2</div><div>Clique em "Pagar DAS" no menu</div></div><div class="gs"><div class="sn">3</div><div>Selecione o mês e gere o boleto ou PIX</div></div><div class="gs"><div class="sn">4</div><div>Pague até dia <strong>20</strong> — atraso gera multa!</div></div><div class="gs"><div class="sn">5</div><div>Guarde comprovante em Documentos → CNPJ</div></div><a class="gl-btn" href="https://www.gov.br/empresas-e-negocios/pt-br/empreendedor/servicos/calculo-e-pagamento/calculo-e-pagamento" target="_blank">🌐 Gerar DAS agora</a></div></div>
-    <div class="gc" onclick="tG(this)"><div class="gb">📊 Declaração Anual</div><div class="gh"><div style="font-size:1.2rem">📅</div><div class="gt">DASN-SIMEI — prazo 31/maio</div></div><div class="gd">Declare o faturamento e evite multa</div><div class="gcont"><div class="gs"><div class="sn">1</div><div>Todo ano até <strong>31 de maio</strong> declare o faturamento do ano anterior</div></div><div class="gs"><div class="sn">2</div><div>gov.br/mei → "Declaração Anual (DASN-SIMEI)"</div></div><div class="gs"><div class="sn">3</div><div>Use os lançamentos do app para ter o total exato!</div></div><div class="gs"><div class="sn">4</div><div>Multa mínima por atraso: R$50</div></div><a class="gl-btn" href="https://www.gov.br/empresas-e-negocios/pt-br/empreendedor/servicos/declaracao-anual/declaracao-anual" target="_blank">🌐 Fazer declaração anual</a></div></div>
-    <div class="gc" onclick="tG(this)"><div class="gb">💸 Lucros vs Avulso</div><div class="gh"><div style="font-size:1.2rem">💰</div><div class="gt">Como retirar dinheiro do CNPJ</div></div><div class="gd">Entenda qual forma é mais vantajosa</div><div class="gcont"><div class="gs"><div class="sn">1</div><div><strong>Distribuição de lucros:</strong> retirada do lucro da empresa. <strong>100% isenta de IR — sem limite!</strong></div></div><div class="gs"><div class="sn">2</div><div><strong>Retirada avulsa:</strong> sem comprovar que é lucro. Entra na base tributável do IR — evite!</div></div><div class="gs"><div class="sn">3</div><div>Para comprovar lucro isento, guarde <strong>todos os comprovantes de despesa</strong></div></div><div class="gs"><div class="sn">4</div><div>Estratégia: retire tudo como distribuição de lucros + comprovantes organizados = zero IR!</div></div></div></div>
-    <div class="gc" onclick="tG(this)"><div class="gb">🧾 IRPF</div><div class="gh"><div style="font-size:1.2rem">📋</div><div class="gt">Declaração IR — pague menos</div></div><div class="gd">Como declarar e aproveitar isenções</div><div class="gcont"><div class="gs"><div class="sn">1</div><div>Prazo: <strong>março a maio</strong> no site da Receita Federal</div></div><div class="gs"><div class="sn">2</div><div>Declare rendimentos tributáveis: retiradas avulsas, outros salários</div></div><div class="gs"><div class="sn">3</div><div><strong>Lucros isentos:</strong> lançar em "Rendimentos Isentos e Não Tributáveis"</div></div><div class="gs"><div class="sn">4</div><div>Deduções: saúde, educação, dependentes — reduzem o imposto!</div></div><a class="gl-btn" href="https://www.gov.br/receitafederal/pt-br/assuntos/meu-imposto-de-renda" target="_blank">🌐 Site IR — Receita Federal</a></div></div>
-    <div class="gc" onclick="tG(this)"><div class="gb">⚠️ Teto MEI</div><div class="gh"><div style="font-size:1.2rem">📏</div><div class="gt">Cuidado com o limite de faturamento</div></div><div class="gd">O que acontece se ultrapassar</div><div class="gcont"><div class="gs"><div class="sn">1</div><div><strong>MEI Comum:</strong> R$81.000/ano | <strong>Caminhoneiro:</strong> R$251.600/ano</div></div><div class="gs"><div class="sn">2</div><div>Ultrapassou até 20%: vira ME no ano seguinte</div></div><div class="gs"><div class="sn">3</div><div>Ultrapassou mais de 20%: <strong>desenquadramento retroativo desde janeiro!</strong></div></div><div class="gs"><div class="sn">4</div><div>O app alerta em 70% e 90% do teto — fique atento!</div></div></div></div>
+    <div class="greet" style="font-size:1.05rem;margin-bottom:.1rem">Sites Essenciais 🔗</div>
+    <p style="color:var(--texto2);font-size:.75rem;margin-bottom:.3rem">Por: Leandro Quagliato — <a href="https://empreendeaqui.com.br/" target="_blank" style="color:var(--verde)">Empreende Aqui</a></p>
+    <p style="color:var(--texto2);font-size:.75rem;margin-bottom:.9rem">Toque no card para abrir o site</p>
+
+    <div class="gc" onclick="window.open('https://solucoes.receita.fazenda.gov.br/servicos/cnpjreva/cnpjreva_solicitacao.asp','_blank')">
+      <div class="gb">Site #1</div>
+      <div class="gh"><div style="font-size:1.2rem">🔍</div><div class="gt">Consulta CNPJ e Situação Cadastral</div></div>
+      <div class="gd">Verifique os dados e situação do seu CNPJ na Receita Federal</div>
+    </div>
+
+    <div class="gc" onclick="window.open('https://www8.receita.fazenda.gov.br/simplesnacional/aplicacoes/atspo/pgmei.app/identificacao','_blank')">
+      <div class="gb">Site #2</div>
+      <div class="gh"><div style="font-size:1.2rem">💳</div><div class="gt">PGMEI — Consulta DAS em aberto</div></div>
+      <div class="gd">Verifique e gere suas guias DAS mensais para pagamento</div>
+    </div>
+
+    <div class="gc" onclick="window.open('https://consopt.www8.receita.fazenda.gov.br/consultaoptantes','_blank')">
+      <div class="gb">Site #3</div>
+      <div class="gh"><div style="font-size:1.2rem">✅</div><div class="gt">Simples Nacional — Consultar Opção</div></div>
+      <div class="gd">Veja se você ainda está ativo no MEI e no Simples Nacional</div>
+    </div>
+
+    <div class="gc" onclick="window.open('https://www.nfse.gov.br/EmissorNacional/Login','_blank')">
+      <div class="gb">Site #4</div>
+      <div class="gh"><div style="font-size:1.2rem">🧾</div><div class="gt">Portal NFS-e Nacional</div></div>
+      <div class="gd">Emita sua Nota Fiscal de Serviços pelo portal nacional do governo</div>
+    </div>
+
+    <div class="gc" onclick="window.open('https://sebrae.com.br/sites/PortalSebrae/produtoseservicos/emissornfe','_blank')">
+      <div class="gb">Site #5</div>
+      <div class="gh"><div style="font-size:1.2rem">📦</div><div class="gt">Emissor Sebrae — Nota Fiscal de Produto</div></div>
+      <div class="gd">Emita NF-e de produto gratuitamente pelo Sebrae</div>
+    </div>
+
+    <div class="gc" onclick="window.open('https://www.gov.br/empresas-e-negocios/pt-br/empreendedor','_blank')">
+      <div class="gb">Site #6</div>
+      <div class="gh"><div style="font-size:1.2rem">🏪</div><div class="gt">Portal do Empreendedor</div></div>
+      <div class="gd">Abrir MEI, dar baixa, declaração anual e novidades para o MEI</div>
+    </div>
+
+    <div class="gc" onclick="tG(this)">
+      <div class="gb">Site #7</div>
+      <div class="gh"><div style="font-size:1.2rem">📬</div><div class="gt">E-CAC / DTE — Notificações do Governo</div></div>
+      <div class="gd">Consulte notificações, intimações e comunicados da Receita Federal</div>
+      <div class="gcont">
+        <div class="gs"><div class="sn">1</div><div><strong>E-CAC:</strong> consulte notificações e pendências com a Receita</div></div>
+        <div class="gs"><div class="sn">2</div><div><strong>DTE:</strong> ative o Domicílio Tributário Eletrônico para receber avisos digitais</div></div>
+        <a class="gl-btn" href="https://cav.receita.fazenda.gov.br/autenticacao/login" target="_blank">🌐 Acessar E-CAC</a>
+        <a class="gl-btn" href="https://www.gov.br/pt-br/servicos/optar-pelo-domicilio-tributario-eletronico" target="_blank" style="margin-left:.5rem">🌐 Ativar DTE</a>
+      </div>
+    </div>
+
+    <div class="gc" onclick="window.open('https://www.gov.br/esocial/pt-br','_blank')">
+      <div class="gb">Site #8</div>
+      <div class="gh"><div style="font-size:1.2rem">👷</div><div class="gt">E-Social</div></div>
+      <div class="gd">Informações sobre obrigações trabalhistas do MEI com funcionários</div>
+    </div>
+
+    <div class="gc" onclick="window.open('https://www.gov.br/empresas-e-negocios/pt-br/empreendedor/meu-mei-digital','_blank')">
+      <div class="gb">Site #9</div>
+      <div class="gh"><div style="font-size:1.2rem">📱</div><div class="gt">Meu MEI Digital</div></div>
+      <div class="gd">Novo aplicativo oficial do MEI — gerencie tudo pelo celular</div>
+    </div>
+
+    <div class="gc" onclick="window.open('https://www27.receita.fazenda.gov.br/simulador-irpf/','_blank')">
+      <div class="gb">Site #10</div>
+      <div class="gh"><div style="font-size:1.2rem">📊</div><div class="gt">Simulador IRPF — Receita Federal</div></div>
+      <div class="gd">Simule sua declaração do Imposto de Renda diretamente na Receita</div>
+    </div>
+
+    <div style="background:var(--card);border:1px solid var(--borda);border-radius:14px;padding:1.05rem;margin-top:.5rem">
+      <div style="font-size:.7rem;font-weight:800;color:var(--amarelo);text-transform:uppercase;letter-spacing:.4px;margin-bottom:.7rem">⭐ Extras — Materiais Gratuitos</div>
+      <a href="https://www.gov.br/empresas-e-negocios/pt-br/empreendedor/arquivos-e-imagens/relatorio-mensal-das-receitas-brutas-1.pdf" target="_blank" class="gl-btn" style="display:flex;margin-bottom:.5rem;background:rgba(0,196,140,.15);color:var(--verde)">📄 Relatório Mensal de Faturamento</a>
+      <a href="https://docs.google.com/spreadsheets/d/1117DaDcH8N8QibN5RdzfLQw5Qc1-lksL5ZBtfRbvanI/edit?usp=sharing" target="_blank" class="gl-btn" style="display:flex;margin-bottom:.5rem;background:rgba(75,139,245,.15);color:var(--azul)">📊 Controle de Sucesso do MEI (DRE)</a>
+      <a href="https://docs.google.com/spreadsheets/d/1U4V70Bz41Edr8s_e1QIT29v9jGsdbqpKRpi6rVXLI6w/edit?usp=sharing" target="_blank" class="gl-btn" style="display:flex;margin-bottom:.5rem;background:rgba(176,107,255,.15);color:var(--roxo)">💰 Controle de Gastos Pessoa Física</a>
+      <a href="https://docs.google.com/document/d/1URj7j71qsqHTvfuGUkjcKfqmcx8EkJs3oxZ2gE-O440/edit?usp=sharing" target="_blank" class="gl-btn" style="display:flex;background:rgba(255,209,102,.15);color:var(--amarelo)">❓ 400 Perguntas Mais Feitas pelo MEI</a>
+    </div>
   </div>
 
   <!-- DOCUMENTOS -->
@@ -886,13 +955,25 @@ input[type=date]{color-scheme:dark;}
     </div>
     <div id="wrap-cat" class="hidden">
       <label class="lbl">Categoria do gasto</label>
-      <div class="rg">
+      <!-- Categorias CPF -->
+      <div id="cats-cpf" class="rg">
         <div class="rb" id="cat-moradia" onclick="setCat('🏠 Moradia')">🏠 Moradia</div>
         <div class="rb" id="cat-alimentacao" onclick="setCat('🍽️ Aliment.')">🍽️ Aliment.</div>
         <div class="rb" id="cat-saude" onclick="setCat('💊 Saúde')">💊 Saúde</div>
         <div class="rb" id="cat-transporte" onclick="setCat('🚗 Transp.')">🚗 Transp.</div>
         <div class="rb" id="cat-lazer" onclick="setCat('🎉 Lazer')">🎉 Lazer</div>
-        <div class="rb" id="cat-outros" onclick="setCat('📦 Outros')">📦 Outros</div>
+        <div class="rb" id="cat-outros-cpf" onclick="setCat('📦 Outros')">📦 Outros</div>
+      </div>
+      <!-- Categorias CNPJ -->
+      <div id="cats-cnpj" class="rg" style="display:none">
+        <div class="rb" id="cat-das" onclick="setCat('🧾 DAS')">🧾 DAS</div>
+        <div class="rb" id="cat-telefone" onclick="setCat('📱 Tel/Internet')">📱 Tel/Internet</div>
+        <div class="rb" id="cat-transp-cnpj" onclick="setCat('🚗 Transporte')">🚗 Transporte</div>
+        <div class="rb" id="cat-fornecedor" onclick="setCat('🛒 Fornecedores')">🛒 Fornecedores</div>
+        <div class="rb" id="cat-equipamento" onclick="setCat('💻 Equipamentos')">💻 Equipamentos</div>
+        <div class="rb" id="cat-aluguel" onclick="setCat('🏠 Aluguel')">🏠 Aluguel</div>
+        <div class="rb" id="cat-marketing" onclick="setCat('📣 Marketing')">📣 Marketing</div>
+        <div class="rb" id="cat-outros-cnpj" onclick="setCat('📦 Outros')">📦 Outros</div>
       </div>
     </div>
     <label class="lbl">Descrição</label>
@@ -1169,13 +1250,19 @@ function matchAno(l,ano){return l.ano===ano||(ano===new Date().getFullYear()&&!l
 
 // Saldo acumulado até determinado mês (carrega de mês em mês)
 function calcSaldoAcum(cart,mesAte,ano){
-  var tipos=cart==='cnpj'?['entrada','saida','retirada']:['entrada','retirada_entrada','saida'];
   var saldo=0;
   for(var m=0;m<=mesAte;m++){
     var e=sumMes(cart,'entrada',m,ano);
-    var ret=cart==='cnpj'?sumMes(cart,'retirada',m,ano):sumMes(cart,'retirada_entrada',m,ano);
     var s=sumMes(cart,'saida',m,ano);
-    saldo+=e+ret-s;
+    if(cart==='cnpj'){
+      // CNPJ: retirada SAI do caixa
+      var ret=sumMes(cart,'retirada',m,ano);
+      saldo+=e-s-ret;
+    } else {
+      // CPF: retirada_entrada ENTRA no caixa
+      var retEnt=sumMes(cart,'retirada_entrada',m,ano);
+      saldo+=e+retEnt-s;
+    }
   }
   return saldo;
 }
@@ -1412,15 +1499,26 @@ function setSub(s){
 }
 function setCat(c){
   mCat=c;
-  ['moradia','alimentacao','saude','transporte','lazer','outros'].forEach(function(k){
-    var el=document.getElementById('cat-'+k);if(el)el.className='rb'+(c.toLowerCase().indexOf(k.replace('ã','a').replace('é','e'))>=0?' sr':'');
-  });
+  // Reset todas as categorias
+  document.querySelectorAll('#cats-cpf .rb, #cats-cnpj .rb').forEach(function(el){el.className='rb sr'.replace(' sr','');el.className='rb';});
+  // Highlight a selecionada
+  var todos=document.querySelectorAll('#cats-cpf .rb, #cats-cnpj .rb');
+  todos.forEach(function(el){if(el.textContent.trim().toLowerCase().indexOf(c.replace(/[🏠🍽️💊🚗🎉📦🧾📱🛒💻📣]/g,'').trim().toLowerCase())>=0){el.className='rb sr';}});
 }
 function atualizarMUI(){
-  var isR=mTipo==='retirada',isCpfS=mCart==='cpf'&&mTipo==='saida';
+  var isR=mTipo==='retirada';
+  var isSaida=mTipo==='saida';
   document.getElementById('wrap-sub').classList.toggle('hidden',!isR);
   document.getElementById('transf-aviso').classList.toggle('hidden',!isR);
-  document.getElementById('wrap-cat').classList.toggle('hidden',!isCpfS);
+  document.getElementById('wrap-cat').classList.toggle('hidden',!isSaida);
+  // Mostrar categorias certas
+  if(isSaida){
+    document.getElementById('cats-cpf').style.display=mCart==='cpf'?'flex':'none';
+    document.getElementById('cats-cnpj').style.display=mCart==='cnpj'?'flex':'none';
+    // Reset categoria padrão conforme carteira
+    mCat=mCart==='cnpj'?'📦 Outros':'📦 Outros';
+    document.querySelectorAll('#cats-cpf .rb, #cats-cnpj .rb').forEach(function(el){el.className='rb';});
+  }
   document.getElementById('btn-sal').className=mCart==='cpf'?'bsav b':'bsav';
   if(isR)setSub(mSub);
 }
@@ -1432,7 +1530,7 @@ function salvar(){
   var dataStr=document.getElementById('l-data').value;
   if(!desc||isNaN(val)||val<=0){alert('Preencha todos os campos');return;}
   var dataLanc=dataStr?new Date(dataStr+'T00:00:00'):new Date();
-  var cat=mTipo==='retirada'?mSub:(mCart==='cpf'&&mTipo==='saida'?mCat:'');
+  var cat=mTipo==='retirada'?mSub:(mTipo==='saida'?mCat:'');
   var id=Date.now();
   var novoLanc={id:id,cart:mCart,tipo:mTipo,desc:desc,val:val,mes:dataLanc.getMonth(),ano:dataLanc.getFullYear(),data:dataLanc.toLocaleDateString('pt-BR'),cat:cat,dataISO:dataStr||null};
   S.lancs.push(novoLanc);
