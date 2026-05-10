@@ -623,8 +623,7 @@ input[type=date]{color-scheme:dark;}
 
   <!-- GUIAS -->
   <div id="scr-guias" class="scr">
-    <div class="greet" style="font-size:1.05rem;margin-bottom:.1rem">Sites Essenciais 🔗</div>
-    <p style="color:var(--texto2);font-size:.75rem;margin-bottom:.3rem">Por: Leandro Quagliato — <a href="https://empreendeaqui.com.br/" target="_blank" style="color:var(--verde)">Empreende Aqui</a></p>
+    <div class="greet" style="font-size:1.05rem;margin-bottom:.25rem">Sites Essenciais 🔗</div>
     <p style="color:var(--texto2);font-size:.75rem;margin-bottom:.9rem">Toque no card para abrir o site</p>
 
     <div class="gc" onclick="window.open('https://solucoes.receita.fazenda.gov.br/servicos/cnpjreva/cnpjreva_solicitacao.asp','_blank')">
@@ -681,24 +680,19 @@ input[type=date]{color-scheme:dark;}
       <div class="gd">Informações sobre obrigações trabalhistas do MEI com funcionários</div>
     </div>
 
-    <div class="gc" onclick="window.open('https://www.gov.br/empresas-e-negocios/pt-br/empreendedor/meu-mei-digital','_blank')">
-      <div class="gb">Site #9</div>
-      <div class="gh"><div style="font-size:1.2rem">📱</div><div class="gt">Meu MEI Digital</div></div>
-      <div class="gd">Novo aplicativo oficial do MEI — gerencie tudo pelo celular</div>
-    </div>
-
     <div class="gc" onclick="window.open('https://www27.receita.fazenda.gov.br/simulador-irpf/','_blank')">
-      <div class="gb">Site #10</div>
+      <div class="gb">Site #9</div>
       <div class="gh"><div style="font-size:1.2rem">📊</div><div class="gt">Simulador IRPF — Receita Federal</div></div>
       <div class="gd">Simule sua declaração do Imposto de Renda diretamente na Receita</div>
     </div>
 
     <div style="background:var(--card);border:1px solid var(--borda);border-radius:14px;padding:1.05rem;margin-top:.5rem">
-      <div style="font-size:.7rem;font-weight:800;color:var(--amarelo);text-transform:uppercase;letter-spacing:.4px;margin-bottom:.7rem">⭐ Extras — Materiais Gratuitos</div>
-      <a href="https://www.gov.br/empresas-e-negocios/pt-br/empreendedor/arquivos-e-imagens/relatorio-mensal-das-receitas-brutas-1.pdf" target="_blank" class="gl-btn" style="display:flex;margin-bottom:.5rem;background:rgba(0,196,140,.15);color:var(--verde)">📄 Relatório Mensal de Faturamento</a>
-      <a href="https://docs.google.com/spreadsheets/d/1117DaDcH8N8QibN5RdzfLQw5Qc1-lksL5ZBtfRbvanI/edit?usp=sharing" target="_blank" class="gl-btn" style="display:flex;margin-bottom:.5rem;background:rgba(75,139,245,.15);color:var(--azul)">📊 Controle de Sucesso do MEI (DRE)</a>
-      <a href="https://docs.google.com/spreadsheets/d/1U4V70Bz41Edr8s_e1QIT29v9jGsdbqpKRpi6rVXLI6w/edit?usp=sharing" target="_blank" class="gl-btn" style="display:flex;margin-bottom:.5rem;background:rgba(176,107,255,.15);color:var(--roxo)">💰 Controle de Gastos Pessoa Física</a>
-      <a href="https://docs.google.com/document/d/1URj7j71qsqHTvfuGUkjcKfqmcx8EkJs3oxZ2gE-O440/edit?usp=sharing" target="_blank" class="gl-btn" style="display:flex;background:rgba(255,209,102,.15);color:var(--amarelo)">❓ 400 Perguntas Mais Feitas pelo MEI</a>
+      <div style="font-size:.7rem;font-weight:800;color:var(--amarelo);text-transform:uppercase;letter-spacing:.4px;margin-bottom:.7rem">⭐ Material Extra</div>
+      <div class="gc" style="margin-bottom:.5rem;border-radius:10px" onclick="window.open('https://www.gov.br/empresas-e-negocios/pt-br/empreendedor/arquivos-e-imagens/relatorio-mensal-das-receitas-brutas-1.pdf','_blank')">
+        <div class="gh" style="margin-bottom:.2rem"><div style="font-size:1.1rem">📄</div><div class="gt" style="font-size:.82rem">Relatório Mensal de Faturamento</div></div>
+        <div class="gd">Preencha todo mês com base nos lançamentos do app → Imprima → Tire foto → Salve como PDF → Arquive em Documentos no mês correspondente!</div>
+      </div>
+      <a href="https://docs.google.com/document/d/1uPhROtwA6cY-TxN_D3yRsZtTHHYJ_-pT/edit?usp=sharing" target="_blank" class="gl-btn" style="display:flex;background:rgba(255,209,102,.15);color:var(--amarelo)">❓ 400 Perguntas Mais Feitas pelo MEI</a>
     </div>
   </div>
 
@@ -826,7 +820,7 @@ input[type=date]{color-scheme:dark;}
 
     <div id="rel-acoes">
       <label class="lbl">Ano de referência</label>
-      <div class="rg" id="rel-anos" style="margin-bottom:.9rem"></div>
+      <div style="display:flex;gap:.5rem;margin-bottom:.9rem" id="rel-anos"></div>
       <button onclick="gerarRelatorio()" class="btn-p" style="margin-bottom:.6rem">📄 Gerar Relatório</button>
       <div class="edu-box azul">
         <div class="et">📤 Como funciona</div>
@@ -1056,6 +1050,7 @@ async function recuperarSenha(){
 async function fazerLogout(){
   await supa.auth.signOut();
   usuarioAtual=null;
+  carregando=false;
   S={nome:'',tipo:'',negocio:'',dataAbertura:null,outrasVal:0,lancs:[],docs:{cnpj:[],cpf:[]},mes:new Date().getMonth(),lancTab:'cnpj',dreTab:'cnpj',docTab:'cnpj'};
   document.getElementById('app').style.display='none';
   document.getElementById('onboarding').style.display='none';
@@ -1064,6 +1059,8 @@ async function fazerLogout(){
 
 // ── CARREGAR DADOS DO USUÁRIO ──
 async function carregarDadosUsuario(){
+  if(carregando)return;
+  carregando=true;
   showLoad('Carregando seus dados...');
   var{data:perfil}=await supa.from('perfis').select('*').eq('id',usuarioAtual.id).single();
   if(perfil){
@@ -1096,9 +1093,11 @@ async function carregarDadosUsuario(){
     document.getElementById('h-nome').textContent=S.nome;
     document.getElementById('d-nome').textContent=S.nome;
     atualizarGuiaNF();renderMeses();inicializarRelAno();atualizar();
+    carregando=false;
   } else {
     // Novo usuário — vai para onboarding
     hideLoad();
+    carregando=false;
     document.getElementById('auth').style.display='none';
     document.getElementById('onboarding').style.display='flex';
   }
@@ -1151,23 +1150,24 @@ function traduzirErro(msg){
 }
 
 // ── VERIFICAR SESSÃO AO ABRIR ──
+var carregando=false;
 window.addEventListener('load',async function(){
   showLoad('Verificando sessão...');
-  // Listener de mudança de auth — captura login via link de email
   supa.auth.onAuthStateChange(async function(event,session){
-    if((event==='SIGNED_IN'||event==='TOKEN_REFRESHED')&&session&&!usuarioAtual){
+    if((event==='SIGNED_IN')&&session&&!usuarioAtual&&!carregando){
       usuarioAtual=session.user;
       await carregarDadosUsuario();
     }
     if(event==='SIGNED_OUT'){
       usuarioAtual=null;
+      carregando=false;
     }
   });
   var{data:{session}}=await supa.auth.getSession();
-  if(session){
+  if(session&&!carregando){
     usuarioAtual=session.user;
     await carregarDadosUsuario();
-  } else {
+  } else if(!session){
     hideLoad();
     document.getElementById('auth').style.display='flex';
     document.getElementById('onboarding').style.display='none';
@@ -1208,10 +1208,20 @@ function entrar(){
 function inicializarRelAno(){
   var a=new Date().getFullYear();
   relAno=a-1;
-  var wrap=document.getElementById('rel-anos');wrap.innerHTML='';
+  var wrap=document.getElementById('rel-anos');
+  if(!wrap)return;
+  wrap.innerHTML='';
   [a-2,a-1,a].forEach(function(yr){
-    var el=document.createElement('div');el.className='rb'+(yr===relAno?' sg':'');el.textContent=yr;
-    el.onclick=function(){relAno=yr;wrap.querySelectorAll('.rb').forEach(function(x){x.classList.remove('sg');});el.classList.add('sg');};
+    var el=document.createElement('button');
+    el.style.cssText='flex:1;padding:.7rem;border-radius:10px;font-weight:800;font-size:.9rem;cursor:pointer;border:2px solid '+(yr===relAno?'var(--verde)':'var(--borda)')+';background:'+(yr===relAno?'rgba(0,196,140,.15)':'var(--card)')+';color:'+(yr===relAno?'var(--verde)':'var(--texto2)')+';';
+    el.textContent=yr;
+    el.onclick=function(){
+      relAno=yr;
+      wrap.querySelectorAll('button').forEach(function(x){
+        x.style.borderColor='var(--borda)';x.style.background='var(--card)';x.style.color='var(--texto2)';
+      });
+      el.style.borderColor='var(--verde)';el.style.background='rgba(0,196,140,.15)';el.style.color='var(--verde)';
+    };
     wrap.appendChild(el);
   });
 }
