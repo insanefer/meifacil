@@ -2364,6 +2364,56 @@ async function quitarTudo(grupoId){
   },300);
 }
 
+async function excluirAgendaPago(id){
+  var item=S.agenda.find(function(a){return a.id===id;});
+  if(!item)return;
+  if(!confirm('🗑 Excluir "'+item.desc+'" (já pago/recebido)?\n\nIsso vai excluir da Agenda e também reverter o lançamento automático.\n\nOK = Excluir e reverter\nCancelar = Voltar'))return;
+  showLoad('Excluindo...');
+  S.agenda=S.agenda.filter(function(a){return a.id!==id;});
+  await supa.from('agenda').delete().eq('id',id).eq('user_id',usuarioAtual.id);
+  // Reverter lançamento automático
+  var descBase=item.desc.toLowerCase();
+  var lancParaRemover=S.lancs.filter(function(l){
+    return l.desc&&(
+      l.desc.toLowerCase().indexOf(descBase)>=0||
+      l.desc.toLowerCase().indexOf(item.desc.toLowerCase().replace(/ \(\d+\/\d+\)/,''))>=0
+    )&&(l.desc.indexOf('Agenda Pago')>=0||l.desc.indexOf('Agenda Recebido')>=0||l.desc.indexOf('Quitado')>=0);
+  });
+  for(var j=0;j<lancParaRemover.length;j++){
+    S.lancs=S.lancs.filter(function(l){return l.id!==lancParaRemover[j].id;});
+    await supa.from('lancamentos').delete().eq('id',lancParaRemover[j].id).eq('user_id',usuarioAtual.id);
+  }
+  hideLoad();renderAgenda();atualizar();
+}
+
+async function excluirGrupoPago(grupoId){
+  var gr=S.agenda.filter(function(a){return a.grupoId===grupoId;});
+  if(!gr.length)return;
+  var nomeBase=gr[0].desc.replace(/ \(\d+\/\d+\)/,'');
+  if(!confirm('🗑 Excluir o grupo "'+nomeBase+'" (já quitado)?\n\nIsso vai excluir da Agenda e também reverter os lançamentos automáticos nos Lançamentos.\n\nOK = Excluir e reverter\nCancelar = Voltar'))return;
+  showLoad('Excluindo...');
+  // Excluir da agenda
+  var ids=gr.map(function(a){return a.id;});
+  S.agenda=S.agenda.filter(function(a){return!ids.includes(a.id);});
+  for(var i=0;i<ids.length;i++){
+    await supa.from('agenda').delete().eq('id',ids[i]).eq('user_id',usuarioAtual.id);
+  }
+  // Reverter lançamentos que vieram da agenda — busca por descrição com (Quitado) ou (Agenda Pago)
+  var descBase=nomeBase.toLowerCase();
+  var lancParaRemover=S.lancs.filter(function(l){
+    return l.desc&&(l.desc.toLowerCase().indexOf(descBase)>=0)&&
+      (l.desc.indexOf('Quitado')>=0||l.desc.indexOf('Agenda Pago')>=0||l.desc.indexOf('Agenda Recebido')>=0||l.desc.indexOf('Quitação total')>=0);
+  });
+  for(var j=0;j<lancParaRemover.length;j++){
+    S.lancs=S.lancs.filter(function(l){return l.id!==lancParaRemover[j].id;});
+    await supa.from('lancamentos').delete().eq('id',lancParaRemover[j].id).eq('user_id',usuarioAtual.id);
+  }
+  hideLoad();
+  renderAgenda();
+  atualizar();
+  alert('✅ Grupo excluído e '+(lancParaRemover.length>0?lancParaRemover.length+' lançamento(s) revertido(s).':'nenhum lançamento encontrado para reverter.'));
+}
+
 async function excluirAgenda(id){
   var item=S.agenda.find(function(a){return a.id===id;});
   if(!item)return;
@@ -2498,7 +2548,7 @@ function renderAgenda(){
         '<div class="ag-btns">'+
           (item.pago?'<button class="ag-btn pago" disabled>✅ '+(item.tipo==='pagar'?'Pago':'Recebido')+'</button>':
             '<button class="ag-btn pagar" onclick="marcarPago('+item.id+')">✅ '+(item.tipo==='pagar'?'Pago':'Recebido')+'</button>')+
-          '<button class="ag-btn del" onclick="excluirAgenda('+item.id+')">🗑</button>'+
+          '<button class="ag-btn del" onclick="'+(item.pago?'excluirAgendaPago('+item.id+')':'excluirAgenda('+item.id+')')+'">🗑</button>'+
         '</div></div>';
     } else {
       var gr=entry.items;
@@ -2510,13 +2560,15 @@ function renderAgenda(){
       var dias=prox?diasParaVencer(prox.vencimento):0;
       var corVal=gr[0].tipo==='pagar'?'r':'b';
       var sinalVal=gr[0].tipo==='pagar'?'-':'+';
+      // Próxima parcela a pagar = pagas + 1
+      var numProxima=pagas+1;
       return'<div class="ag-item '+st+'" style="border-left:3px solid var(--roxo)">'+
         '<div class="ag-top">'+
           '<div style="flex:1"><div class="ag-desc">'+nomeBase+
-            ' <span style="font-size:.65rem;color:var(--roxo);font-weight:700">'+pagas+'/'+total+' pagas</span></div>'+
+            ' <span style="font-size:.65rem;color:var(--roxo);font-weight:700">'+pagas+'/'+total+' parcelas pagas</span></div>'+
           (prox?'<div class="ag-meta" style="margin-top:.3rem">'+
             '<span class="ag-status '+st+'">'+labelStatus(st,dias)+'</span>'+
-            '<span class="ag-data">📅 Próxima: '+new Date(prox.vencimento+'T00:00:00').toLocaleDateString('pt-BR')+'</span>'+
+            '<span class="ag-data">📅 Parcela '+numProxima+'/'+total+': '+new Date(prox.vencimento+'T00:00:00').toLocaleDateString('pt-BR')+'</span>'+
           '</div>':'<div class="ag-meta" style="margin-top:.3rem"><span class="ag-status paga">✅ Quitado!</span></div>')+
           '</div>'+
           '<div class="ag-val '+corVal+'" style="margin-left:.5rem">'+sinalVal+fmt(gr[0].val)+'/parc</div>'+
@@ -2524,7 +2576,8 @@ function renderAgenda(){
         '<div class="ag-btns">'+
           (prox?'<button class="ag-btn pagar" onclick="marcarPago('+prox.id+')">✅ Pagar próxima</button>':'<button class="ag-btn pago" disabled>✅ Quitado</button>')+
           (prox?'<button class="ag-btn" style="background:rgba(176,107,255,.15);color:var(--roxo);flex:1" onclick="quitarTudo('+entry.grupoId+')">💜 Quitar tudo</button>':'')+
-          '<button class="ag-btn del" onclick="excluirAgenda('+(prox?prox.id:gr[gr.length-1].id)+')">🗑</button>'+
+          (!prox?'<button class="ag-btn del" onclick="excluirGrupoPago('+entry.grupoId+')">🗑 Excluir</button>':
+                 '<button class="ag-btn del" onclick="excluirAgenda('+(prox.id)+')">🗑</button>')+
         '</div></div>';
     }
   }).join('');
