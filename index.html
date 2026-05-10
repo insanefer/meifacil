@@ -1094,15 +1094,12 @@ async function carregarDadosUsuario(){
       document.getElementById('d-nome').textContent=S.nome;
       hideLoad();
       carregando=false;
-      // requestAnimationFrame garante que o DOM renderizou antes de atualizar
-      requestAnimationFrame(function(){
-        requestAnimationFrame(function(){
-          atualizarGuiaNF();
-          renderMeses();
-          inicializarRelAno();
-          atualizar();
-        });
-      });
+      // Atualiza imediatamente
+      atualizarGuiaNF();renderMeses();inicializarRelAno();atualizar();
+      // Atualiza de novo após 300ms — garante que o CSS transition terminou
+      setTimeout(function(){atualizar();},300);
+      // Atualiza de novo após 1s — garante que o browser renderizou tudo
+      setTimeout(function(){atualizar();inicializarRelAno();},1000);
     } else {
       clearTimeout(tSeg);
       hideLoad();
@@ -1217,11 +1214,7 @@ function entrar(){
   document.getElementById('app').style.display='block';
   document.getElementById('h-nome').textContent=S.nome;
   document.getElementById('d-nome').textContent=S.nome;
-  requestAnimationFrame(function(){
-    requestAnimationFrame(function(){
-      atualizarGuiaNF();renderMeses();inicializarRelAno();atualizar();
-    });
-  });
+  atualizarGuiaNF();renderMeses();inicializarRelAno();atualizar();
 }
 
 function inicializarRelAno(){
