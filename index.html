@@ -2332,34 +2332,35 @@ async function quitarTudo(grupoId){
   if(!parcelas.length){alert('Todas as parcelas já foram quitadas!');return;}
   var nomeBase=parcelas[0].desc.replace(/ \(\d+\/\d+\)/,'');
   var totalVal=parcelas.reduce(function(s,p){return s+p.val;},0);
-  if(!confirm('💜 Quitar todas as '+parcelas.length+' parcelas restantes de "'+nomeBase+'"?\n\nValor total: '+fmt(totalVal)+'\n\nCada parcela será lançada no mês do seu vencimento.\n\nOK = Quitar tudo\nCancelar = Voltar'))return;
+  var hoje=new Date();
+  var hojeStr=hoje.toLocaleDateString('pt-BR');
+  if(!confirm('💜 Quitar todas as '+parcelas.length+' parcelas restantes de "'+nomeBase+'"?\n\nValor total: '+fmt(totalVal)+'\n\nTudo será lançado como uma despesa no MÊS ATUAL ('+hojeStr+').\n\nOK = Quitar tudo\nCancelar = Voltar'))return;
   showLoad('Quitando '+parcelas.length+' parcelas...');
+  // Lança um único valor total no mês atual
+  var novoLanc={
+    id:Date.now(),
+    cart:parcelas[0].cart,
+    tipo:parcelas[0].tipo==='pagar'?'saida':'entrada',
+    desc:nomeBase+' — Quitação total ('+parcelas.length+' parcelas)',
+    val:totalVal,
+    mes:hoje.getMonth(),
+    ano:hoje.getFullYear(),
+    data:hojeStr,
+    cat:parcelas[0].cat,
+    dataISO:hoje.toISOString().split('T')[0]
+  };
+  S.lancs.push(novoLanc);
+  salvarLancamentoDB(novoLanc);
+  // Marca todas as parcelas como pagas
   for(var i=0;i<parcelas.length;i++){
-    var item=parcelas[i];
-    item.pago=true;
-    // Lança no mês do vencimento da parcela
-    var dataLanc=new Date(item.vencimento+'T00:00:00');
-    var novoLanc={
-      id:Date.now()+i,
-      cart:item.cart,
-      tipo:item.tipo==='pagar'?'saida':'entrada',
-      desc:item.desc+' (Quitado)',
-      val:item.val,
-      mes:dataLanc.getMonth(),
-      ano:dataLanc.getFullYear(),
-      data:dataLanc.toLocaleDateString('pt-BR'),
-      cat:item.cat,
-      dataISO:item.vencimento
-    };
-    S.lancs.push(novoLanc);
-    salvarLancamentoDB(novoLanc);
-    await supa.from('agenda').update({pago:true}).eq('id',item.id).eq('user_id',usuarioAtual.id);
+    parcelas[i].pago=true;
+    await supa.from('agenda').update({pago:true}).eq('id',parcelas[i].id).eq('user_id',usuarioAtual.id);
   }
   hideLoad();
   renderAgenda();
   atualizar();
   setTimeout(function(){
-    alert('✅ Todas as '+parcelas.length+' parcelas quitadas!\nTotal lançado: '+fmt(totalVal)+'\n\n📁 Guarde os comprovantes em Documentos → '+(parcelas[0].cart==='cnpj'?'CNPJ':'CPF')+'!');
+    alert('✅ Quitação total realizada!\nValor lançado em '+hojeStr+': '+fmt(totalVal)+'\n\n📁 Guarde o comprovante em Documentos → '+(parcelas[0].cart==='cnpj'?'CNPJ':'CPF')+'!');
   },300);
 }
 
@@ -2431,13 +2432,17 @@ function renderAgenda(){
   var lista=document.getElementById('ag-lista');
   var mesSel=document.getElementById('ag-mes-sel');
   var mesNum=mesSel?mesSel.value:'';
-  var ano=new Date().getFullYear();
+  var anoAtual=new Date().getFullYear();
 
   var items=S.agenda.filter(function(a){
     if(a.cart!==agTab)return false;
+    var venc=new Date(a.vencimento+'T00:00:00');
+    // Itens mensais: mostrar apenas do ano atual (evita duplicatas)
+    if(a.rec==='mensal'||a.rec==='mensal_gerado'){
+      if(venc.getFullYear()!==anoAtual)return false;
+    }
     // Filtro por mês
     if(mesNum!==''){
-      var venc=new Date(a.vencimento+'T00:00:00');
       if(venc.getMonth()!==parseInt(mesNum))return false;
     }
     // Filtro por status
@@ -2445,7 +2450,7 @@ function renderAgenda(){
     if(agStatus==='pendente')return!a.pago&&st!=='vencida';
     if(agStatus==='atrasada')return!a.pago&&st==='vencida';
     if(agStatus==='paga')return a.pago;
-    return true; // todas
+    return true;
   });
 
   items.sort(function(a,b){
@@ -2518,7 +2523,7 @@ function renderAgenda(){
         '</div>'+
         '<div class="ag-btns">'+
           (prox?'<button class="ag-btn pagar" onclick="marcarPago('+prox.id+')">✅ Pagar próxima</button>':'<button class="ag-btn pago" disabled>✅ Quitado</button>')+
-          (pagas<total?'<button class="ag-btn" style="background:rgba(176,107,255,.15);color:var(--roxo);flex:1" onclick="quitarTudo('+entry.grupoId+')">💜 Quitar tudo</button>':'')+
+          (prox?'<button class="ag-btn" style="background:rgba(176,107,255,.15);color:var(--roxo);flex:1" onclick="quitarTudo('+entry.grupoId+')">💜 Quitar tudo</button>':'')+
           '<button class="ag-btn del" onclick="excluirAgenda('+(prox?prox.id:gr[gr.length-1].id)+')">🗑</button>'+
         '</div></div>';
     }
