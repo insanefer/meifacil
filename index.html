@@ -952,7 +952,11 @@ input[type=date]{color-scheme:dark;}
   <!-- AGENDA -->
   <div id="scr-agenda" class="scr">
     <div class="greet" style="font-size:1.05rem;margin-bottom:.25rem">Agenda 📅</div>
-    <p style="color:var(--texto2);font-size:.78rem;margin-bottom:.9rem">Contas a pagar e a receber</p>
+    <p style="color:var(--texto2);font-size:.78rem;margin-bottom:.5rem">Contas a pagar e a receber</p>
+    <div class="ib" style="background:rgba(75,139,245,.06);border-color:rgba(75,139,245,.18);margin-bottom:.8rem">
+      <div class="ibt" style="color:var(--azul)">💡 Para que serve a Agenda?</div>
+      <div class="ibx">A Agenda é para <strong>agendamentos futuros</strong> — contas que ainda vão vencer (aluguel, DAS, parcelas, contas a receber). Quando pagar ou receber, marque como pago e o valor entra automaticamente nos Lançamentos.<br><br>⚡ Comprou ou recebeu <strong>agora</strong>? Lance direto em <strong>Lançamentos</strong>!</div>
+    </div>
     <div class="ag-tabs">
       <div class="ag-tab acg" id="ag-tc" onclick="setAgTab('cnpj')">🏪 CNPJ</div>
       <div class="ag-tab" id="ag-tp" onclick="setAgTab('cpf')">👤 CPF</div>
@@ -2374,51 +2378,65 @@ async function excluirAgendaPago(id){
   if(!item)return;
   if(!confirm('🗑 Excluir "'+item.desc+'" (já pago/recebido)?\n\nIsso vai excluir da Agenda e reverter o lançamento nos Lançamentos.\n\nOK = Excluir e reverter\nCancelar = Voltar'))return;
   showLoad('Excluindo...');
-  // Remove da agenda
   S.agenda=S.agenda.filter(function(a){return a.id!==id;});
   await supa.from('agenda').delete().eq('id',id).eq('user_id',usuarioAtual.id);
-  // Busca lançamento pelo agendaId ou pelo lancId salvo
+  // Buscar lançamentos para remover — múltiplos critérios
+  var descPago=item.desc+(item.tipo==='pagar'?' (Agenda Pago)':' (Agenda Recebido)');
   var lancParaRemover=S.lancs.filter(function(l){
-    return l.agendaId===id||l.agendaId===item.id||
-      (l.desc&&l.desc===item.desc+(item.tipo==='pagar'?' (Agenda Pago)':' (Agenda Recebido)'));
+    return l.agendaId===id||
+           l.agendaId===item.id||
+           l.desc===descPago||
+           (item.lancId&&l.id===item.lancId);
   });
+  // Se não achou em memória, busca no banco pela descrição
+  if(lancParaRemover.length===0){
+    var{data:lancDB}=await supa.from('lancamentos').select('id').eq('user_id',usuarioAtual.id).ilike('descricao',item.desc+'%');
+    if(lancDB&&lancDB.length){
+      lancParaRemover=lancDB.filter(function(l){return S.lancs.find(function(sl){return sl.id===l.id;});}).map(function(l){return S.lancs.find(function(sl){return sl.id===l.id;});});
+      if(!lancParaRemover.length){
+        // Exclui direto do banco mesmo sem estar em memória
+        for(var k=0;k<lancDB.length;k++){
+          await supa.from('lancamentos').delete().eq('id',lancDB[k].id).eq('user_id',usuarioAtual.id);
+        }
+        hideLoad();renderAgenda();atualizar();
+        return;
+      }
+    }
+  }
   for(var j=0;j<lancParaRemover.length;j++){
     var lid=lancParaRemover[j].id;
     S.lancs=S.lancs.filter(function(l){return l.id!==lid;});
     await supa.from('lancamentos').delete().eq('id',lid).eq('user_id',usuarioAtual.id);
   }
   hideLoad();renderAgenda();atualizar();
-  if(lancParaRemover.length===0){
-    alert('⚠️ Item excluído da Agenda, mas o lançamento não foi encontrado para reverter automaticamente.\nExclua-o manualmente em Lançamentos se necessário.');
-  }
 }
 
 async function excluirGrupoPago(grupoId){
   var gr=S.agenda.filter(function(a){return a.grupoId===grupoId;});
   if(!gr.length)return;
   var nomeBase=gr[0].desc.replace(/ \(\d+\/\d+\)/,'');
-  if(!confirm('🗑 Excluir o grupo "'+nomeBase+'" (já quitado)?\n\nIsso vai excluir da Agenda e também reverter os lançamentos automáticos nos Lançamentos.\n\nOK = Excluir e reverter\nCancelar = Voltar'))return;
+  if(!confirm('🗑 Excluir o grupo "'+nomeBase+'" (já quitado)?\n\nIsso vai excluir da Agenda e reverter os lançamentos.\n\nOK = Excluir e reverter\nCancelar = Voltar'))return;
   showLoad('Excluindo...');
-  // Excluir da agenda
   var ids=gr.map(function(a){return a.id;});
   S.agenda=S.agenda.filter(function(a){return!ids.includes(a.id);});
   for(var i=0;i<ids.length;i++){
     await supa.from('agenda').delete().eq('id',ids[i]).eq('user_id',usuarioAtual.id);
   }
-  // Reverter lançamentos que vieram da agenda — busca por descrição com (Quitado) ou (Agenda Pago)
-  var descBase=nomeBase.toLowerCase();
-  var lancParaRemover=S.lancs.filter(function(l){
-    return l.desc&&(l.desc.toLowerCase().indexOf(descBase)>=0)&&
-      (l.desc.indexOf('Quitado')>=0||l.desc.indexOf('Agenda Pago')>=0||l.desc.indexOf('Agenda Recebido')>=0||l.desc.indexOf('Quitação total')>=0);
-  });
-  for(var j=0;j<lancParaRemover.length;j++){
-    S.lancs=S.lancs.filter(function(l){return l.id!==lancParaRemover[j].id;});
-    await supa.from('lancamentos').delete().eq('id',lancParaRemover[j].id).eq('user_id',usuarioAtual.id);
+  // Buscar lançamentos por descrição — inclui variações
+  var termos=[nomeBase,'Quitado','Agenda Pago','Agenda Recebido','Quitação total'];
+  var removidos=0;
+  var{data:lancDB}=await supa.from('lancamentos').select('id,descricao').eq('user_id',usuarioAtual.id).ilike('descricao','%'+nomeBase.substring(0,Math.min(nomeBase.length,20))+'%');
+  if(lancDB&&lancDB.length){
+    for(var j=0;j<lancDB.length;j++){
+      var l=lancDB[j];
+      if(termos.some(function(t){return l.descricao&&l.descricao.indexOf(t)>=0;})){
+        S.lancs=S.lancs.filter(function(sl){return sl.id!==l.id;});
+        await supa.from('lancamentos').delete().eq('id',l.id).eq('user_id',usuarioAtual.id);
+        removidos++;
+      }
+    }
   }
-  hideLoad();
-  renderAgenda();
-  atualizar();
-  alert('✅ Grupo excluído e '+(lancParaRemover.length>0?lancParaRemover.length+' lançamento(s) revertido(s).':'nenhum lançamento encontrado para reverter.'));
+  hideLoad();renderAgenda();atualizar();
 }
 
 async function excluirAgenda(id){
