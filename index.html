@@ -1199,7 +1199,8 @@ async function carregarDadosUsuario(){
         pago:a.pago||false,
         grupoId:a.grupo_id||null,
         totalParcelas:a.total_parcelas||null,
-        numParcela:a.num_parcela||null
+        numParcela:a.num_parcela||null,
+        lancId:a.lanc_id||null
       };});
       clearTimeout(tSeg);
       document.getElementById('auth').style.display='none';
@@ -2314,13 +2315,17 @@ async function marcarPago(id){
   if(!confirm(msg))return;
   item.pago=true;
   var dataLanc=new Date(item.vencimento+'T00:00:00');
-  var novoLanc={id:Date.now(),cart:item.cart,tipo:item.tipo==='pagar'?'saida':'entrada',
+  var lancId=Date.now();
+  var novoLanc={id:lancId,cart:item.cart,tipo:item.tipo==='pagar'?'saida':'entrada',
     desc:item.desc+(item.tipo==='pagar'?' (Agenda Pago)':' (Agenda Recebido)'),
     val:item.val,mes:dataLanc.getMonth(),ano:dataLanc.getFullYear(),
-    data:dataLanc.toLocaleDateString('pt-BR'),cat:item.cat,dataISO:item.vencimento};
+    data:dataLanc.toLocaleDateString('pt-BR'),cat:item.cat,dataISO:item.vencimento,
+    agendaId:item.id}; // referência para poder excluir depois
   S.lancs.push(novoLanc);
   salvarLancamentoDB(novoLanc);
-  await supa.from('agenda').update({pago:true}).eq('id',item.id).eq('user_id',usuarioAtual.id);
+  // Salvar referência do lançamento na agenda
+  await supa.from('agenda').update({pago:true,lanc_id:lancId}).eq('id',item.id).eq('user_id',usuarioAtual.id);
+  item.lancId=lancId;
   renderAgenda();atualizar();
   setTimeout(function(){
     alert('✅ '+(item.tipo==='pagar'?'Despesa lançada!':'Receita lançada!')+'\n\n📁 Lembre de guardar o comprovante em Documentos → '+(item.cart==='cnpj'?'CNPJ':'CPF')+'!');
@@ -2367,23 +2372,25 @@ async function quitarTudo(grupoId){
 async function excluirAgendaPago(id){
   var item=S.agenda.find(function(a){return a.id===id;});
   if(!item)return;
-  if(!confirm('🗑 Excluir "'+item.desc+'" (já pago/recebido)?\n\nIsso vai excluir da Agenda e também reverter o lançamento automático.\n\nOK = Excluir e reverter\nCancelar = Voltar'))return;
+  if(!confirm('🗑 Excluir "'+item.desc+'" (já pago/recebido)?\n\nIsso vai excluir da Agenda e reverter o lançamento nos Lançamentos.\n\nOK = Excluir e reverter\nCancelar = Voltar'))return;
   showLoad('Excluindo...');
+  // Remove da agenda
   S.agenda=S.agenda.filter(function(a){return a.id!==id;});
   await supa.from('agenda').delete().eq('id',id).eq('user_id',usuarioAtual.id);
-  // Reverter lançamento automático
-  var descBase=item.desc.toLowerCase();
+  // Busca lançamento pelo agendaId ou pelo lancId salvo
   var lancParaRemover=S.lancs.filter(function(l){
-    return l.desc&&(
-      l.desc.toLowerCase().indexOf(descBase)>=0||
-      l.desc.toLowerCase().indexOf(item.desc.toLowerCase().replace(/ \(\d+\/\d+\)/,''))>=0
-    )&&(l.desc.indexOf('Agenda Pago')>=0||l.desc.indexOf('Agenda Recebido')>=0||l.desc.indexOf('Quitado')>=0);
+    return l.agendaId===id||l.agendaId===item.id||
+      (l.desc&&l.desc===item.desc+(item.tipo==='pagar'?' (Agenda Pago)':' (Agenda Recebido)'));
   });
   for(var j=0;j<lancParaRemover.length;j++){
-    S.lancs=S.lancs.filter(function(l){return l.id!==lancParaRemover[j].id;});
-    await supa.from('lancamentos').delete().eq('id',lancParaRemover[j].id).eq('user_id',usuarioAtual.id);
+    var lid=lancParaRemover[j].id;
+    S.lancs=S.lancs.filter(function(l){return l.id!==lid;});
+    await supa.from('lancamentos').delete().eq('id',lid).eq('user_id',usuarioAtual.id);
   }
   hideLoad();renderAgenda();atualizar();
+  if(lancParaRemover.length===0){
+    alert('⚠️ Item excluído da Agenda, mas o lançamento não foi encontrado para reverter automaticamente.\nExclua-o manualmente em Lançamentos se necessário.');
+  }
 }
 
 async function excluirGrupoPago(grupoId){
@@ -2560,21 +2567,23 @@ function renderAgenda(){
       var dias=prox?diasParaVencer(prox.vencimento):0;
       var corVal=gr[0].tipo==='pagar'?'r':'b';
       var sinalVal=gr[0].tipo==='pagar'?'-':'+';
-      // Próxima parcela a pagar = pagas + 1
-      var numProxima=pagas+1;
+      // Parcela atual = pagas + 1
+      var numAtual=pagas+1;
+      // Label correto: "Parcela X/Y"
+      var labelParcela=prox?'Parcela '+numAtual+'/'+total:'Quitado';
       return'<div class="ag-item '+st+'" style="border-left:3px solid var(--roxo)">'+
         '<div class="ag-top">'+
           '<div style="flex:1"><div class="ag-desc">'+nomeBase+
-            ' <span style="font-size:.65rem;color:var(--roxo);font-weight:700">'+pagas+'/'+total+' parcelas pagas</span></div>'+
+            ' <span style="font-size:.65rem;color:var(--roxo);font-weight:700">'+labelParcela+'</span></div>'+
           (prox?'<div class="ag-meta" style="margin-top:.3rem">'+
             '<span class="ag-status '+st+'">'+labelStatus(st,dias)+'</span>'+
-            '<span class="ag-data">📅 Parcela '+numProxima+'/'+total+': '+new Date(prox.vencimento+'T00:00:00').toLocaleDateString('pt-BR')+'</span>'+
-          '</div>':'<div class="ag-meta" style="margin-top:.3rem"><span class="ag-status paga">✅ Quitado!</span></div>')+
+            '<span class="ag-data">📅 '+new Date(prox.vencimento+'T00:00:00').toLocaleDateString('pt-BR')+'</span>'+
+          '</div>':'<div class="ag-meta" style="margin-top:.3rem"><span class="ag-status paga">✅ Todas as '+total+' parcelas pagas!</span></div>')+
           '</div>'+
           '<div class="ag-val '+corVal+'" style="margin-left:.5rem">'+sinalVal+fmt(gr[0].val)+'/parc</div>'+
         '</div>'+
         '<div class="ag-btns">'+
-          (prox?'<button class="ag-btn pagar" onclick="marcarPago('+prox.id+')">✅ Pagar próxima</button>':'<button class="ag-btn pago" disabled>✅ Quitado</button>')+
+          (prox?'<button class="ag-btn pagar" onclick="marcarPago('+prox.id+')">✅ Pagar parcela '+numAtual+'</button>':'<button class="ag-btn pago" disabled>✅ Quitado</button>')+
           (prox?'<button class="ag-btn" style="background:rgba(176,107,255,.15);color:var(--roxo);flex:1" onclick="quitarTudo('+entry.grupoId+')">💜 Quitar tudo</button>':'')+
           (!prox?'<button class="ag-btn del" onclick="excluirGrupoPago('+entry.grupoId+')">🗑 Excluir</button>':
                  '<button class="ag-btn del" onclick="excluirAgenda('+(prox.id)+')">🗑</button>')+
