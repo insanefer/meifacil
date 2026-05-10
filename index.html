@@ -577,7 +577,7 @@ input[type=date]{color-scheme:dark;}
         <div class="dr"><span class="drl">Total retirado p/ CPF</span><span class="drv p" id="dr-trpf">R$ 0,00</span></div>
       </div>
     </div>
-    <div id="dre-p" class="hidden">
+    <div id="dre-p" style="display:none">
       <div class="dc">
         <h3>Fluxo Pessoal — CPF</h3>
         <div class="dr"><span class="drl">Retiradas do MEI</span><span class="drv p" id="dcp-ret">R$ 0,00</span></div>
@@ -789,7 +789,7 @@ input[type=date]{color-scheme:dark;}
       <div id="docs-cnpj"><div class="empty">Nenhum documento salvo ainda.</div></div>
     </div>
 
-    <div id="doc-pw" class="hidden">
+    <div id="doc-pw" style="display:none">
       <div class="ib">
         <div class="ibt">👤 Documentos do CPF</div>
         <div class="ibx">Guarde: recibos médicos, educação, dependentes, extratos pessoais, comprovantes de IR. Garantem suas deduções no IRPF!</div>
@@ -1534,8 +1534,8 @@ function setDT(t){
   S.dreTab=t;
   document.getElementById('pill-dc').className='pill'+(t==='cnpj'?' acg':'');
   document.getElementById('pill-dp').className='pill'+(t==='cpf'?' acb':'');
-  document.getElementById('dre-c').classList.toggle('hidden',t!=='cnpj');
-  document.getElementById('dre-p').classList.toggle('hidden',t!=='cpf');
+  document.getElementById('dre-c').style.display=t==='cnpj'?'block':'none';
+  document.getElementById('dre-p').style.display=t==='cpf'?'block':'none';
   atualizarDRE();
 }
 
@@ -1690,8 +1690,8 @@ function setDTab(t){
   S.docTab=t;
   document.getElementById('doc-tc').className='doc-tab'+(t==='cnpj'?' acg':'');
   document.getElementById('doc-tp').className='doc-tab'+(t==='cpf'?' acb':'');
-  document.getElementById('doc-cw').classList.toggle('hidden',t!=='cnpj');
-  document.getElementById('doc-pw').classList.toggle('hidden',t!=='cpf');
+  document.getElementById('doc-cw').style.display=t==='cnpj'?'block':'none';
+  document.getElementById('doc-pw').style.display=t==='cpf'?'block':'none';
 }
 function limparNomeArquivo(nome){
   return nome.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9._-]/g,'_').replace(/__+/g,'_');
@@ -2134,8 +2134,7 @@ function atualizarCatsModal(){
 function atualizarMagRec(){
   var rec=document.getElementById('mag-rec').value;
   var wrap=document.getElementById('mag-parcelas-wrap');
-  wrap.classList.toggle('hidden',rec!=='parcelado');
-  // Limpa o campo se não for parcelado
+  wrap.style.display=rec==='parcelado'?'block':'none';
   if(rec!=='parcelado'){
     var inp=document.getElementById('mag-parcelas');
     if(inp)inp.value='';
@@ -2149,7 +2148,7 @@ function abrirModalAgenda(){
   document.getElementById('mag-val').value='';
   document.getElementById('mag-data').value=new Date().toISOString().split('T')[0];
   document.getElementById('mag-rec').value='unica';
-  document.getElementById('mag-parcelas-wrap').classList.add('hidden');
+  document.getElementById('mag-parcelas-wrap').style.display='none';
   if(document.getElementById('mag-parcelas'))document.getElementById('mag-parcelas').value='';
   magCart=agTab;magTipo='pagar';
   setMagCart(magCart);setMagTipo(magTipo);
