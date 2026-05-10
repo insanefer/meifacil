@@ -1040,25 +1040,21 @@ input[type=date]{color-scheme:dark;}
     <label class="lbl">Descrição</label>
     <input type="text" id="mag-desc" placeholder="Ex: Aluguel, DAS, Fornecedor..."/>
     <label class="lbl">Categoria</label>
-    <div class="rg" id="mag-cats" style="margin-bottom:.85rem">
-      <div class="rb" onclick="setMagCat('🧾 DAS',this)">🧾 DAS</div>
-      <div class="rb" onclick="setMagCat('📱 Tel/Internet',this)">📱 Tel/Internet</div>
-      <div class="rb" onclick="setMagCat('🚗 Transporte',this)">🚗 Transporte</div>
-      <div class="rb" onclick="setMagCat('🛒 Fornecedores',this)">🛒 Fornecedores</div>
-      <div class="rb" onclick="setMagCat('💻 Equipamentos',this)">💻 Equipamentos</div>
-      <div class="rb" onclick="setMagCat('🏠 Aluguel',this)">🏠 Aluguel</div>
-      <div class="rb" onclick="setMagCat('📣 Marketing',this)">📣 Marketing</div>
-      <div class="rb" onclick="setMagCat('📦 Outros',this)">📦 Outros</div>
-    </div>
+    <div class="rg" id="mag-cats" style="margin-bottom:.85rem;flex-wrap:wrap"></div>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem">
       <div><label class="lbl">Valor (R$)</label><input type="text" id="mag-val" placeholder="0,00" oninput="msk(this)" style="margin-bottom:0"/></div>
       <div><label class="lbl">Vencimento</label><input type="date" id="mag-data" style="margin-bottom:0"/></div>
     </div>
     <label class="lbl" style="margin-top:.85rem">Recorrência</label>
-    <select id="mag-rec" style="width:100%;background:var(--bg);border:1.5px solid var(--borda);border-radius:10px;padding:.72rem 1rem;color:var(--texto);font-size:.88rem;margin-bottom:.9rem;outline:none">
+    <select id="mag-rec" onchange="atualizarMagRec()" style="width:100%;background:var(--bg);border:1.5px solid var(--borda);border-radius:10px;padding:.72rem 1rem;color:var(--texto);font-size:.88rem;margin-bottom:.7rem;outline:none">
       <option value="unica">Única vez</option>
-      <option value="mensal">Mensal</option>
+      <option value="mensal">Mensal (sem prazo — aparece todo mês)</option>
+      <option value="parcelado">Parcelado (X vezes)</option>
     </select>
+    <div id="mag-parcelas-wrap" class="hidden">
+      <label class="lbl">Número de parcelas</label>
+      <input type="text" id="mag-parcelas" placeholder="Ex: 6" style="margin-bottom:.7rem" oninput="this.value=this.value.replace(/\D/g,'')"/>
+    </div>
     <div class="mbtns">
       <button class="bcnc" onclick="fecharModalAgenda()">Cancelar</button>
       <button class="bsav" onclick="salvarAgenda()">Salvar</button>
@@ -2075,11 +2071,33 @@ var magTipo='pagar';
 var magCat='📦 Outros';
 var agEditId=null;
 
+// Categorias por carteira e tipo
+var CATS_AG={
+  cnpj:{pagar:['🧾 DAS','📱 Tel/Internet','🚗 Transporte','🛒 Fornecedores','💻 Equipamentos','🏠 Aluguel','📣 Marketing','📦 Outros'],
+        receber:['👤 Cliente','🛠️ Serviço Prestado','📦 Produto Vendido','💰 Outros']},
+  cpf:{pagar:['🏠 Moradia','🍽️ Alimentação','💊 Saúde','🚗 Transporte','🎉 Lazer','📚 Educação','📦 Outros'],
+       receber:['💼 Salário','🖥️ Freelance','🏠 Aluguel Recebido','💰 Outros']}
+};
+
 function setAgTab(t){
   agTab=t;
   document.getElementById('ag-tc').className='ag-tab'+(t==='cnpj'?' acg':'');
   document.getElementById('ag-tp').className='ag-tab'+(t==='cpf'?' acb':'');
   renderAgenda();
+}
+
+function atualizarCatsModal(){
+  var cats=CATS_AG[magCart][magTipo];
+  magCat=cats[cats.length-1]; // padrão = último (Outros)
+  var wrap=document.getElementById('mag-cats');
+  wrap.innerHTML=cats.map(function(c){
+    return'<div class="rb" onclick="setMagCat(\''+c+'\',this)">'+c+'</div>';
+  }).join('');
+}
+
+function atualizarMagRec(){
+  var rec=document.getElementById('mag-rec').value;
+  document.getElementById('mag-parcelas-wrap').classList.toggle('hidden',rec!=='parcelado');
 }
 
 function abrirModalAgenda(){
@@ -2089,9 +2107,11 @@ function abrirModalAgenda(){
   document.getElementById('mag-val').value='';
   document.getElementById('mag-data').value=new Date().toISOString().split('T')[0];
   document.getElementById('mag-rec').value='unica';
-  magCart=agTab;magTipo='pagar';magCat='📦 Outros';
+  document.getElementById('mag-parcelas-wrap').classList.add('hidden');
+  if(document.getElementById('mag-parcelas'))document.getElementById('mag-parcelas').value='';
+  magCart=agTab;magTipo='pagar';
   setMagCart(magCart);setMagTipo(magTipo);
-  document.querySelectorAll('#mag-cats .rb').forEach(function(b){b.className='rb';});
+  atualizarCatsModal();
   document.getElementById('modal-agenda').classList.add('op');
 }
 
@@ -2101,11 +2121,13 @@ function setMagCart(c){
   magCart=c;
   document.getElementById('mag-cnpj').className='rb'+(c==='cnpj'?' sg':'');
   document.getElementById('mag-cpf').className='rb'+(c==='cpf'?' sb':'');
+  atualizarCatsModal();
 }
 function setMagTipo(t){
   magTipo=t;
   document.getElementById('mag-pagar').className='rb'+(t==='pagar'?' sr':'');
   document.getElementById('mag-receber').className='rb'+(t==='receber'?' sg':'');
+  atualizarCatsModal();
 }
 function setMagCat(c,el){
   magCat=c;
@@ -2134,93 +2156,237 @@ function labelStatus(st,dias){
   return'🟢 A vencer em '+dias+' dia(s)';
 }
 
-function salvarAgenda(){
+// Gerar próxima data mensal
+function proximoMes(dataStr){
+  var d=new Date(dataStr+'T00:00:00');
+  d.setMonth(d.getMonth()+1);
+  return d.toISOString().split('T')[0];
+}
+
+// Gerar itens mensais para o mês atual e próximos 2 meses
+function gerarMensais(){
+  var hoje=new Date();hoje.setHours(0,0,0,0);
+  S.agenda.forEach(function(item){
+    if(item.rec!=='mensal'||item.pago)return;
+    // Verifica se já tem item gerado para o mês atual ou próximos
+    var dataBase=new Date(item.vencimento+'T00:00:00');
+    // Gera para mês atual e próximos 2
+    for(var i=0;i<3;i++){
+      var dataAlvo=new Date(hoje.getFullYear(),hoje.getMonth()+i,dataBase.getDate());
+      var dataAlvoStr=dataAlvo.toISOString().split('T')[0];
+      var jaExiste=S.agenda.some(function(a){
+        return a.grupoId===item.id&&a.vencimento===dataAlvoStr;
+      });
+      if(!jaExiste&&dataAlvoStr>item.vencimento){
+        var novo={
+          id:Date.now()+Math.random(),
+          cart:item.cart,tipo:item.tipo,desc:item.desc,val:item.val,
+          vencimento:dataAlvoStr,cat:item.cat,rec:'mensal_gerado',
+          pago:false,grupoId:item.id
+        };
+        S.agenda.push(novo);
+        salvarAgendaDB(novo,true);
+      }
+    }
+  });
+}
+
+async function salvarAgenda(){
   var desc=document.getElementById('mag-desc').value.trim();
   var vs=document.getElementById('mag-val').value.replace(/\./g,'').replace(',','.');
   var val=parseFloat(vs);
   var data=document.getElementById('mag-data').value;
   var rec=document.getElementById('mag-rec').value;
   if(!desc||isNaN(val)||val<=0||!data){alert('Preencha todos os campos!');return;}
-  var item={id:agEditId||Date.now(),cart:magCart,tipo:magTipo,desc:desc,val:val,vencimento:data,cat:magCat,rec:rec,pago:false};
-  if(agEditId){S.agenda=S.agenda.map(function(a){return a.id===agEditId?item:a;});}
-  else{S.agenda.push(item);}
-  salvarAgendaDB(item,!agEditId);
+
+  if(rec==='parcelado'){
+    var nParc=parseInt(document.getElementById('mag-parcelas').value)||0;
+    if(nParc<2){alert('Informe o número de parcelas (mínimo 2)!');return;}
+    var grupoId=Date.now();
+    showLoad('Criando '+nParc+' parcelas...');
+    for(var i=0;i<nParc;i++){
+      var dataParc=new Date(data+'T00:00:00');
+      dataParc.setMonth(dataParc.getMonth()+i);
+      var parcStr=dataParc.toISOString().split('T')[0];
+      var item={id:grupoId+i,cart:magCart,tipo:magTipo,
+        desc:desc+' ('+( i+1)+'/'+nParc+')',
+        val:val,vencimento:parcStr,cat:magCat,rec:'parcelado',
+        pago:false,grupoId:grupoId,totalParcelas:nParc,numParcela:i+1};
+      S.agenda.push(item);
+      await salvarAgendaDB(item,true);
+    }
+    hideLoad();
+  } else {
+    var item={id:Date.now(),cart:magCart,tipo:magTipo,desc:desc,val:val,
+      vencimento:data,cat:magCat,rec:rec,pago:false};
+    S.agenda.push(item);
+    await salvarAgendaDB(item,true);
+    // Se mensal, já gera os próximos meses
+    if(rec==='mensal')gerarMensais();
+  }
   fecharModalAgenda();renderAgenda();atualizar();
 }
 
 async function salvarAgendaDB(item,isNew){
   if(!usuarioAtual)return;
-  if(isNew){
-    await supa.from('agenda').insert({
-      user_id:usuarioAtual.id,cart:item.cart,tipo:item.tipo,
-      descricao:item.desc,valor:item.val,vencimento:item.vencimento,
-      categoria:item.cat,recorrencia:item.rec,pago:item.pago
-    });
-  } else {
-    await supa.from('agenda').update({pago:item.pago}).eq('id',item.id).eq('user_id',usuarioAtual.id);
-  }
+  try{
+    if(isNew){
+      var{data:novo}=await supa.from('agenda').insert({
+        user_id:usuarioAtual.id,cart:item.cart,tipo:item.tipo,
+        descricao:item.desc,valor:item.val,vencimento:item.vencimento,
+        categoria:item.cat,recorrencia:item.rec,pago:item.pago,
+        grupo_id:item.grupoId||null,total_parcelas:item.totalParcelas||null,num_parcela:item.numParcela||null
+      }).select().single();
+      if(novo)item.id=novo.id;
+    } else {
+      await supa.from('agenda').update({pago:item.pago}).eq('id',item.id).eq('user_id',usuarioAtual.id);
+    }
+  }catch(e){console.error('Agenda DB:',e);}
 }
 
 async function marcarPago(id){
   var item=S.agenda.find(function(a){return a.id===id;});
   if(!item||item.pago)return;
-  if(!confirm('Marcar "'+item.desc+'" como pago?\n\nIsso vai lançar automaticamente como despesa nos Lançamentos!'))return;
+  var msg='Marcar "'+item.desc+'" como pago?';
+  if(item.rec==='parcelado'&&item.totalParcelas>1){
+    msg+='\n\nDica: Se quitar todas as parcelas de uma vez, use "Quitar tudo".';
+  }
+  msg+='\n\nIsso vai lançar automaticamente como despesa nos Lançamentos!';
+  if(!confirm(msg))return;
   item.pago=true;
-  // Lançar automaticamente como despesa
   var dataLanc=new Date(item.vencimento+'T00:00:00');
-  var novoLanc={id:Date.now(),cart:item.cart,tipo:'saida',desc:item.desc+' (Agenda)',val:item.val,mes:dataLanc.getMonth(),ano:dataLanc.getFullYear(),data:dataLanc.toLocaleDateString('pt-BR'),cat:item.cat,dataISO:item.vencimento};
+  var novoLanc={id:Date.now(),cart:item.cart,tipo:item.tipo==='pagar'?'saida':'entrada',
+    desc:item.desc+(item.tipo==='pagar'?' (Agenda Pago)':' (Agenda Recebido)'),
+    val:item.val,mes:dataLanc.getMonth(),ano:dataLanc.getFullYear(),
+    data:dataLanc.toLocaleDateString('pt-BR'),cat:item.cat,dataISO:item.vencimento};
   S.lancs.push(novoLanc);
   salvarLancamentoDB(novoLanc);
-  await supa.from('agenda').update({pago:true}).eq('id',id).eq('user_id',usuarioAtual.id);
+  await supa.from('agenda').update({pago:true}).eq('id',item.id).eq('user_id',usuarioAtual.id);
   renderAgenda();atualizar();
-  // Lembrete de comprovante
   setTimeout(function(){
-    alert('✅ Despesa lançada!\n\n📁 Lembre de guardar o comprovante de pagamento em Documentos → '+(item.cart==='cnpj'?'CNPJ':'CPF')+'!');
+    alert('✅ '+(item.tipo==='pagar'?'Despesa lançada!':'Receita lançada!')+'\n\n📁 Lembre de guardar o comprovante em Documentos → '+(item.cart==='cnpj'?'CNPJ':'CPF')+'!');
   },300);
+}
+
+async function quitarTudo(grupoId){
+  var parcelas=S.agenda.filter(function(a){return a.grupoId===grupoId&&!a.pago;});
+  if(!parcelas.length)return;
+  if(!confirm('Quitar todas as '+parcelas.length+' parcelas restantes de "'+parcelas[0].desc.replace(/ \(\d+\/\d+\)/,'')+'"?\n\nSerá lançada uma despesa por parcela automaticamente!'))return;
+  showLoad('Quitando parcelas...');
+  for(var i=0;i<parcelas.length;i++){
+    var item=parcelas[i];item.pago=true;
+    var dataLanc=new Date(item.vencimento+'T00:00:00');
+    var novoLanc={id:Date.now()+i,cart:item.cart,tipo:'saida',desc:item.desc+' (Quitado)',
+      val:item.val,mes:dataLanc.getMonth(),ano:dataLanc.getFullYear(),
+      data:dataLanc.toLocaleDateString('pt-BR'),cat:item.cat,dataISO:item.vencimento};
+    S.lancs.push(novoLanc);
+    salvarLancamentoDB(novoLanc);
+    await supa.from('agenda').update({pago:true}).eq('id',item.id).eq('user_id',usuarioAtual.id);
+  }
+  hideLoad();renderAgenda();atualizar();
+  setTimeout(function(){alert('✅ Todas as parcelas quitadas!\n\n📁 Guarde os comprovantes em Documentos!');},300);
 }
 
 async function excluirAgenda(id){
   var item=S.agenda.find(function(a){return a.id===id;});
-  if(!confirm('Excluir "'+item.desc+'"?\n\nEsta ação não pode ser desfeita.'))return;
-  S.agenda=S.agenda.filter(function(a){return a.id!==id;});
-  await supa.from('agenda').delete().eq('id',id).eq('user_id',usuarioAtual.id);
+  if(!item)return;
+  var opcao='unico';
+  if(item.rec==='mensal'||item.rec==='mensal_gerado'){
+    var resp=confirm('Excluir só este mês ou todos os futuros?\n\nOK = Excluir TODOS os futuros\nCancelar = Excluir só este mês');
+    if(resp)opcao='todos';
+  } else if(item.rec==='parcelado'&&item.grupoId){
+    var resp2=confirm('Excluir só esta parcela ou todas as parcelas restantes?\n\nOK = Excluir TODAS as restantes\nCancelar = Excluir só esta parcela');
+    if(resp2)opcao='todos';
+  }
+  if(opcao==='todos'){
+    var grupoRef=item.grupoId||item.id;
+    var ids=S.agenda.filter(function(a){return(a.grupoId===grupoRef||a.id===grupoRef)&&!a.pago;}).map(function(a){return a.id;});
+    S.agenda=S.agenda.filter(function(a){return!ids.includes(a.id);});
+    for(var i=0;i<ids.length;i++){await supa.from('agenda').delete().eq('id',ids[i]).eq('user_id',usuarioAtual.id);}
+  } else {
+    S.agenda=S.agenda.filter(function(a){return a.id!==id;});
+    await supa.from('agenda').delete().eq('id',id).eq('user_id',usuarioAtual.id);
+  }
   renderAgenda();atualizar();
 }
 
 function renderAgenda(){
   var lista=document.getElementById('ag-lista');
   var items=S.agenda.filter(function(a){return a.cart===agTab;});
-  // Ordenar: vencidas primeiro, depois por data
   items.sort(function(a,b){
     if(a.pago!==b.pago)return a.pago?1:-1;
     return new Date(a.vencimento)-new Date(b.vencimento);
   });
   if(!items.length){lista.innerHTML='<div class="empty">Nenhuma conta cadastrada.<br>Clique em "+ Nova conta" para começar.</div>';return;}
-  lista.innerHTML=items.map(function(item){
-    var st=statusAgenda(item);
-    var dias=diasParaVencer(item.vencimento);
-    var vencFmt=new Date(item.vencimento+'T00:00:00').toLocaleDateString('pt-BR');
-    var corVal=item.tipo==='pagar'?'r':'b';
-    var sinalVal=item.tipo==='pagar'?'-':'+';
-    return'<div class="ag-item '+st+'">'+
-      '<div class="ag-top">'+
-        '<div><div class="ag-desc">'+item.desc+'</div><div class="ag-meta" style="margin-top:.3rem">'+
-          '<span class="ag-status '+st+'">'+labelStatus(st,dias)+'</span>'+
-          '<span class="ag-data">📅 '+vencFmt+'</span>'+
-          '<span class="ag-cat">'+item.cat+'</span>'+
-        '</div></div>'+
-        '<div class="ag-val '+corVal+'">'+sinalVal+fmt(item.val)+'</div>'+
-      '</div>'+
-      '<div class="ag-btns">'+
-        (item.pago?'<button class="ag-btn pago" disabled>✅ Pago</button>':'<button class="ag-btn pagar" onclick="marcarPago('+item.id+')">✅ Marcar como pago</button>')+
-        '<button class="ag-btn del" onclick="excluirAgenda('+item.id+')">🗑</button>'+
-      '</div>'+
-    '</div>';
+
+  // Agrupar parcelas
+  var grupos={};var listaFinal=[];
+  items.forEach(function(item){
+    if(item.rec==='parcelado'&&item.grupoId){
+      if(!grupos[item.grupoId]){grupos[item.grupoId]=[];listaFinal.push({tipo:'grupo',grupoId:item.grupoId,items:grupos[item.grupoId]});}
+      grupos[item.grupoId].push(item);
+    } else {listaFinal.push({tipo:'item',item:item});}
+  });
+
+  lista.innerHTML=listaFinal.map(function(entry){
+    if(entry.tipo==='item'){
+      var item=entry.item;
+      var st=statusAgenda(item);
+      var dias=diasParaVencer(item.vencimento);
+      var vencFmt=new Date(item.vencimento+'T00:00:00').toLocaleDateString('pt-BR');
+      var corVal=item.tipo==='pagar'?'r':'b';
+      var sinalVal=item.tipo==='pagar'?'-':'+';
+      var recLabel=item.rec==='mensal'?'🔄 Mensal':item.rec==='mensal_gerado'?'🔄 Mensal':'';
+      return'<div class="ag-item '+st+'">'+
+        '<div class="ag-top">'+
+          '<div><div class="ag-desc">'+item.desc+(recLabel?' <span style="font-size:.62rem;color:var(--azul)">'+recLabel+'</span>':'')+'</div>'+
+          '<div class="ag-meta" style="margin-top:.3rem">'+
+            '<span class="ag-status '+st+'">'+labelStatus(st,dias)+'</span>'+
+            '<span class="ag-data">📅 '+vencFmt+'</span>'+
+            '<span class="ag-cat">'+item.cat+'</span>'+
+          '</div></div>'+
+          '<div class="ag-val '+corVal+'">'+sinalVal+fmt(item.val)+'</div>'+
+        '</div>'+
+        '<div class="ag-btns">'+
+          (item.pago?'<button class="ag-btn pago" disabled>✅ Pago/Recebido</button>':
+            '<button class="ag-btn pagar" onclick="marcarPago('+item.id+')">✅ '+(item.tipo==='pagar'?'Pago':'Recebido')+'</button>')+
+          '<button class="ag-btn del" onclick="excluirAgenda('+item.id+')">🗑</button>'+
+        '</div>'+
+      '</div>';
+    } else {
+      // Grupo de parcelas
+      var gr=entry.items;
+      var pagas=gr.filter(function(p){return p.pago;}).length;
+      var total=gr.length;
+      var prox=gr.find(function(p){return!p.pago;});
+      var nomeBase=gr[0].desc.replace(/ \(\d+\/\d+\)/,'');
+      var st=prox?statusAgenda(prox):'paga';
+      var dias=prox?diasParaVencer(prox.vencimento):0;
+      var corVal=gr[0].tipo==='pagar'?'r':'b';
+      var sinalVal=gr[0].tipo==='pagar'?'-':'+';
+      return'<div class="ag-item '+st+'" style="border-left:3px solid var(--roxo)">'+
+        '<div class="ag-top">'+
+          '<div><div class="ag-desc">'+nomeBase+' <span style="font-size:.65rem;color:var(--roxo);font-weight:700">'+pagas+'/'+total+' parcelas pagas</span></div>'+
+          (prox?'<div class="ag-meta" style="margin-top:.3rem">'+
+            '<span class="ag-status '+st+'">'+labelStatus(st,dias)+'</span>'+
+            '<span class="ag-data">📅 Próxima: '+new Date(prox.vencimento+'T00:00:00').toLocaleDateString('pt-BR')+'</span>'+
+          '</div>':'<div class="ag-meta" style="margin-top:.3rem"><span class="ag-status paga">✅ Quitado!</span></div>')+
+          '</div>'+
+          '<div class="ag-val '+corVal+'">'+sinalVal+fmt(gr[0].val)+'/mês</div>'+
+        '</div>'+
+        '<div class="ag-btns">'+
+          (prox?'<button class="ag-btn pagar" onclick="marcarPago('+prox.id+')">✅ Pagar próxima</button>':'<button class="ag-btn pago" disabled>✅ Quitado</button>')+
+          (pagas<total&&total>1?'<button class="ag-btn" style="background:rgba(176,107,255,.15);color:var(--roxo)" onclick="quitarTudo('+entry.grupoId+')">💜 Quitar tudo</button>':'')+
+          '<button class="ag-btn del" onclick="excluirAgenda('+(prox?prox.id:gr[gr.length-1].id)+')">🗑</button>'+
+        '</div>'+
+      '</div>';
+    }
   }).join('');
 }
 
 function atualizarAlertasAgenda(){
-  var hoje=new Date();hoje.setHours(0,0,0,0);
+  // Gerar mensais antes de verificar alertas
+  if(S.agenda.some(function(a){return a.rec==='mensal';}))gerarMensais();
   var vencidas=S.agenda.filter(function(a){return!a.pago&&diasParaVencer(a.vencimento)<0;});
   var proximas=S.agenda.filter(function(a){return!a.pago&&diasParaVencer(a.vencimento)>=0&&diasParaVencer(a.vencimento)<=5;});
   var elV=document.getElementById('d-ag-venc');
@@ -2234,6 +2400,7 @@ function atualizarAlertasAgenda(){
     else elP.classList.add('hidden');
   }
 }
+
 
 function tG(card){card.querySelector('.gcont').classList.toggle('op');}
 
