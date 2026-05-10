@@ -1218,9 +1218,14 @@ function inicializarRelAno(){
   var wrap=document.getElementById('rel-anos');
   if(!wrap)return;
   wrap.innerHTML='';
+  wrap.style.display='grid';
+  wrap.style.gridTemplateColumns='1fr 1fr 1fr';
+  wrap.style.gap='.5rem';
+  wrap.style.marginBottom='.9rem';
   [a-2,a-1,a].forEach(function(yr){
+    var sel=yr===relAno;
     var el=document.createElement('button');
-    el.style.cssText='flex:1;padding:.7rem;border-radius:10px;font-weight:800;font-size:.9rem;cursor:pointer;border:2px solid '+(yr===relAno?'var(--verde)':'var(--borda)')+';background:'+(yr===relAno?'rgba(0,196,140,.15)':'var(--card)')+';color:'+(yr===relAno?'var(--verde)':'var(--texto2)')+';';
+    el.style.cssText='width:100%;padding:.8rem .4rem;border-radius:10px;font-weight:800;font-size:.95rem;cursor:pointer;border:2px solid '+(sel?'var(--verde)':'var(--borda)')+';background:'+(sel?'rgba(0,196,140,.15)':'var(--card)')+';color:'+(sel?'var(--verde)':'var(--texto2)')+';';
     el.textContent=yr;
     el.onclick=function(){
       relAno=yr;
@@ -1241,9 +1246,15 @@ function goTo(id){
   if(idx>=0)document.querySelectorAll('.nav-i')[idx].classList.add('ac');
   curScr=id;
   var sf=id==='home'||id==='lanc';document.getElementById('fab').style.display=sf?'flex':'none';
+  if(id==='home')atualizar();
   if(id==='lanc'){document.getElementById('fab').className='fab'+(S.lancTab==='cpf'?' b':'');renderLancs();}
   if(id==='dre')atualizarDRE();
   if(id==='ir')atualizarIR();
+  if(id==='relatorio'){
+    // Garante que os botões de ano aparecem ao navegar
+    var wrap=document.getElementById('rel-anos');
+    if(wrap&&wrap.children.length===0)inicializarRelAno();
+  }
 }
 
 // ── CÁLCULOS ──
