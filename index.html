@@ -648,29 +648,49 @@ input[type=date]{color-scheme:dark;}
       </div>
       <div class="ib" style="background:rgba(75,139,245,.06);border-color:rgba(75,139,245,.18)">
         <div class="ibt" style="color:var(--azul)">💡 Dica de nomenclatura</div>
-        <div class="ibx">Nomeie seus arquivos de forma clara para facilitar na hora de enviar ao contador:<br>
+        <div class="ibx">Nomeie seus arquivos de forma clara:<br>
         <strong>DAS_Janeiro_2025.pdf</strong><br>
         <strong>NF_Cliente_Joao_Fev2025.pdf</strong><br>
-        <strong>Despesa_Internet_Marco2025.pdf</strong><br>
-        <strong>Recibo_Fornecedor_Abril2025.pdf</strong></div>
+        <strong>Despesa_Internet_Marco2025.pdf</strong></div>
+      </div>
+      <div class="ib" style="background:rgba(176,107,255,.06);border-color:rgba(176,107,255,.18)">
+        <div class="ibt" style="color:var(--roxo)">📱 Como transformar foto em PDF</div>
+        <div class="ibx">
+        <strong>iPhone:</strong> Abra a foto → Compartilhar → Imprimir → Aperte zoom na prévia → Compartilhar → Salvar como PDF<br><br>
+        <strong>Android:</strong> Abra a foto → Menu ⋮ → Imprimir → Salvar como PDF<br><br>
+        <strong>Google Drive:</strong> Tire foto com o app → clique nos 3 pontinhos → Compartilhar como PDF
+        </div>
+      </div>
+      <div style="display:flex;gap:.5rem;margin-bottom:.7rem">
+        <div style="flex:1">
+          <label class="lbl">Mês do documento</label>
+          <select id="mes-upload-cnpj" style="width:100%;background:var(--bg);border:1.5px solid var(--borda);border-radius:9px;padding:.6rem .7rem;color:var(--texto);font-size:.82rem;outline:none">
+            <option value="01">Janeiro</option><option value="02">Fevereiro</option>
+            <option value="03">Março</option><option value="04">Abril</option>
+            <option value="05">Maio</option><option value="06">Junho</option>
+            <option value="07">Julho</option><option value="08">Agosto</option>
+            <option value="09">Setembro</option><option value="10">Outubro</option>
+            <option value="11">Novembro</option><option value="12">Dezembro</option>
+          </select>
+        </div>
       </div>
       <div class="up-area" onclick="simUpload('cnpj')">
         <div class="ui">📤</div>
-        <div class="ul">Enviar documento CNPJ</div>
-        <div class="us">NF, DAS, recibo, comprovante... (máx. 5MB)</div>
+        <div class="ul">Enviar documento CNPJ (PDF)</div>
+        <div class="us">Apenas arquivos .pdf — máx. 5MB</div>
       </div>
-      <div style="display:flex;gap:.5rem;align-items:center;margin-bottom:.7rem;flex-wrap:wrap">
-        <select id="mes-doc-cnpj" style="flex:1;background:var(--bg);border:1.5px solid var(--borda);border-radius:9px;padding:.5rem .7rem;color:var(--texto);font-size:.8rem;outline:none">
+      <div style="display:flex;gap:.5rem;align-items:center;margin-bottom:.7rem;flex-wrap:wrap;margin-top:.5rem">
+        <select id="mes-filtro-cnpj" style="flex:1;background:var(--bg);border:1.5px solid var(--borda);border-radius:9px;padding:.5rem .7rem;color:var(--texto);font-size:.8rem;outline:none">
           <option value="">Todos os meses</option>
-          <option value="Janeiro">Janeiro</option><option value="Fevereiro">Fevereiro</option>
-          <option value="Março">Março</option><option value="Abril">Abril</option>
-          <option value="Maio">Maio</option><option value="Junho">Junho</option>
-          <option value="Julho">Julho</option><option value="Agosto">Agosto</option>
-          <option value="Setembro">Setembro</option><option value="Outubro">Outubro</option>
-          <option value="Novembro">Novembro</option><option value="Dezembro">Dezembro</option>
+          <option value="01">Janeiro</option><option value="02">Fevereiro</option>
+          <option value="03">Março</option><option value="04">Abril</option>
+          <option value="05">Maio</option><option value="06">Junho</option>
+          <option value="07">Julho</option><option value="08">Agosto</option>
+          <option value="09">Setembro</option><option value="10">Outubro</option>
+          <option value="11">Novembro</option><option value="12">Dezembro</option>
         </select>
-        <button onclick="baixarTodosMes('cnpj')" style="background:var(--azul);color:#fff;border:none;border-radius:9px;padding:.5rem 1rem;font-size:.78rem;font-weight:700;cursor:pointer;white-space:nowrap">⬇️ Baixar todos do mês</button>
         <button onclick="renderDocs('cnpj')" style="background:var(--card);color:var(--texto2);border:1px solid var(--borda);border-radius:9px;padding:.5rem .7rem;font-size:.78rem;cursor:pointer">🔍 Filtrar</button>
+        <button onclick="baixarTodosMes('cnpj')" style="background:var(--azul);color:#fff;border:none;border-radius:9px;padding:.5rem 1rem;font-size:.78rem;font-weight:700;cursor:pointer;white-space:nowrap">⬇️ Baixar mês</button>
       </div>
       <div id="docs-cnpj"><div class="empty">Nenhum documento salvo ainda.</div></div>
     </div>
@@ -685,26 +705,46 @@ input[type=date]{color-scheme:dark;}
         <div class="ibx">Nomeie seus arquivos de forma clara:<br>
         <strong>Medico_Consulta_Janeiro2025.pdf</strong><br>
         <strong>Escola_Boleto_Fev2025.pdf</strong><br>
-        <strong>IR_Informe_Rendimentos_2024.pdf</strong><br>
-        <strong>Aluguel_Recibo_Marco2025.pdf</strong></div>
+        <strong>IR_Informe_Rendimentos_2024.pdf</strong></div>
+      </div>
+      <div class="ib" style="background:rgba(176,107,255,.06);border-color:rgba(176,107,255,.18)">
+        <div class="ibt" style="color:var(--roxo)">📱 Como transformar foto em PDF</div>
+        <div class="ibx">
+        <strong>iPhone:</strong> Abra a foto → Compartilhar → Imprimir → Aperte zoom na prévia → Compartilhar → Salvar como PDF<br><br>
+        <strong>Android:</strong> Abra a foto → Menu ⋮ → Imprimir → Salvar como PDF<br><br>
+        <strong>Google Drive:</strong> Tire foto com o app → clique nos 3 pontinhos → Compartilhar como PDF
+        </div>
+      </div>
+      <div style="display:flex;gap:.5rem;margin-bottom:.7rem">
+        <div style="flex:1">
+          <label class="lbl">Mês do documento</label>
+          <select id="mes-upload-cpf" style="width:100%;background:var(--bg);border:1.5px solid var(--borda);border-radius:9px;padding:.6rem .7rem;color:var(--texto);font-size:.82rem;outline:none">
+            <option value="01">Janeiro</option><option value="02">Fevereiro</option>
+            <option value="03">Março</option><option value="04">Abril</option>
+            <option value="05">Maio</option><option value="06">Junho</option>
+            <option value="07">Julho</option><option value="08">Agosto</option>
+            <option value="09">Setembro</option><option value="10">Outubro</option>
+            <option value="11">Novembro</option><option value="12">Dezembro</option>
+          </select>
+        </div>
       </div>
       <div class="up-area" onclick="simUpload('cpf')">
         <div class="ui">📤</div>
-        <div class="ul">Enviar documento CPF</div>
-        <div class="us">Recibo médico, educação, IR... (máx. 5MB)</div>
+        <div class="ul">Enviar documento CPF (PDF)</div>
+        <div class="us">Apenas arquivos .pdf — máx. 5MB</div>
       </div>
-      <div style="display:flex;gap:.5rem;align-items:center;margin-bottom:.7rem;flex-wrap:wrap">
-        <select id="mes-doc-cpf" style="flex:1;background:var(--bg);border:1.5px solid var(--borda);border-radius:9px;padding:.5rem .7rem;color:var(--texto);font-size:.8rem;outline:none">
+      <div style="display:flex;gap:.5rem;align-items:center;margin-bottom:.7rem;flex-wrap:wrap;margin-top:.5rem">
+        <select id="mes-filtro-cpf" style="flex:1;background:var(--bg);border:1.5px solid var(--borda);border-radius:9px;padding:.5rem .7rem;color:var(--texto);font-size:.8rem;outline:none">
           <option value="">Todos os meses</option>
-          <option value="Janeiro">Janeiro</option><option value="Fevereiro">Fevereiro</option>
-          <option value="Março">Março</option><option value="Abril">Abril</option>
-          <option value="Maio">Maio</option><option value="Junho">Junho</option>
-          <option value="Julho">Julho</option><option value="Agosto">Agosto</option>
-          <option value="Setembro">Setembro</option><option value="Outubro">Outubro</option>
-          <option value="Novembro">Novembro</option><option value="Dezembro">Dezembro</option>
+          <option value="01">Janeiro</option><option value="02">Fevereiro</option>
+          <option value="03">Março</option><option value="04">Abril</option>
+          <option value="05">Maio</option><option value="06">Junho</option>
+          <option value="07">Julho</option><option value="08">Agosto</option>
+          <option value="09">Setembro</option><option value="10">Outubro</option>
+          <option value="11">Novembro</option><option value="12">Dezembro</option>
         </select>
-        <button onclick="baixarTodosMes('cpf')" style="background:var(--azul);color:#fff;border:none;border-radius:9px;padding:.5rem 1rem;font-size:.78rem;font-weight:700;cursor:pointer;white-space:nowrap">⬇️ Baixar todos do mês</button>
         <button onclick="renderDocs('cpf')" style="background:var(--card);color:var(--texto2);border:1px solid var(--borda);border-radius:9px;padding:.5rem .7rem;font-size:.78rem;cursor:pointer">🔍 Filtrar</button>
+        <button onclick="baixarTodosMes('cpf')" style="background:var(--azul);color:#fff;border:none;border-radius:9px;padding:.5rem 1rem;font-size:.78rem;font-weight:700;cursor:pointer;white-space:nowrap">⬇️ Baixar mês</button>
       </div>
       <div id="docs-cpf"><div class="empty">Nenhum documento salvo ainda.</div></div>
     </div>
@@ -960,9 +1000,12 @@ async function carregarDadosUsuario(){
     S.docs={cnpj:[],cpf:[]};
     (docs||[]).forEach(function(d){
       if(S.docs[d.carteira])S.docs[d.carteira].push({
+        id:d.id,
         nome:d.nome,
-        data:d.data_upload?new Date(d.data_upload+'T00:00:00').toLocaleDateString('pt-BR'):'',
-        caminho:d.caminho||''
+        data:d.mes?MESES_NOMES[d.mes]+'/'+(d.data_upload?d.data_upload.substring(0,4):new Date().getFullYear()):
+             (d.data_upload?new Date(d.data_upload+'T00:00:00').toLocaleDateString('pt-BR'):''),
+        caminho:d.caminho||'',
+        mes:d.mes||''
       });
     });
     hideLoad();
@@ -1412,35 +1455,45 @@ function setDTab(t){
   document.getElementById('doc-pw').classList.toggle('hidden',t!=='cpf');
 }
 function limparNomeArquivo(nome){
-  return nome
-    .normalize('NFD').replace(/[\u0300-\u036f]/g,'') // remove acentos
-    .replace(/[^a-zA-Z0-9._-]/g,'_') // substitui caracteres especiais por _
-    .replace(/__+/g,'_'); // remove underscores duplos
+  return nome.normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-zA-Z0-9._-]/g,'_').replace(/__+/g,'_');
 }
+
+var MESES_NOMES={'01':'Janeiro','02':'Fevereiro','03':'Março','04':'Abril','05':'Maio','06':'Junho','07':'Julho','08':'Agosto','09':'Setembro','10':'Outubro','11':'Novembro','12':'Dezembro'};
 
 function simUpload(c){
   var input=document.createElement('input');
   input.type='file';
-  input.accept='.pdf,.jpg,.jpeg,.png,.webp';
+  input.accept='.pdf,application/pdf';
   input.onchange=async function(){
     var file=input.files[0];
     if(!file)return;
+    if(!file.name.toLowerCase().endsWith('.pdf')){alert('Por favor envie apenas arquivos PDF!\n\nDica: Tire foto e salve como PDF — veja as instruções acima.');return;}
     if(file.size>5*1024*1024){alert('Arquivo muito grande! Máximo 5MB.');return;}
     if(!usuarioAtual){alert('Você precisa estar logado!');return;}
+    var mesNum=document.getElementById('mes-upload-'+c).value;
+    var mesNome=MESES_NOMES[mesNum];
+    var ano=new Date().getFullYear();
     showLoad('Enviando documento...');
     var nomeSeguro=limparNomeArquivo(file.name);
-    var caminho=usuarioAtual.id+'/'+c+'/'+Date.now()+'_'+nomeSeguro;
+    var caminho=usuarioAtual.id+'/'+c+'/'+mesNum+'/'+Date.now()+'_'+nomeSeguro;
     var{error}=await supa.storage.from('documentos').upload(caminho,file);
     if(error){hideLoad();alert('Erro ao enviar: '+error.message);return;}
-    var hoje=new Date().toISOString().split('T')[0];
-    await supa.from('documentos').insert({
+    var dataUpload=ano+'-'+mesNum+'-01';
+    var{data:docSalvo}=await supa.from('documentos').insert({
       user_id:usuarioAtual.id,
-      nome:file.name, // guarda nome original para exibir
+      nome:file.name,
       carteira:c,
-      data_upload:hoje,
-      caminho:caminho
+      data_upload:dataUpload,
+      caminho:caminho,
+      mes:mesNum
+    }).select().single();
+    S.docs[c].push({
+      id:docSalvo?docSalvo.id:Date.now(),
+      nome:file.name,
+      data:mesNome+'/'+ano,
+      caminho:caminho,
+      mes:mesNum
     });
-    S.docs[c].push({nome:file.name,data:new Date().toLocaleDateString('pt-BR'),caminho:caminho});
     renderDocs(c);
     hideLoad();
   };
@@ -1449,24 +1502,43 @@ function simUpload(c){
 
 function renderDocs(c){
   var el=document.getElementById('docs-'+c);
-  var mesFiltro=document.getElementById('mes-doc-'+c)?document.getElementById('mes-doc-'+c).value:'';
+  var mesFiltro=document.getElementById('mes-filtro-'+c)?document.getElementById('mes-filtro-'+c).value:'';
   var lista=S.docs[c].filter(function(d){
     if(!mesFiltro)return true;
-    // verifica se o nome do arquivo ou a data contém o mês
-    return d.nome.toLowerCase().indexOf(mesFiltro.toLowerCase())>=0||
-           (d.data&&d.data.indexOf(mesFiltro)>=0);
+    return d.mes===mesFiltro;
   });
   if(!lista.length){
-    el.innerHTML='<div class="empty">'+(mesFiltro?'Nenhum documento em '+mesFiltro+'.':'Nenhum documento salvo ainda.')+'</div>';
+    el.innerHTML='<div class="empty">'+(mesFiltro?'Nenhum documento em '+MESES_NOMES[mesFiltro]+'.':'Nenhum documento salvo ainda.')+'</div>';
     return;
   }
-  el.innerHTML=lista.map(function(d){
-    return'<div class="di" style="cursor:pointer" onclick="baixarDoc(\''+encodeURIComponent(d.caminho||'')+'\',\''+encodeURIComponent(d.nome)+'\')">'+
-      '<div class="dico">📄</div>'+
-      '<div><div class="dnm">'+d.nome+'</div><div class="ddt">'+d.data+'</div></div>'+
-      '<div style="color:var(--azul);font-size:.72rem;font-weight:700;margin-left:auto">⬇️</div>'+
+  el.innerHTML=lista.map(function(d,i){
+    var idx=S.docs[c].indexOf(d);
+    return'<div class="di">'+
+      '<div class="dico" style="cursor:pointer" onclick="baixarDoc(\''+encodeURIComponent(d.caminho||'')+'\',\''+encodeURIComponent(d.nome)+'\')">📄</div>'+
+      '<div style="flex:1;cursor:pointer" onclick="baixarDoc(\''+encodeURIComponent(d.caminho||'')+'\',\''+encodeURIComponent(d.nome)+'\')">'+
+        '<div class="dnm">'+d.nome+'</div>'+
+        '<div class="ddt">'+d.data+'</div>'+
+      '</div>'+
+      '<div style="display:flex;gap:.4rem;align-items:center">'+
+        '<span style="color:var(--azul);font-size:.72rem;font-weight:700;cursor:pointer" onclick="baixarDoc(\''+encodeURIComponent(d.caminho||'')+'\',\''+encodeURIComponent(d.nome)+'\')">⬇️</span>'+
+        '<button onclick="excluirDoc(\''+c+'\','+idx+')" style="background:rgba(255,107,107,.12);border:none;color:var(--vermelho);border-radius:7px;padding:.25rem .4rem;cursor:pointer;font-size:.8rem">🗑</button>'+
+      '</div>'+
       '</div>';
   }).join('');
+}
+
+async function excluirDoc(c,idx){
+  var doc=S.docs[c][idx];
+  if(!doc)return;
+  if(!confirm('Tem certeza que deseja excluir o documento "'+doc.nome+'"?\n\nEsta ação não pode ser desfeita.'))return;
+  showLoad('Excluindo documento...');
+  // Excluir do Storage
+  if(doc.caminho)await supa.storage.from('documentos').remove([doc.caminho]);
+  // Excluir do banco
+  if(doc.id)await supa.from('documentos').delete().eq('id',doc.id).eq('user_id',usuarioAtual.id);
+  S.docs[c].splice(idx,1);
+  renderDocs(c);
+  hideLoad();
 }
 
 async function baixarDoc(caminhoEnc,nomeEnc){
@@ -1484,14 +1556,11 @@ async function baixarDoc(caminhoEnc,nomeEnc){
 }
 
 async function baixarTodosMes(c){
-  var mesFiltro=document.getElementById('mes-doc-'+c).value;
+  var mesFiltro=document.getElementById('mes-filtro-'+c).value;
   if(!mesFiltro){alert('Selecione um mês para baixar!');return;}
-  var lista=S.docs[c].filter(function(d){
-    return d.nome.toLowerCase().indexOf(mesFiltro.toLowerCase())>=0||
-           (d.data&&d.data.indexOf(mesFiltro)>=0);
-  });
-  if(!lista.length){alert('Nenhum documento encontrado em '+mesFiltro+'.');return;}
-  showLoad('Baixando '+lista.length+' documento(s)...');
+  var lista=S.docs[c].filter(function(d){return d.mes===mesFiltro;});
+  if(!lista.length){alert('Nenhum documento encontrado em '+MESES_NOMES[mesFiltro]+'.');return;}
+  showLoad('Baixando '+lista.length+' documento(s) de '+MESES_NOMES[mesFiltro]+'...');
   for(var i=0;i<lista.length;i++){
     var d=lista[i];
     if(!d.caminho)continue;
@@ -1501,8 +1570,7 @@ async function baixarTodosMes(c){
       var a=document.createElement('a');
       a.href=url;a.download=d.nome;a.click();
       URL.revokeObjectURL(url);
-      // Pequena pausa entre downloads
-      await new Promise(function(r){setTimeout(r,500);});
+      await new Promise(function(r){setTimeout(r,600);});
     }
   }
   hideLoad();
