@@ -1092,9 +1092,17 @@ async function carregarDadosUsuario(){
       document.getElementById('app').style.display='block';
       document.getElementById('h-nome').textContent=S.nome;
       document.getElementById('d-nome').textContent=S.nome;
-      atualizarGuiaNF();renderMeses();inicializarRelAno();atualizar();
       hideLoad();
       carregando=false;
+      // requestAnimationFrame garante que o DOM renderizou antes de atualizar
+      requestAnimationFrame(function(){
+        requestAnimationFrame(function(){
+          atualizarGuiaNF();
+          renderMeses();
+          inicializarRelAno();
+          atualizar();
+        });
+      });
     } else {
       clearTimeout(tSeg);
       hideLoad();
@@ -1209,7 +1217,11 @@ function entrar(){
   document.getElementById('app').style.display='block';
   document.getElementById('h-nome').textContent=S.nome;
   document.getElementById('d-nome').textContent=S.nome;
-  atualizarGuiaNF();renderMeses();inicializarRelAno();atualizar();
+  requestAnimationFrame(function(){
+    requestAnimationFrame(function(){
+      atualizarGuiaNF();renderMeses();inicializarRelAno();atualizar();
+    });
+  });
 }
 
 function inicializarRelAno(){
