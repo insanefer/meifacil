@@ -2133,7 +2133,13 @@ function atualizarCatsModal(){
 
 function atualizarMagRec(){
   var rec=document.getElementById('mag-rec').value;
-  document.getElementById('mag-parcelas-wrap').classList.toggle('hidden',rec!=='parcelado');
+  var wrap=document.getElementById('mag-parcelas-wrap');
+  wrap.classList.toggle('hidden',rec!=='parcelado');
+  // Limpa o campo se não for parcelado
+  if(rec!=='parcelado'){
+    var inp=document.getElementById('mag-parcelas');
+    if(inp)inp.value='';
+  }
 }
 
 function abrirModalAgenda(){
@@ -2199,23 +2205,33 @@ function proximoMes(dataStr){
   return d.toISOString().split('T')[0];
 }
 
-// Gerar itens mensais para o mês atual e próximos 2 meses
+// Gerar itens mensais — 13 meses à frente (cobre virada de ano)
 function gerarMensais(){
   var hoje=new Date();hoje.setHours(0,0,0,0);
   S.agenda.forEach(function(item){
     if(item.rec!=='mensal'||item.pago)return;
-    // Verifica se já tem item gerado para o mês atual ou próximos
     var dataBase=new Date(item.vencimento+'T00:00:00');
-    // Gera para mês atual e próximos 2
-    for(var i=0;i<3;i++){
-      var dataAlvo=new Date(hoje.getFullYear(),hoje.getMonth()+i,dataBase.getDate());
+    var dia=dataBase.getDate();
+    // Gera para os próximos 13 meses a partir do mês atual
+    for(var i=0;i<=13;i++){
+      var anoAlvo=hoje.getFullYear();
+      var mesAlvo=hoje.getMonth()+i;
+      // Ajustar overflow de mês
+      while(mesAlvo>11){mesAlvo-=12;anoAlvo++;}
+      // Dia seguro (ex: 31 em fevereiro vira último dia do mês)
+      var ultimoDia=new Date(anoAlvo,mesAlvo+1,0).getDate();
+      var diaSeguro=Math.min(dia,ultimoDia);
+      var dataAlvo=new Date(anoAlvo,mesAlvo,diaSeguro);
       var dataAlvoStr=dataAlvo.toISOString().split('T')[0];
+      // Não gerar antes da data original
+      if(dataAlvoStr<=item.vencimento)continue;
+      // Verificar se já existe
       var jaExiste=S.agenda.some(function(a){
         return a.grupoId===item.id&&a.vencimento===dataAlvoStr;
       });
-      if(!jaExiste&&dataAlvoStr>item.vencimento){
+      if(!jaExiste){
         var novo={
-          id:Date.now()+Math.random(),
+          id:Date.now()+i+Math.random(),
           cart:item.cart,tipo:item.tipo,desc:item.desc,val:item.val,
           vencimento:dataAlvoStr,cat:item.cat,rec:'mensal_gerado',
           pago:false,grupoId:item.id
