@@ -321,8 +321,37 @@ input[type=date]{color-scheme:dark;}
 .rel-btn.pdf{background:#FF6B6B;color:#fff;}
 .rel-btn.cinza{background:var(--card);color:var(--texto2);border:1px solid var(--borda);}
 
-.empty{text-align:center;color:var(--texto2);font-size:.8rem;padding:1.6rem 0;}
-.hidden{display:none!important;}
+/* AGENDA */
+.ag-tabs{display:flex;gap:.4rem;margin-bottom:.9rem;}
+.ag-tab{flex:1;background:var(--card);border:1.5px solid var(--borda);border-radius:10px;padding:.6rem;text-align:center;font-size:.76rem;font-weight:700;cursor:pointer;color:var(--texto2);}
+.ag-tab.acg{border-color:var(--verde);color:var(--verde);background:rgba(0,196,140,.07);}
+.ag-tab.acb{border-color:var(--azul);color:var(--azul);background:rgba(75,139,245,.07);}
+.ag-item{background:var(--card);border:1px solid var(--borda);border-radius:12px;padding:.9rem;margin-bottom:.5rem;}
+.ag-item.vencida{border-color:rgba(255,107,107,.4);background:rgba(255,107,107,.04);}
+.ag-item.proxima{border-color:rgba(255,209,102,.4);background:rgba(255,209,102,.04);}
+.ag-item.paga{opacity:.55;border-color:rgba(0,196,140,.2);}
+.ag-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:.4rem;}
+.ag-desc{font-size:.85rem;font-weight:700;}
+.ag-val{font-size:.9rem;font-weight:900;}
+.ag-val.r{color:var(--vermelho);}
+.ag-val.b{color:var(--azul);}
+.ag-meta{display:flex;gap:.5rem;align-items:center;flex-wrap:wrap;margin-bottom:.5rem;}
+.ag-status{font-size:.65rem;font-weight:700;padding:.12rem .55rem;border-radius:99px;}
+.ag-status.vencida{background:rgba(255,107,107,.15);color:var(--vermelho);}
+.ag-status.proxima{background:rgba(255,209,102,.15);color:var(--amarelo);}
+.ag-status.ok{background:rgba(0,196,140,.12);color:var(--verde);}
+.ag-status.paga{background:rgba(255,255,255,.08);color:var(--texto2);}
+.ag-data{font-size:.68rem;color:var(--texto2);}
+.ag-cat{font-size:.63rem;padding:.08rem .45rem;border-radius:99px;background:rgba(75,139,245,.12);color:var(--azul);}
+.ag-btns{display:flex;gap:.4rem;}
+.ag-btn{flex:1;border:none;border-radius:8px;padding:.45rem;font-size:.72rem;font-weight:700;cursor:pointer;}
+.ag-btn.pagar{background:rgba(0,196,140,.15);color:var(--verde);}
+.ag-btn.del{background:rgba(255,107,107,.12);color:var(--vermelho);}
+.ag-btn.pago{background:rgba(255,255,255,.06);color:var(--texto2);cursor:default;}
+.alerta-agenda{border-radius:11px;padding:.65rem .85rem;font-size:.76rem;margin-bottom:.5rem;cursor:pointer;}
+.alerta-agenda.venc{background:rgba(255,107,107,.09);border:1px solid rgba(255,107,107,.25);color:var(--vermelho);}
+.alerta-agenda.prox{background:rgba(255,209,102,.09);border:1px solid rgba(255,209,102,.25);color:var(--amarelo);}
+
 </style>
 </head>
 <body>
@@ -452,6 +481,8 @@ input[type=date]{color-scheme:dark;}
   <div id="scr-home" class="scr ac">
     <div class="greet">Olá, <span style="color:var(--verde)" id="d-nome">—</span> 👋</div>
     <div class="sub" id="d-sub">MEI Comum · 2025</div>
+    <div id="d-ag-venc" class="alerta-agenda venc hidden" onclick="goTo('agenda')"></div>
+    <div id="d-ag-prox" class="alerta-agenda prox hidden" onclick="goTo('agenda')"></div>
     <div id="d-aw" class="alerta w hidden"></div>
     <div id="d-ad" class="alerta d hidden"></div>
 
@@ -918,12 +949,24 @@ input[type=date]{color-scheme:dark;}
     </div>
   </div>
 
+  <!-- AGENDA -->
+  <div id="scr-agenda" class="scr">
+    <div class="greet" style="font-size:1.05rem;margin-bottom:.25rem">Agenda 📅</div>
+    <p style="color:var(--texto2);font-size:.78rem;margin-bottom:.9rem">Contas a pagar e a receber</p>
+    <div class="ag-tabs">
+      <div class="ag-tab acg" id="ag-tc" onclick="setAgTab('cnpj')">🏪 CNPJ</div>
+      <div class="ag-tab" id="ag-tp" onclick="setAgTab('cpf')">👤 CPF</div>
+    </div>
+    <button onclick="abrirModalAgenda()" style="width:100%;background:var(--verde);color:#0E1720;border:none;border-radius:12px;padding:.8rem;font-weight:800;font-size:.88rem;cursor:pointer;margin-bottom:.9rem">+ Nova conta</button>
+    <div id="ag-lista"><div class="empty">Nenhuma conta cadastrada ainda.</div></div>
+  </div>
+
   <nav class="nav-bot">
     <button class="nav-i ac" onclick="goTo('home')"><span class="ni">🏠</span>Início</button>
     <button class="nav-i" onclick="goTo('lanc')"><span class="ni">💵</span>Lançar</button>
     <button class="nav-i" onclick="goTo('dre')"><span class="ni">📊</span>Result.</button>
     <button class="nav-i" onclick="goTo('ir')"><span class="ni">📋</span>Sim.IR</button>
-    <button class="nav-i" onclick="goTo('guias')"><span class="ni">📚</span>Guias</button>
+    <button class="nav-i" onclick="goTo('agenda')"><span class="ni">📅</span>Agenda</button>
     <button class="nav-i" onclick="goTo('docs')"><span class="ni">📁</span>Docs</button>
     <button class="nav-i" onclick="goTo('relatorio')"><span class="ni">📄</span>Relat.</button>
   </nav>
@@ -977,6 +1020,49 @@ input[type=date]{color-scheme:dark;}
       <div><label class="lbl">Data</label><input type="date" id="l-data" style="margin-bottom:0"/></div>
     </div>
     <div class="mbtns"><button class="bcnc" onclick="fecharModal()">Cancelar</button><button class="bsav" id="btn-sal" onclick="salvar()">Salvar</button></div>
+  </div>
+</div>
+
+<!-- MODAL AGENDA -->
+<div class="mo" id="modal-agenda">
+  <div class="mb">
+    <h3 id="mag-titulo">Nova conta</h3>
+    <label class="lbl">Carteira</label>
+    <div class="rg" style="margin-bottom:.85rem">
+      <div class="rb sg" id="mag-cnpj" onclick="setMagCart('cnpj')">🏪 CNPJ</div>
+      <div class="rb" id="mag-cpf" onclick="setMagCart('cpf')">👤 CPF</div>
+    </div>
+    <label class="lbl">Tipo</label>
+    <div class="rg" style="margin-bottom:.85rem">
+      <div class="rb sr" id="mag-pagar" onclick="setMagTipo('pagar')">📤 A Pagar</div>
+      <div class="rb" id="mag-receber" onclick="setMagTipo('receber')">📥 A Receber</div>
+    </div>
+    <label class="lbl">Descrição</label>
+    <input type="text" id="mag-desc" placeholder="Ex: Aluguel, DAS, Fornecedor..."/>
+    <label class="lbl">Categoria</label>
+    <div class="rg" id="mag-cats" style="margin-bottom:.85rem">
+      <div class="rb" onclick="setMagCat('🧾 DAS',this)">🧾 DAS</div>
+      <div class="rb" onclick="setMagCat('📱 Tel/Internet',this)">📱 Tel/Internet</div>
+      <div class="rb" onclick="setMagCat('🚗 Transporte',this)">🚗 Transporte</div>
+      <div class="rb" onclick="setMagCat('🛒 Fornecedores',this)">🛒 Fornecedores</div>
+      <div class="rb" onclick="setMagCat('💻 Equipamentos',this)">💻 Equipamentos</div>
+      <div class="rb" onclick="setMagCat('🏠 Aluguel',this)">🏠 Aluguel</div>
+      <div class="rb" onclick="setMagCat('📣 Marketing',this)">📣 Marketing</div>
+      <div class="rb" onclick="setMagCat('📦 Outros',this)">📦 Outros</div>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.5rem">
+      <div><label class="lbl">Valor (R$)</label><input type="text" id="mag-val" placeholder="0,00" oninput="msk(this)" style="margin-bottom:0"/></div>
+      <div><label class="lbl">Vencimento</label><input type="date" id="mag-data" style="margin-bottom:0"/></div>
+    </div>
+    <label class="lbl" style="margin-top:.85rem">Recorrência</label>
+    <select id="mag-rec" style="width:100%;background:var(--bg);border:1.5px solid var(--borda);border-radius:10px;padding:.72rem 1rem;color:var(--texto);font-size:.88rem;margin-bottom:.9rem;outline:none">
+      <option value="unica">Única vez</option>
+      <option value="mensal">Mensal</option>
+    </select>
+    <div class="mbtns">
+      <button class="bcnc" onclick="fecharModalAgenda()">Cancelar</button>
+      <button class="bsav" onclick="salvarAgenda()">Salvar</button>
+    </div>
   </div>
 </div>
 
@@ -1051,7 +1137,7 @@ async function fazerLogout(){
   await supa.auth.signOut();
   usuarioAtual=null;
   carregando=false;
-  S={nome:'',tipo:'',negocio:'',dataAbertura:null,outrasVal:0,lancs:[],docs:{cnpj:[],cpf:[]},mes:new Date().getMonth(),lancTab:'cnpj',dreTab:'cnpj',docTab:'cnpj'};
+  S={nome:'',tipo:'',negocio:'',dataAbertura:null,outrasVal:0,lancs:[],agenda:[],docs:{cnpj:[],cpf:[]},mes:new Date().getMonth(),lancTab:'cnpj',dreTab:'cnpj',docTab:'cnpj'};
   document.getElementById('app').style.display='none';
   document.getElementById('onboarding').style.display='none';
   document.getElementById('auth').style.display='flex';
@@ -1086,6 +1172,9 @@ async function carregarDadosUsuario(){
           caminho:d.caminho||'',mes:d.mes||''
         });
       });
+      // Carregar agenda
+      var{data:agendaDB}=await supa.from('agenda').select('*').eq('user_id',usuarioAtual.id);
+      S.agenda=(agendaDB||[]).map(function(a){return{id:a.id,cart:a.cart,tipo:a.tipo,desc:a.descricao,val:parseFloat(a.valor),vencimento:a.vencimento,cat:a.categoria||'📦 Outros',rec:a.recorrencia||'unica',pago:a.pago||false};});
       clearTimeout(tSeg);
       document.getElementById('auth').style.display='none';
       document.getElementById('onboarding').style.display='none';
@@ -1186,7 +1275,7 @@ window.addEventListener('load',async function(){
   }
 });
 
-var S={nome:'',tipo:'',negocio:'',dataAbertura:null,outrasVal:0,lancs:[],docs:{cnpj:[],cpf:[]},mes:new Date().getMonth(),lancTab:'cnpj',dreTab:'cnpj',docTab:'cnpj'};
+var S={nome:'',tipo:'',negocio:'',dataAbertura:null,outrasVal:0,lancs:[],agenda:[],docs:{cnpj:[],cpf:[]},mes:new Date().getMonth(),lancTab:'cnpj',dreTab:'cnpj',docTab:'cnpj'};
 var TETOS={comum:81000,caminhoneiro:251600};
 var MES=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
 var IR_F=[{min:0,max:33888,aliq:0,ded:0},{min:33889,max:45012,aliq:.075,ded:2541.6},{min:45013,max:55976,aliq:.15,ded:5808.06},{min:55977,max:82469,aliq:.225,ded:9997.56},{min:82470,max:Infinity,aliq:.275,ded:14101.19}];
@@ -1247,7 +1336,7 @@ function goTo(id){
   document.querySelectorAll('.scr').forEach(function(s){s.classList.remove('ac');});
   document.querySelectorAll('.nav-i').forEach(function(n){n.classList.remove('ac');});
   document.getElementById('scr-'+id).classList.add('ac');
-  var idx=['home','lanc','dre','ir','guias','docs','relatorio'].indexOf(id);
+  var idx=['home','lanc','dre','ir','agenda','docs','relatorio'].indexOf(id);
   if(idx>=0)document.querySelectorAll('.nav-i')[idx].classList.add('ac');
   curScr=id;
   var sf=id==='home'||id==='lanc';document.getElementById('fab').style.display=sf?'flex':'none';
@@ -1255,8 +1344,8 @@ function goTo(id){
   if(id==='lanc'){document.getElementById('fab').className='fab'+(S.lancTab==='cpf'?' b':'');renderLancs();}
   if(id==='dre')atualizarDRE();
   if(id==='ir')atualizarIR();
+  if(id==='agenda')renderAgenda();
   if(id==='relatorio'){
-    // Garante que os botões de ano aparecem ao navegar
     var wrap=document.getElementById('rel-anos');
     if(wrap&&wrap.children.length===0)inicializarRelAno();
   }
@@ -1301,6 +1390,7 @@ function calcSaldoAcum(cart,mesAte,ano){
 }
 
 function atualizar(){
+  atualizarAlertasAgenda();
   var ano=new Date().getFullYear();
   var teto=calcTeto();
   var anual=sumAno('cnpj','entrada',ano);
@@ -1978,7 +2068,175 @@ function atualizarGuiaNF(){
   var info=g[S.negocio]||g['servico'];
   t.textContent=info.t;d.textContent=info.d;
 }
+// ── AGENDA ──
+var agTab='cnpj';
+var magCart='cnpj';
+var magTipo='pagar';
+var magCat='📦 Outros';
+var agEditId=null;
+
+function setAgTab(t){
+  agTab=t;
+  document.getElementById('ag-tc').className='ag-tab'+(t==='cnpj'?' acg':'');
+  document.getElementById('ag-tp').className='ag-tab'+(t==='cpf'?' acb':'');
+  renderAgenda();
+}
+
+function abrirModalAgenda(){
+  agEditId=null;
+  document.getElementById('mag-titulo').textContent='Nova conta';
+  document.getElementById('mag-desc').value='';
+  document.getElementById('mag-val').value='';
+  document.getElementById('mag-data').value=new Date().toISOString().split('T')[0];
+  document.getElementById('mag-rec').value='unica';
+  magCart=agTab;magTipo='pagar';magCat='📦 Outros';
+  setMagCart(magCart);setMagTipo(magTipo);
+  document.querySelectorAll('#mag-cats .rb').forEach(function(b){b.className='rb';});
+  document.getElementById('modal-agenda').classList.add('op');
+}
+
+function fecharModalAgenda(){document.getElementById('modal-agenda').classList.remove('op');}
+
+function setMagCart(c){
+  magCart=c;
+  document.getElementById('mag-cnpj').className='rb'+(c==='cnpj'?' sg':'');
+  document.getElementById('mag-cpf').className='rb'+(c==='cpf'?' sb':'');
+}
+function setMagTipo(t){
+  magTipo=t;
+  document.getElementById('mag-pagar').className='rb'+(t==='pagar'?' sr':'');
+  document.getElementById('mag-receber').className='rb'+(t==='receber'?' sg':'');
+}
+function setMagCat(c,el){
+  magCat=c;
+  document.querySelectorAll('#mag-cats .rb').forEach(function(b){b.className='rb';});
+  el.className='rb sb';
+}
+
+function diasParaVencer(dataStr){
+  var hoje=new Date();hoje.setHours(0,0,0,0);
+  var venc=new Date(dataStr+'T00:00:00');venc.setHours(0,0,0,0);
+  return Math.round((venc-hoje)/(1000*60*60*24));
+}
+
+function statusAgenda(item){
+  if(item.pago)return'paga';
+  var d=diasParaVencer(item.vencimento);
+  if(d<0)return'vencida';
+  if(d<=5)return'proxima';
+  return'ok';
+}
+
+function labelStatus(st,dias){
+  if(st==='paga')return'✅ Pago';
+  if(st==='vencida')return'🔴 Vencida há '+Math.abs(dias)+' dia(s)';
+  if(st==='proxima')return'🟡 Vence em '+dias+' dia(s)';
+  return'🟢 A vencer em '+dias+' dia(s)';
+}
+
+function salvarAgenda(){
+  var desc=document.getElementById('mag-desc').value.trim();
+  var vs=document.getElementById('mag-val').value.replace(/\./g,'').replace(',','.');
+  var val=parseFloat(vs);
+  var data=document.getElementById('mag-data').value;
+  var rec=document.getElementById('mag-rec').value;
+  if(!desc||isNaN(val)||val<=0||!data){alert('Preencha todos os campos!');return;}
+  var item={id:agEditId||Date.now(),cart:magCart,tipo:magTipo,desc:desc,val:val,vencimento:data,cat:magCat,rec:rec,pago:false};
+  if(agEditId){S.agenda=S.agenda.map(function(a){return a.id===agEditId?item:a;});}
+  else{S.agenda.push(item);}
+  salvarAgendaDB(item,!agEditId);
+  fecharModalAgenda();renderAgenda();atualizar();
+}
+
+async function salvarAgendaDB(item,isNew){
+  if(!usuarioAtual)return;
+  if(isNew){
+    await supa.from('agenda').insert({
+      user_id:usuarioAtual.id,cart:item.cart,tipo:item.tipo,
+      descricao:item.desc,valor:item.val,vencimento:item.vencimento,
+      categoria:item.cat,recorrencia:item.rec,pago:item.pago
+    });
+  } else {
+    await supa.from('agenda').update({pago:item.pago}).eq('id',item.id).eq('user_id',usuarioAtual.id);
+  }
+}
+
+async function marcarPago(id){
+  var item=S.agenda.find(function(a){return a.id===id;});
+  if(!item||item.pago)return;
+  if(!confirm('Marcar "'+item.desc+'" como pago?\n\nIsso vai lançar automaticamente como despesa nos Lançamentos!'))return;
+  item.pago=true;
+  // Lançar automaticamente como despesa
+  var dataLanc=new Date(item.vencimento+'T00:00:00');
+  var novoLanc={id:Date.now(),cart:item.cart,tipo:'saida',desc:item.desc+' (Agenda)',val:item.val,mes:dataLanc.getMonth(),ano:dataLanc.getFullYear(),data:dataLanc.toLocaleDateString('pt-BR'),cat:item.cat,dataISO:item.vencimento};
+  S.lancs.push(novoLanc);
+  salvarLancamentoDB(novoLanc);
+  await supa.from('agenda').update({pago:true}).eq('id',id).eq('user_id',usuarioAtual.id);
+  renderAgenda();atualizar();
+  // Lembrete de comprovante
+  setTimeout(function(){
+    alert('✅ Despesa lançada!\n\n📁 Lembre de guardar o comprovante de pagamento em Documentos → '+(item.cart==='cnpj'?'CNPJ':'CPF')+'!');
+  },300);
+}
+
+async function excluirAgenda(id){
+  var item=S.agenda.find(function(a){return a.id===id;});
+  if(!confirm('Excluir "'+item.desc+'"?\n\nEsta ação não pode ser desfeita.'))return;
+  S.agenda=S.agenda.filter(function(a){return a.id!==id;});
+  await supa.from('agenda').delete().eq('id',id).eq('user_id',usuarioAtual.id);
+  renderAgenda();atualizar();
+}
+
+function renderAgenda(){
+  var lista=document.getElementById('ag-lista');
+  var items=S.agenda.filter(function(a){return a.cart===agTab;});
+  // Ordenar: vencidas primeiro, depois por data
+  items.sort(function(a,b){
+    if(a.pago!==b.pago)return a.pago?1:-1;
+    return new Date(a.vencimento)-new Date(b.vencimento);
+  });
+  if(!items.length){lista.innerHTML='<div class="empty">Nenhuma conta cadastrada.<br>Clique em "+ Nova conta" para começar.</div>';return;}
+  lista.innerHTML=items.map(function(item){
+    var st=statusAgenda(item);
+    var dias=diasParaVencer(item.vencimento);
+    var vencFmt=new Date(item.vencimento+'T00:00:00').toLocaleDateString('pt-BR');
+    var corVal=item.tipo==='pagar'?'r':'b';
+    var sinalVal=item.tipo==='pagar'?'-':'+';
+    return'<div class="ag-item '+st+'">'+
+      '<div class="ag-top">'+
+        '<div><div class="ag-desc">'+item.desc+'</div><div class="ag-meta" style="margin-top:.3rem">'+
+          '<span class="ag-status '+st+'">'+labelStatus(st,dias)+'</span>'+
+          '<span class="ag-data">📅 '+vencFmt+'</span>'+
+          '<span class="ag-cat">'+item.cat+'</span>'+
+        '</div></div>'+
+        '<div class="ag-val '+corVal+'">'+sinalVal+fmt(item.val)+'</div>'+
+      '</div>'+
+      '<div class="ag-btns">'+
+        (item.pago?'<button class="ag-btn pago" disabled>✅ Pago</button>':'<button class="ag-btn pagar" onclick="marcarPago('+item.id+')">✅ Marcar como pago</button>')+
+        '<button class="ag-btn del" onclick="excluirAgenda('+item.id+')">🗑</button>'+
+      '</div>'+
+    '</div>';
+  }).join('');
+}
+
+function atualizarAlertasAgenda(){
+  var hoje=new Date();hoje.setHours(0,0,0,0);
+  var vencidas=S.agenda.filter(function(a){return!a.pago&&diasParaVencer(a.vencimento)<0;});
+  var proximas=S.agenda.filter(function(a){return!a.pago&&diasParaVencer(a.vencimento)>=0&&diasParaVencer(a.vencimento)<=5;});
+  var elV=document.getElementById('d-ag-venc');
+  var elP=document.getElementById('d-ag-prox');
+  if(elV){
+    if(vencidas.length){elV.classList.remove('hidden');elV.textContent='🔴 '+vencidas.length+' conta(s) vencida(s)! Toque para ver →';}
+    else elV.classList.add('hidden');
+  }
+  if(elP){
+    if(proximas.length){elP.classList.remove('hidden');elP.textContent='🟡 '+proximas.length+' conta(s) vencendo nos próximos 5 dias → Toque para ver';}
+    else elP.classList.add('hidden');
+  }
+}
+
 function tG(card){card.querySelector('.gcont').classList.toggle('op');}
+
 function fmt(v){return'R$ '+v.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});}
 function msk(i){var v=i.value.replace(/\D/g,'');if(!v){i.value='';return;}i.value=(parseInt(v)/100).toFixed(2).replace('.',',');}
 </script>
