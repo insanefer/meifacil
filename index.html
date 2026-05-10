@@ -958,6 +958,28 @@ input[type=date]{color-scheme:dark;}
       <div class="ag-tab" id="ag-tp" onclick="setAgTab('cpf')">👤 CPF</div>
     </div>
     <button onclick="abrirModalAgenda()" style="width:100%;background:var(--verde);color:#0E1720;border:none;border-radius:12px;padding:.8rem;font-weight:800;font-size:.88rem;cursor:pointer;margin-bottom:.9rem">+ Nova conta</button>
+
+    <!-- Filtro de mês -->
+    <div style="display:flex;gap:.5rem;margin-bottom:.7rem;align-items:center">
+      <select id="ag-mes-sel" onchange="renderAgenda()" style="flex:1;background:var(--bg);border:1.5px solid var(--borda);border-radius:9px;padding:.5rem .7rem;color:var(--texto);font-size:.8rem;outline:none">
+        <option value="">Todos os meses</option>
+        <option value="0">Janeiro</option><option value="1">Fevereiro</option>
+        <option value="2">Março</option><option value="3">Abril</option>
+        <option value="4">Maio</option><option value="5">Junho</option>
+        <option value="6">Julho</option><option value="7">Agosto</option>
+        <option value="8">Setembro</option><option value="9">Outubro</option>
+        <option value="10">Novembro</option><option value="11">Dezembro</option>
+      </select>
+    </div>
+
+    <!-- Abas de status -->
+    <div style="display:flex;gap:.3rem;margin-bottom:.8rem">
+      <button id="ag-st-pend" onclick="setAgStatus('pendente')" style="flex:1;padding:.45rem .3rem;border-radius:8px;font-size:.72rem;font-weight:700;cursor:pointer;border:1.5px solid var(--amarelo);background:rgba(255,209,102,.15);color:var(--amarelo)">⏳ Pendentes</button>
+      <button id="ag-st-atra" onclick="setAgStatus('atrasada')" style="flex:1;padding:.45rem .3rem;border-radius:8px;font-size:.72rem;font-weight:700;cursor:pointer;border:1.5px solid var(--borda);background:var(--card);color:var(--texto2)">🔴 Atrasadas</button>
+      <button id="ag-st-paga" onclick="setAgStatus('paga')" style="flex:1;padding:.45rem .3rem;border-radius:8px;font-size:.72rem;font-weight:700;cursor:pointer;border:1.5px solid var(--borda);background:var(--card);color:var(--texto2)">✅ Pagas</button>
+      <button id="ag-st-all" onclick="setAgStatus('todas')" style="flex:1;padding:.45rem .3rem;border-radius:8px;font-size:.72rem;font-weight:700;cursor:pointer;border:1.5px solid var(--borda);background:var(--card);color:var(--texto2)">📋 Todas</button>
+    </div>
+
     <div id="ag-lista"><div class="empty">Nenhuma conta cadastrada ainda.</div></div>
   </div>
 
@@ -2066,12 +2088,12 @@ function atualizarGuiaNF(){
 }
 // ── AGENDA ──
 var agTab='cnpj';
+var agStatus='pendente';
 var magCart='cnpj';
 var magTipo='pagar';
 var magCat='📦 Outros';
 var agEditId=null;
 
-// Categorias por carteira e tipo
 var CATS_AG={
   cnpj:{pagar:['🧾 DAS','📱 Tel/Internet','🚗 Transporte','🛒 Fornecedores','💻 Equipamentos','🏠 Aluguel','📣 Marketing','📦 Outros'],
         receber:['👤 Cliente','🛠️ Serviço Prestado','📦 Produto Vendido','💰 Outros']},
@@ -2083,6 +2105,20 @@ function setAgTab(t){
   agTab=t;
   document.getElementById('ag-tc').className='ag-tab'+(t==='cnpj'?' acg':'');
   document.getElementById('ag-tp').className='ag-tab'+(t==='cpf'?' acb':'');
+  renderAgenda();
+}
+
+function setAgStatus(st){
+  agStatus=st;
+  var btns={pendente:'ag-st-pend',atrasada:'ag-st-atra',paga:'ag-st-paga',todas:'ag-st-all'};
+  var cores={pendente:['var(--amarelo)','rgba(255,209,102,.15)'],atrasada:['var(--vermelho)','rgba(255,107,107,.15)'],paga:['var(--verde)','rgba(0,196,140,.15)'],todas:['var(--azul)','rgba(75,139,245,.15)']};
+  Object.keys(btns).forEach(function(k){
+    var el=document.getElementById(btns[k]);
+    if(el){
+      if(k===st){el.style.borderColor=cores[k][0];el.style.background=cores[k][1];el.style.color=cores[k][0];}
+      else{el.style.borderColor='var(--borda)';el.style.background='var(--card)';el.style.color='var(--texto2)';}
+    }
+  });
   renderAgenda();
 }
 
@@ -2290,20 +2326,61 @@ async function quitarTudo(grupoId){
 async function excluirAgenda(id){
   var item=S.agenda.find(function(a){return a.id===id;});
   if(!item)return;
-  var opcao='unico';
-  if(item.rec==='mensal'||item.rec==='mensal_gerado'){
-    var resp=confirm('Excluir só este mês ou todos os futuros?\n\nOK = Excluir TODOS os futuros\nCancelar = Excluir só este mês');
-    if(resp)opcao='todos';
-  } else if(item.rec==='parcelado'&&item.grupoId){
-    var resp2=confirm('Excluir só esta parcela ou todas as parcelas restantes?\n\nOK = Excluir TODAS as restantes\nCancelar = Excluir só esta parcela');
-    if(resp2)opcao='todos';
-  }
-  if(opcao==='todos'){
-    var grupoRef=item.grupoId||item.id;
-    var ids=S.agenda.filter(function(a){return(a.grupoId===grupoRef||a.id===grupoRef)&&!a.pago;}).map(function(a){return a.id;});
-    S.agenda=S.agenda.filter(function(a){return!ids.includes(a.id);});
-    for(var i=0;i<ids.length;i++){await supa.from('agenda').delete().eq('id',ids[i]).eq('user_id',usuarioAtual.id);}
+
+  var isRecorrente=item.rec==='mensal'||item.rec==='mensal_gerado';
+  var isParcelado=item.rec==='parcelado'&&item.grupoId;
+
+  if(isRecorrente){
+    // Modal customizado com 3 opções
+    var resp=window.confirm(
+      '⚠️ ATENÇÃO — Excluir conta recorrente\n\n"'+item.desc+'"\n\n'+
+      'OK = Excluir TODOS os meses futuros\n'+
+      'Cancelar = NÃO excluir nada (voltar)'
+    );
+    if(!resp)return; // Cancelar = não faz nada
+    // Pergunta secundária só este mês
+    var apenasEste=!window.confirm(
+      'Confirmar: Excluir TODOS os meses futuros?\n\n'+
+      'OK = Sim, excluir todos\n'+
+      'Cancelar = Excluir só este mês'
+    );
+    if(apenasEste){
+      S.agenda=S.agenda.filter(function(a){return a.id!==id;});
+      await supa.from('agenda').delete().eq('id',id).eq('user_id',usuarioAtual.id);
+    } else {
+      var grupoRef=item.grupoId||item.id;
+      var ids=S.agenda.filter(function(a){
+        return(a.grupoId===grupoRef||a.id===grupoRef)&&!a.pago;
+      }).map(function(a){return a.id;});
+      S.agenda=S.agenda.filter(function(a){return!ids.includes(a.id);});
+      for(var i=0;i<ids.length;i++){
+        await supa.from('agenda').delete().eq('id',ids[i]).eq('user_id',usuarioAtual.id);
+      }
+    }
+  } else if(isParcelado){
+    var resp2=window.confirm(
+      '⚠️ ATENÇÃO — Excluir parcela\n\n"'+item.desc+'"\n\n'+
+      'OK = Excluir TODAS as parcelas restantes\n'+
+      'Cancelar = NÃO excluir nada (voltar)'
+    );
+    if(!resp2)return;
+    var apenasEsta=!window.confirm(
+      'Confirmar: Excluir TODAS as parcelas restantes?\n\n'+
+      'OK = Sim, excluir todas\n'+
+      'Cancelar = Excluir só esta parcela'
+    );
+    if(apenasEsta){
+      S.agenda=S.agenda.filter(function(a){return a.id!==id;});
+      await supa.from('agenda').delete().eq('id',id).eq('user_id',usuarioAtual.id);
+    } else {
+      var ids2=S.agenda.filter(function(a){return a.grupoId===item.grupoId&&!a.pago;}).map(function(a){return a.id;});
+      S.agenda=S.agenda.filter(function(a){return!ids2.includes(a.id);});
+      for(var j=0;j<ids2.length;j++){
+        await supa.from('agenda').delete().eq('id',ids2[j]).eq('user_id',usuarioAtual.id);
+      }
+    }
   } else {
+    if(!confirm('Excluir "'+item.desc+'"?\n\nEsta ação não pode ser desfeita.\n\nOK = Excluir\nCancelar = Voltar'))return;
     S.agenda=S.agenda.filter(function(a){return a.id!==id;});
     await supa.from('agenda').delete().eq('id',id).eq('user_id',usuarioAtual.id);
   }
@@ -2312,19 +2389,45 @@ async function excluirAgenda(id){
 
 function renderAgenda(){
   var lista=document.getElementById('ag-lista');
-  var items=S.agenda.filter(function(a){return a.cart===agTab;});
+  var mesSel=document.getElementById('ag-mes-sel');
+  var mesNum=mesSel?mesSel.value:'';
+  var ano=new Date().getFullYear();
+
+  var items=S.agenda.filter(function(a){
+    if(a.cart!==agTab)return false;
+    // Filtro por mês
+    if(mesNum!==''){
+      var venc=new Date(a.vencimento+'T00:00:00');
+      if(venc.getMonth()!==parseInt(mesNum))return false;
+    }
+    // Filtro por status
+    var st=statusAgenda(a);
+    if(agStatus==='pendente')return!a.pago&&st!=='vencida';
+    if(agStatus==='atrasada')return!a.pago&&st==='vencida';
+    if(agStatus==='paga')return a.pago;
+    return true; // todas
+  });
+
   items.sort(function(a,b){
     if(a.pago!==b.pago)return a.pago?1:-1;
     return new Date(a.vencimento)-new Date(b.vencimento);
   });
-  if(!items.length){lista.innerHTML='<div class="empty">Nenhuma conta cadastrada.<br>Clique em "+ Nova conta" para começar.</div>';return;}
+
+  if(!items.length){
+    var msgs={pendente:'Nenhuma conta pendente.',atrasada:'Nenhuma conta atrasada! 🎉',paga:'Nenhuma conta paga ainda.',todas:'Nenhuma conta cadastrada.'};
+    lista.innerHTML='<div class="empty">'+(msgs[agStatus]||msgs.todas)+'<br>Clique em "+ Nova conta" para começar.</div>';
+    return;
+  }
 
   // Agrupar parcelas
-  var grupos={};var listaFinal=[];
+  var grupos={};var listaFinal=[];var gruposAdicionados={};
   items.forEach(function(item){
     if(item.rec==='parcelado'&&item.grupoId){
-      if(!grupos[item.grupoId]){grupos[item.grupoId]=[];listaFinal.push({tipo:'grupo',grupoId:item.grupoId,items:grupos[item.grupoId]});}
-      grupos[item.grupoId].push(item);
+      if(!gruposAdicionados[item.grupoId]){
+        gruposAdicionados[item.grupoId]=true;
+        var todasParcelas=S.agenda.filter(function(a){return a.grupoId===item.grupoId;});
+        listaFinal.push({tipo:'grupo',grupoId:item.grupoId,items:todasParcelas});
+      }
     } else {listaFinal.push({tipo:'item',item:item});}
   });
 
@@ -2336,25 +2439,23 @@ function renderAgenda(){
       var vencFmt=new Date(item.vencimento+'T00:00:00').toLocaleDateString('pt-BR');
       var corVal=item.tipo==='pagar'?'r':'b';
       var sinalVal=item.tipo==='pagar'?'-':'+';
-      var recLabel=item.rec==='mensal'?'🔄 Mensal':item.rec==='mensal_gerado'?'🔄 Mensal':'';
+      var recLabel=item.rec==='mensal'||item.rec==='mensal_gerado'?'<span style="font-size:.62rem;color:var(--azul);margin-left:.3rem">🔄 Mensal</span>':'';
       return'<div class="ag-item '+st+'">'+
         '<div class="ag-top">'+
-          '<div><div class="ag-desc">'+item.desc+(recLabel?' <span style="font-size:.62rem;color:var(--azul)">'+recLabel+'</span>':'')+'</div>'+
+          '<div style="flex:1"><div class="ag-desc">'+item.desc+recLabel+'</div>'+
           '<div class="ag-meta" style="margin-top:.3rem">'+
             '<span class="ag-status '+st+'">'+labelStatus(st,dias)+'</span>'+
             '<span class="ag-data">📅 '+vencFmt+'</span>'+
             '<span class="ag-cat">'+item.cat+'</span>'+
           '</div></div>'+
-          '<div class="ag-val '+corVal+'">'+sinalVal+fmt(item.val)+'</div>'+
+          '<div class="ag-val '+corVal+'" style="margin-left:.5rem">'+sinalVal+fmt(item.val)+'</div>'+
         '</div>'+
         '<div class="ag-btns">'+
-          (item.pago?'<button class="ag-btn pago" disabled>✅ Pago/Recebido</button>':
+          (item.pago?'<button class="ag-btn pago" disabled>✅ '+(item.tipo==='pagar'?'Pago':'Recebido')+'</button>':
             '<button class="ag-btn pagar" onclick="marcarPago('+item.id+')">✅ '+(item.tipo==='pagar'?'Pago':'Recebido')+'</button>')+
           '<button class="ag-btn del" onclick="excluirAgenda('+item.id+')">🗑</button>'+
-        '</div>'+
-      '</div>';
+        '</div></div>';
     } else {
-      // Grupo de parcelas
       var gr=entry.items;
       var pagas=gr.filter(function(p){return p.pago;}).length;
       var total=gr.length;
@@ -2366,20 +2467,20 @@ function renderAgenda(){
       var sinalVal=gr[0].tipo==='pagar'?'-':'+';
       return'<div class="ag-item '+st+'" style="border-left:3px solid var(--roxo)">'+
         '<div class="ag-top">'+
-          '<div><div class="ag-desc">'+nomeBase+' <span style="font-size:.65rem;color:var(--roxo);font-weight:700">'+pagas+'/'+total+' parcelas pagas</span></div>'+
+          '<div style="flex:1"><div class="ag-desc">'+nomeBase+
+            ' <span style="font-size:.65rem;color:var(--roxo);font-weight:700">'+pagas+'/'+total+' pagas</span></div>'+
           (prox?'<div class="ag-meta" style="margin-top:.3rem">'+
             '<span class="ag-status '+st+'">'+labelStatus(st,dias)+'</span>'+
             '<span class="ag-data">📅 Próxima: '+new Date(prox.vencimento+'T00:00:00').toLocaleDateString('pt-BR')+'</span>'+
           '</div>':'<div class="ag-meta" style="margin-top:.3rem"><span class="ag-status paga">✅ Quitado!</span></div>')+
           '</div>'+
-          '<div class="ag-val '+corVal+'">'+sinalVal+fmt(gr[0].val)+'/mês</div>'+
+          '<div class="ag-val '+corVal+'" style="margin-left:.5rem">'+sinalVal+fmt(gr[0].val)+'/parc</div>'+
         '</div>'+
         '<div class="ag-btns">'+
           (prox?'<button class="ag-btn pagar" onclick="marcarPago('+prox.id+')">✅ Pagar próxima</button>':'<button class="ag-btn pago" disabled>✅ Quitado</button>')+
-          (pagas<total&&total>1?'<button class="ag-btn" style="background:rgba(176,107,255,.15);color:var(--roxo)" onclick="quitarTudo('+entry.grupoId+')">💜 Quitar tudo</button>':'')+
+          (pagas<total?'<button class="ag-btn" style="background:rgba(176,107,255,.15);color:var(--roxo);flex:1" onclick="quitarTudo('+entry.grupoId+')">💜 Quitar tudo</button>':'')+
           '<button class="ag-btn del" onclick="excluirAgenda('+(prox?prox.id:gr[gr.length-1].id)+')">🗑</button>'+
-        '</div>'+
-      '</div>';
+        '</div></div>';
     }
   }).join('');
 }
