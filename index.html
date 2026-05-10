@@ -1086,14 +1086,20 @@ async function carregarDadosUsuario(){
         mes:d.mes||''
       });
     });
-    hideLoad();
     document.getElementById('auth').style.display='none';
     document.getElementById('onboarding').style.display='none';
     document.getElementById('app').style.display='block';
     document.getElementById('h-nome').textContent=S.nome;
     document.getElementById('d-nome').textContent=S.nome;
-    atualizarGuiaNF();renderMeses();inicializarRelAno();atualizar();
-    carregando=false;
+    // Pequeno delay para garantir que o DOM está pronto antes de atualizar
+    setTimeout(function(){
+      atualizarGuiaNF();
+      renderMeses();
+      inicializarRelAno();
+      atualizar();
+      hideLoad();
+      carregando=false;
+    }, 100);
   } else {
     // Novo usuário — vai para onboarding
     hideLoad();
@@ -1202,7 +1208,9 @@ function entrar(){
   document.getElementById('app').style.display='block';
   document.getElementById('h-nome').textContent=S.nome;
   document.getElementById('d-nome').textContent=S.nome;
-  atualizarGuiaNF();renderMeses();inicializarRelAno();atualizar();
+  setTimeout(function(){
+    atualizarGuiaNF();renderMeses();inicializarRelAno();atualizar();
+  },100);
 }
 
 function inicializarRelAno(){
@@ -1211,9 +1219,14 @@ function inicializarRelAno(){
   var wrap=document.getElementById('rel-anos');
   if(!wrap)return;
   wrap.innerHTML='';
+  wrap.style.display='grid';
+  wrap.style.gridTemplateColumns='1fr 1fr 1fr';
+  wrap.style.gap='.5rem';
+  wrap.style.marginBottom='.9rem';
   [a-2,a-1,a].forEach(function(yr){
+    var sel=yr===relAno;
     var el=document.createElement('button');
-    el.style.cssText='flex:1;padding:.7rem;border-radius:10px;font-weight:800;font-size:.9rem;cursor:pointer;border:2px solid '+(yr===relAno?'var(--verde)':'var(--borda)')+';background:'+(yr===relAno?'rgba(0,196,140,.15)':'var(--card)')+';color:'+(yr===relAno?'var(--verde)':'var(--texto2)')+';';
+    el.style.cssText='padding:.8rem .5rem;border-radius:10px;font-weight:800;font-size:1rem;cursor:pointer;border:2px solid '+(sel?'var(--verde)':'var(--borda)')+';background:'+(sel?'rgba(0,196,140,.15)':'var(--card)')+';color:'+(sel?'var(--verde)':'var(--texto2)')+';width:100%;';
     el.textContent=yr;
     el.onclick=function(){
       relAno=yr;
