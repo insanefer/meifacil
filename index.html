@@ -1633,7 +1633,13 @@ function setCart(c){
   document.getElementById('rb-cnpj').className='rb'+(c==='cnpj'?' sg':'');
   document.getElementById('rb-cpf').className='rb'+(c==='cpf'?' sb':'');
   document.getElementById('rb-ret').style.display=c==='cnpj'?'':'none';
-  if(c==='cpf'&&mTipo==='retirada')setTL('entrada');
+  if(c==='cpf'){
+    // CPF nunca tem retirada — força entrada
+    mTipo='entrada';
+    document.getElementById('rb-ent').className='rb sg';
+    document.getElementById('rb-sai').className='rb';
+    document.getElementById('rb-ret').className='rb';
+  }
   atualizarMUI();
 }
 function setTL(t){
@@ -1660,8 +1666,11 @@ function setCat(c){
   todos.forEach(function(el){if(el.textContent.trim().toLowerCase().indexOf(c.replace(/[🏠🍽️💊🚗🎉📦🧾📱🛒💻📣]/g,'').trim().toLowerCase())>=0){el.className='rb sr';}});
 }
 function atualizarMUI(){
-  var isR=mTipo==='retirada';
+  // Retirada p/ CPF só existe no CNPJ
+  var isR=mTipo==='retirada'&&mCart==='cnpj';
   var isSaida=mTipo==='saida';
+  // Se estiver em CPF e tipo ainda for retirada (estado residual), forçar para entrada
+  if(mCart==='cpf'&&mTipo==='retirada'){mTipo='entrada';document.getElementById('rb-ent').className='rb sg';document.getElementById('rb-sai').className='rb';document.getElementById('rb-ret').className='rb';}
   document.getElementById('wrap-sub').classList.toggle('hidden',!isR);
   document.getElementById('transf-aviso').classList.toggle('hidden',!isR);
   document.getElementById('wrap-cat').classList.toggle('hidden',!isSaida);
@@ -1670,7 +1679,7 @@ function atualizarMUI(){
     document.getElementById('cats-cpf').style.display=mCart==='cpf'?'flex':'none';
     document.getElementById('cats-cnpj').style.display=mCart==='cnpj'?'flex':'none';
     // Reset categoria padrão conforme carteira
-    mCat=mCart==='cnpj'?'📦 Outros':'📦 Outros';
+    mCat='📦 Outros';
     document.querySelectorAll('#cats-cpf .rb, #cats-cnpj .rb').forEach(function(el){el.className='rb';});
   }
   document.getElementById('btn-sal').className=mCart==='cpf'?'bsav b':'bsav';
