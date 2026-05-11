@@ -1029,9 +1029,29 @@ input[type=date]{color-scheme:dark;}
         <div class="ex">É o lucro que sobrou depois das despesas. <strong>Não entra no IR</strong> — guarde comprovantes de despesa para comprovar!</div>
       </div>
     </div>
-    <!-- Categoria — só aparece em Saída -->
+    <!-- Categoria — aparece em Entrada e Saída -->
     <div id="wrap-cat" style="display:none">
-      <label class="lbl">Categoria do gasto</label>
+      <label class="lbl" id="cat-label">Categoria</label>
+
+      <!-- ENTRADA CNPJ -->
+      <div id="cats-ent-cnpj" class="rg" style="display:none">
+        <div class="rb" onclick="setCat('💵 Venda Produto')">💵 Venda Produto</div>
+        <div class="rb" onclick="setCat('🛠 Prestação Serviço')">🛠 Prestação Serviço</div>
+        <div class="rb" onclick="setCat('💳 Recebimento NF')">💳 Recebimento NF</div>
+        <div class="rb" onclick="setCat('🏦 Empréstimo/Aporte')">🏦 Empréstimo/Aporte</div>
+        <div class="rb" onclick="setCat('📦 Outros')">📦 Outros</div>
+      </div>
+
+      <!-- ENTRADA CPF -->
+      <div id="cats-ent-cpf" class="rg" style="display:none">
+        <div class="rb" onclick="setCat('💼 Salário/Freela')">💼 Salário/Freela</div>
+        <div class="rb" onclick="setCat('🎁 Presente/Doação')">🎁 Presente/Doação</div>
+        <div class="rb" onclick="setCat('🏠 Aluguel Recebido')">🏠 Aluguel Recebido</div>
+        <div class="rb" onclick="setCat('📈 Investimentos')">📈 Investimentos</div>
+        <div class="rb" onclick="setCat('📦 Outros')">📦 Outros</div>
+      </div>
+
+      <!-- SAÍDA CPF -->
       <div id="cats-cpf" class="rg" style="display:none">
         <div class="rb" onclick="setCat('🏠 Moradia')">🏠 Moradia</div>
         <div class="rb" onclick="setCat('🍽️ Aliment.')">🍽️ Aliment.</div>
@@ -1041,6 +1061,8 @@ input[type=date]{color-scheme:dark;}
         <div class="rb" onclick="setCat('📚 Educação')">📚 Educação</div>
         <div class="rb" onclick="setCat('📦 Outros')">📦 Outros</div>
       </div>
+
+      <!-- SAÍDA CNPJ -->
       <div id="cats-cnpj" class="rg" style="display:none">
         <div class="rb" onclick="setCat('🧾 DAS')">🧾 DAS</div>
         <div class="rb" onclick="setCat('📱 Tel/Internet')">📱 Tel/Internet</div>
@@ -1698,7 +1720,7 @@ function setSub(s){
 function setCat(c){
   mCat=c;
   // Remove seleção de todas as categorias
-  document.querySelectorAll('#cats-cpf .rb, #cats-cnpj .rb').forEach(function(el){el.className='rb';});
+  document.querySelectorAll('#cats-ent-cnpj .rb, #cats-ent-cpf .rb, #cats-cpf .rb, #cats-cnpj .rb').forEach(function(el){el.className='rb';});
   // Marca a clicada
   event.currentTarget.className='rb sr';
 }
@@ -1706,21 +1728,36 @@ function setCat(c){
 function atualizarMUI(){
   var isRetirada = mTipo==='retirada' && mCart==='cnpj';
   var isSaida    = mTipo==='saida';
+  var isEntrada  = mTipo==='entrada';
 
   // Aviso de transferência: só na retirada CNPJ
   document.getElementById('transf-aviso').style.display = isRetirada ? 'block' : 'none';
   // Sub-tipo (Dist. Lucros / Avulso): só na retirada CNPJ
   document.getElementById('wrap-sub').style.display = isRetirada ? 'block' : 'none';
-  // Categorias: só na saída
-  document.getElementById('wrap-cat').style.display = isSaida ? 'block' : 'none';
+  // Categorias: entrada e saída (não retirada)
+  document.getElementById('wrap-cat').style.display = (isSaida || isEntrada) ? 'block' : 'none';
 
-  if(isSaida){
-    // Mostra o grupo correto de categorias
-    document.getElementById('cats-cpf').style.display  = mCart==='cpf'  ? 'flex' : 'none';
-    document.getElementById('cats-cnpj').style.display = mCart==='cnpj' ? 'flex' : 'none';
-    // Reseta seleção
+  // Atualiza o label de categoria conforme o tipo
+  var catLabel = document.getElementById('cat-label');
+  if(catLabel) catLabel.textContent = isEntrada ? 'Categoria da entrada' : 'Categoria do gasto';
+
+  // Oculta todos os grupos de categorias
+  ['cats-ent-cnpj','cats-ent-cpf','cats-cpf','cats-cnpj'].forEach(function(id){
+    document.getElementById(id).style.display='none';
+  });
+
+  if(isEntrada){
+    // Mostra grupo de entrada correto
+    document.getElementById(mCart==='cnpj' ? 'cats-ent-cnpj' : 'cats-ent-cpf').style.display='flex';
+  } else if(isSaida){
+    // Mostra grupo de saída correto
+    document.getElementById(mCart==='cnpj' ? 'cats-cnpj' : 'cats-cpf').style.display='flex';
+  }
+
+  if(isSaida || isEntrada){
+    // Reseta seleção e categoria padrão
     mCat='📦 Outros';
-    document.querySelectorAll('#cats-cpf .rb, #cats-cnpj .rb').forEach(function(el){el.className='rb';});
+    document.querySelectorAll('#cats-ent-cnpj .rb, #cats-ent-cpf .rb, #cats-cpf .rb, #cats-cnpj .rb').forEach(function(el){el.className='rb';});
   }
 
   if(isRetirada) setSub(mSub);
@@ -1733,7 +1770,7 @@ function salvar(){
   var dataStr=document.getElementById('l-data').value;
   if(!desc||isNaN(val)||val<=0){alert('Preencha todos os campos');return;}
   var dataLanc=dataStr?new Date(dataStr+'T00:00:00'):new Date();
-  var cat=mTipo==='retirada'?mSub:(mTipo==='saida'?mCat:'');
+  var cat=mTipo==='retirada'?mSub:(mTipo==='saida'||mTipo==='entrada'?mCat:'');
   var id=Date.now();
   var novoLanc={id:id,cart:mCart,tipo:mTipo,desc:desc,val:val,mes:dataLanc.getMonth(),ano:dataLanc.getFullYear(),data:dataLanc.toLocaleDateString('pt-BR'),cat:cat,dataISO:dataStr||null};
   S.lancs.push(novoLanc);
