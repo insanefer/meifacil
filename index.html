@@ -326,6 +326,7 @@ input[type=date]{color-scheme:dark;}
 .ag-tab{flex:1;background:var(--card);border:1.5px solid var(--borda);border-radius:10px;padding:.6rem;text-align:center;font-size:.76rem;font-weight:700;cursor:pointer;color:var(--texto2);}
 .ag-tab.acg{border-color:var(--verde);color:var(--verde);background:rgba(0,196,140,.07);}
 .ag-tab.acb{border-color:var(--azul);color:var(--azul);background:rgba(75,139,245,.07);}
+.hidden{display:none!important;}
 .ag-item{background:var(--card);border:1px solid var(--borda);border-radius:12px;padding:.9rem;margin-bottom:.5rem;}
 .ag-item.vencida{border-color:rgba(255,107,107,.4);background:rgba(255,107,107,.04);}
 .ag-item.proxima{border-color:rgba(255,209,102,.4);background:rgba(255,209,102,.04);}
@@ -1004,39 +1005,51 @@ input[type=date]{color-scheme:dark;}
   <div class="mb">
     <h3>Novo lançamento</h3>
     <label class="lbl">Carteira</label>
-    <div class="rg"><div class="rb sg" id="rb-cnpj" onclick="setCart('cnpj')">🏪 CNPJ</div><div class="rb" id="rb-cpf" onclick="setCart('cpf')">👤 CPF</div></div>
+    <div class="rg">
+      <div class="rb sg" id="rb-cnpj" onclick="setCart('cnpj')">🏪 CNPJ</div>
+      <div class="rb" id="rb-cpf" onclick="setCart('cpf')">👤 CPF</div>
+    </div>
     <label class="lbl">Tipo</label>
-    <div class="rg"><div class="rb sg" id="rb-ent" onclick="setTL('entrada')">📥 Entrada</div><div class="rb" id="rb-sai" onclick="setTL('saida')">📤 Saída</div><div class="rb" id="rb-ret" onclick="setTL('retirada')">💸 Retirada p/ CPF</div></div>
-    <div id="transf-aviso" class="transf-info hidden">💸 Sairá do <strong>CNPJ</strong> e entrará automaticamente no <strong>CPF — Pessoal</strong>.</div>
-    <div id="wrap-sub" class="hidden">
+    <div class="rg" id="rg-tipo">
+      <div class="rb sg" id="rb-ent" onclick="setTL('entrada')">📥 Entrada</div>
+      <div class="rb" id="rb-sai" onclick="setTL('saida')">📤 Saída</div>
+      <div class="rb" id="rb-ret" onclick="setTL('retirada')">💸 Retirada p/ CPF</div>
+    </div>
+    <!-- Aviso transferência — só aparece em Retirada CNPJ -->
+    <div id="transf-aviso" class="transf-info" style="display:none">💸 Sairá do <strong>CNPJ</strong> e entrará automaticamente no <strong>CPF — Pessoal</strong>.</div>
+    <!-- Tipo de retirada — só aparece em Retirada CNPJ -->
+    <div id="wrap-sub" style="display:none">
       <label class="lbl">Tipo de retirada</label>
-      <div class="rg"><div class="rb sg" id="rb-lc" onclick="setSub('lucros')">⭐ Dist. de Lucros</div><div class="rb" id="rb-av" onclick="setSub('avulso')">💰 Avulso</div></div>
+      <div class="rg">
+        <div class="rb sg" id="rb-lc" onclick="setSub('lucros')">⭐ Dist. de Lucros</div>
+        <div class="rb" id="rb-av" onclick="setSub('avulso')">💰 Avulso</div>
+      </div>
       <div id="sub-info" class="edu-box verde" style="margin-bottom:.8rem">
         <div class="et">⭐ Distribuição de Lucros = Isenta de IR!</div>
         <div class="ex">É o lucro que sobrou depois das despesas. <strong>Não entra no IR</strong> — guarde comprovantes de despesa para comprovar!</div>
       </div>
     </div>
-    <div id="wrap-cat" class="hidden">
+    <!-- Categoria — só aparece em Saída -->
+    <div id="wrap-cat" style="display:none">
       <label class="lbl">Categoria do gasto</label>
-      <!-- Categorias CPF -->
-      <div id="cats-cpf" class="rg">
-        <div class="rb" id="cat-moradia" onclick="setCat('🏠 Moradia')">🏠 Moradia</div>
-        <div class="rb" id="cat-alimentacao" onclick="setCat('🍽️ Aliment.')">🍽️ Aliment.</div>
-        <div class="rb" id="cat-saude" onclick="setCat('💊 Saúde')">💊 Saúde</div>
-        <div class="rb" id="cat-transporte" onclick="setCat('🚗 Transp.')">🚗 Transp.</div>
-        <div class="rb" id="cat-lazer" onclick="setCat('🎉 Lazer')">🎉 Lazer</div>
-        <div class="rb" id="cat-outros-cpf" onclick="setCat('📦 Outros')">📦 Outros</div>
+      <div id="cats-cpf" class="rg" style="display:none">
+        <div class="rb" onclick="setCat('🏠 Moradia')">🏠 Moradia</div>
+        <div class="rb" onclick="setCat('🍽️ Aliment.')">🍽️ Aliment.</div>
+        <div class="rb" onclick="setCat('💊 Saúde')">💊 Saúde</div>
+        <div class="rb" onclick="setCat('🚗 Transp.')">🚗 Transp.</div>
+        <div class="rb" onclick="setCat('🎉 Lazer')">🎉 Lazer</div>
+        <div class="rb" onclick="setCat('📚 Educação')">📚 Educação</div>
+        <div class="rb" onclick="setCat('📦 Outros')">📦 Outros</div>
       </div>
-      <!-- Categorias CNPJ -->
       <div id="cats-cnpj" class="rg" style="display:none">
-        <div class="rb" id="cat-das" onclick="setCat('🧾 DAS')">🧾 DAS</div>
-        <div class="rb" id="cat-telefone" onclick="setCat('📱 Tel/Internet')">📱 Tel/Internet</div>
-        <div class="rb" id="cat-transp-cnpj" onclick="setCat('🚗 Transporte')">🚗 Transporte</div>
-        <div class="rb" id="cat-fornecedor" onclick="setCat('🛒 Fornecedores')">🛒 Fornecedores</div>
-        <div class="rb" id="cat-equipamento" onclick="setCat('💻 Equipamentos')">💻 Equipamentos</div>
-        <div class="rb" id="cat-aluguel" onclick="setCat('🏠 Aluguel')">🏠 Aluguel</div>
-        <div class="rb" id="cat-marketing" onclick="setCat('📣 Marketing')">📣 Marketing</div>
-        <div class="rb" id="cat-outros-cnpj" onclick="setCat('📦 Outros')">📦 Outros</div>
+        <div class="rb" onclick="setCat('🧾 DAS')">🧾 DAS</div>
+        <div class="rb" onclick="setCat('📱 Tel/Internet')">📱 Tel/Internet</div>
+        <div class="rb" onclick="setCat('🚗 Transporte')">🚗 Transporte</div>
+        <div class="rb" onclick="setCat('🛒 Fornecedores')">🛒 Fornecedores</div>
+        <div class="rb" onclick="setCat('💻 Equipamentos')">💻 Equipamentos</div>
+        <div class="rb" onclick="setCat('🏠 Aluguel')">🏠 Aluguel</div>
+        <div class="rb" onclick="setCat('📣 Marketing')">📣 Marketing</div>
+        <div class="rb" onclick="setCat('📦 Outros')">📦 Outros</div>
       </div>
     </div>
     <label class="lbl">Descrição</label>
@@ -1620,28 +1633,46 @@ function atualizarIR(){
 // ── MODAL ──
 function abrirModalCtx(){abrirModal(curScr==='lanc'?S.lancTab:'cnpj','entrada');}
 function abrirModal(c,t){
-  mCart=c;mTipo=t;mSub='lucros';mCat='📦 Outros';
+  mCart=c; mTipo=t; mSub='lucros'; mCat='📦 Outros';
   document.getElementById('modal').classList.add('op');
-  document.getElementById('l-desc').value='';document.getElementById('l-val').value='';
+  document.getElementById('l-desc').value='';
+  document.getElementById('l-val').value='';
   document.getElementById('l-data').value=new Date().toISOString().split('T')[0];
-  setCart(c);setTL(t);
+  // Atualiza carteira e tipo sem chamar atualizarMUI duas vezes
+  // Carteira
+  document.getElementById('rb-cnpj').className='rb'+(c==='cnpj'?' sg':'');
+  document.getElementById('rb-cpf').className='rb'+(c==='cpf'?' sb':'');
+  // Botão Retirada só existe no CNPJ
+  document.getElementById('rb-ret').style.display=c==='cnpj'?'':'none';
+  // Tipo
+  document.getElementById('rb-ent').className='rb'+(t==='entrada'?' sg':'');
+  document.getElementById('rb-sai').className='rb'+(t==='saida'?' sr':'');
+  document.getElementById('rb-ret').className='rb'+(t==='retirada'?' sp':'');
+  // Botão salvar
+  document.getElementById('btn-sal').className=c==='cpf'?'bsav b':'bsav';
+  atualizarMUI();
 }
 function fecharModal(){document.getElementById('modal').classList.remove('op');}
 
 function setCart(c){
   mCart=c;
+  // Atualiza visual da carteira
   document.getElementById('rb-cnpj').className='rb'+(c==='cnpj'?' sg':'');
   document.getElementById('rb-cpf').className='rb'+(c==='cpf'?' sb':'');
+  // Retirada só existe no CNPJ
   document.getElementById('rb-ret').style.display=c==='cnpj'?'':'none';
-  if(c==='cpf'){
-    // CPF nunca tem retirada — força entrada
+  // CPF nunca tem tipo retirada
+  if(c==='cpf'&&mTipo==='retirada'){
     mTipo='entrada';
     document.getElementById('rb-ent').className='rb sg';
     document.getElementById('rb-sai').className='rb';
     document.getElementById('rb-ret').className='rb';
   }
+  // Botão salvar
+  document.getElementById('btn-sal').className=c==='cpf'?'bsav b':'bsav';
   atualizarMUI();
 }
+
 function setTL(t){
   mTipo=t;
   document.getElementById('rb-ent').className='rb'+(t==='entrada'?' sg':'');
@@ -1649,41 +1680,50 @@ function setTL(t){
   document.getElementById('rb-ret').className='rb'+(t==='retirada'?' sp':'');
   atualizarMUI();
 }
+
 function setSub(s){
   mSub=s;
   document.getElementById('rb-lc').className='rb'+(s==='lucros'?' sp':'');
   document.getElementById('rb-av').className='rb'+(s==='avulso'?' sp':'');
   var si=document.getElementById('sub-info');
-  if(s==='lucros'){si.className='edu-box verde';si.innerHTML='<div class="et">⭐ Distribuição de Lucros = Isenta de IR!</div><div class="ex">É o lucro que sobrou depois das despesas. <strong>Não entra no IR</strong> — guarde comprovantes para comprovar!</div>';}
-  else{si.className='edu-box amarelo';si.innerHTML='<div class="et">⚠️ Retirada Avulsa — entra no IR</div><div class="ex">Sem comprovar que é lucro, <strong>entra na base tributável</strong> do IR. Prefira distribuição de lucros!</div>';}
+  if(s==='lucros'){
+    si.className='edu-box verde';
+    si.innerHTML='<div class="et">⭐ Distribuição de Lucros = Isenta de IR!</div><div class="ex">É o lucro que sobrou depois das despesas. <strong>Não entra no IR</strong> — guarde comprovantes para comprovar!</div>';
+  } else {
+    si.className='edu-box amarelo';
+    si.innerHTML='<div class="et">⚠️ Retirada Avulsa — entra no IR</div><div class="ex">Sem comprovar que é lucro, <strong>entra na base tributável</strong> do IR. Prefira distribuição de lucros!</div>';
+  }
 }
+
 function setCat(c){
   mCat=c;
-  // Reset todas as categorias
-  document.querySelectorAll('#cats-cpf .rb, #cats-cnpj .rb').forEach(function(el){el.className='rb sr'.replace(' sr','');el.className='rb';});
-  // Highlight a selecionada
-  var todos=document.querySelectorAll('#cats-cpf .rb, #cats-cnpj .rb');
-  todos.forEach(function(el){if(el.textContent.trim().toLowerCase().indexOf(c.replace(/[🏠🍽️💊🚗🎉📦🧾📱🛒💻📣]/g,'').trim().toLowerCase())>=0){el.className='rb sr';}});
+  // Remove seleção de todas as categorias
+  document.querySelectorAll('#cats-cpf .rb, #cats-cnpj .rb').forEach(function(el){el.className='rb';});
+  // Marca a clicada
+  event.currentTarget.className='rb sr';
 }
+
 function atualizarMUI(){
-  // Retirada p/ CPF só existe no CNPJ
-  var isR=mTipo==='retirada'&&mCart==='cnpj';
-  var isSaida=mTipo==='saida';
-  // Se estiver em CPF e tipo ainda for retirada (estado residual), forçar para entrada
-  if(mCart==='cpf'&&mTipo==='retirada'){mTipo='entrada';document.getElementById('rb-ent').className='rb sg';document.getElementById('rb-sai').className='rb';document.getElementById('rb-ret').className='rb';}
-  document.getElementById('wrap-sub').classList.toggle('hidden',!isR);
-  document.getElementById('transf-aviso').classList.toggle('hidden',!isR);
-  document.getElementById('wrap-cat').classList.toggle('hidden',!isSaida);
-  // Mostrar categorias certas
+  var isRetirada = mTipo==='retirada' && mCart==='cnpj';
+  var isSaida    = mTipo==='saida';
+
+  // Aviso de transferência: só na retirada CNPJ
+  document.getElementById('transf-aviso').style.display = isRetirada ? 'block' : 'none';
+  // Sub-tipo (Dist. Lucros / Avulso): só na retirada CNPJ
+  document.getElementById('wrap-sub').style.display = isRetirada ? 'block' : 'none';
+  // Categorias: só na saída
+  document.getElementById('wrap-cat').style.display = isSaida ? 'block' : 'none';
+
   if(isSaida){
-    document.getElementById('cats-cpf').style.display=mCart==='cpf'?'flex':'none';
-    document.getElementById('cats-cnpj').style.display=mCart==='cnpj'?'flex':'none';
-    // Reset categoria padrão conforme carteira
+    // Mostra o grupo correto de categorias
+    document.getElementById('cats-cpf').style.display  = mCart==='cpf'  ? 'flex' : 'none';
+    document.getElementById('cats-cnpj').style.display = mCart==='cnpj' ? 'flex' : 'none';
+    // Reseta seleção
     mCat='📦 Outros';
     document.querySelectorAll('#cats-cpf .rb, #cats-cnpj .rb').forEach(function(el){el.className='rb';});
   }
-  document.getElementById('btn-sal').className=mCart==='cpf'?'bsav b':'bsav';
-  if(isR)setSub(mSub);
+
+  if(isRetirada) setSub(mSub);
 }
 
 function salvar(){
