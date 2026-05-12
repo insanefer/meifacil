@@ -1237,17 +1237,41 @@ async function fazerLogout(){
 }
 
 // ── CARREGAR DADOS DO USUÁRIO ──
+async function voltarParaLogin(msg){
+  hideLoad();
+  carregando=false;
+  usuarioAtual=null;
+  await supa.auth.signOut().catch(function(){});
+  document.getElementById('app').style.display='none';
+  document.getElementById('onboarding').style.display='none';
+  document.getElementById('auth').style.display='flex';
+  if(msg){
+    var erroEl=document.getElementById('login-erro');
+    if(erroEl){erroEl.textContent=msg;erroEl.style.display='block';}
+  }
+}
 async function carregarDadosUsuario(){
   if(carregando)return;
   carregando=true;
   showLoad('Carregando seus dados...');
-  // Timeout de segurança — se demorar mais de 10s, limpa o loading
+  // Timeout de segurança — 15s, volta para login com aviso
   var tSeg=setTimeout(function(){
-    hideLoad();
-    carregando=false;
-  },10000);
+    voltarParaLogin('Conexão lenta. Verifique sua internet e tente novamente.');
+  },15000);
   try{
-    var{data:perfil}=await supa.from('perfis').select('*').eq('id',usuarioAtual.id).single();
+    // Verifica se a sessão ainda é válida antes de buscar dados
+    var{data:{session},error:sessErr}=await supa.auth.getSession();
+    if(sessErr||!session){
+      clearTimeout(tSeg);
+      voltarParaLogin('Sua sessão expirou. Faça login novamente.');
+      return;
+    }
+    var{data:perfil,error:perfErr}=await supa.from('perfis').select('*').eq('id',usuarioAtual.id).single();
+    if(perfErr&&perfErr.code!=='PGRST116'){
+      clearTimeout(tSeg);
+      voltarParaLogin('Erro ao carregar dados. Tente novamente.');
+      return;
+    }
     if(perfil){
       S.nome=perfil.nome||'';
       S.tipo=perfil.tipo_mei||'comum';
@@ -1300,9 +1324,14 @@ async function carregarDadosUsuario(){
     }
   } catch(err){
     clearTimeout(tSeg);
-    hideLoad();
-    carregando=false;
     console.error('Erro ao carregar dados:',err);
+    // Verifica se é erro de autenticação/sessão
+    var msg=err&&(err.message||'');
+    if(msg.indexOf('JWT')>=0||msg.indexOf('token')>=0||msg.indexOf('auth')>=0||msg.indexOf('session')>=0){
+      voltarParaLogin('Sessão inválida. Faça login novamente.');
+    } else {
+      voltarParaLogin('Erro de conexão. Verifique sua internet e tente de novo.');
+    }
   }
 }
 
@@ -1356,25 +1385,33 @@ function traduzirErro(msg){
 var carregando=false;
 window.addEventListener('load',async function(){
   showLoad('Verificando sessão...');
-  supa.auth.onAuthStateChange(async function(event,session){
-    if((event==='SIGNED_IN')&&session&&!usuarioAtual&&!carregando){
-      usuarioAtual=session.user;
-      await carregarDadosUsuario();
+  try{
+    var{data:{session},error}=await supa.auth.getSession();
+    if(error||!session){
+      // Sem sessão — mostra login
+      hideLoad();
+      document.getElementById('auth').style.display='flex';
+      document.getElementById('onboarding').style.display='none';
+      return;
     }
-    if(event==='SIGNED_OUT'){
-      usuarioAtual=null;
-      carregando=false;
-    }
-  });
-  var{data:{session}}=await supa.auth.getSession();
-  if(session&&!carregando){
+    // Sessão válida — carrega dados
     usuarioAtual=session.user;
     await carregarDadosUsuario();
-  } else if(!session){
+  } catch(e){
     hideLoad();
     document.getElementById('auth').style.display='flex';
     document.getElementById('onboarding').style.display='none';
   }
+  // Listener para logout e renovação de sessão
+  supa.auth.onAuthStateChange(function(event,session){
+    if(event==='SIGNED_OUT'){
+      usuarioAtual=null;
+      carregando=false;
+    }
+    if(event==='TOKEN_REFRESHED'&&session){
+      usuarioAtual=session.user;
+    }
+  });
 });
 
 var S={nome:'',tipo:'',negocio:'',dataAbertura:null,outrasVal:0,lancs:[],agenda:[],docs:{cnpj:[],cpf:[]},mes:new Date().getMonth(),lancTab:'cnpj',dreTab:'cnpj',docTab:'cnpj'};
