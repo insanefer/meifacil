@@ -377,6 +377,60 @@ input[type=date]{color-scheme:dark;}
 .menu-mais-btn .mml{font-size:.8rem;font-weight:700;}
 .menu-mais-fechar{width:100%;background:var(--bg);border:1px solid var(--borda);color:var(--texto2);border-radius:12px;padding:.8rem;cursor:pointer;font-size:.88rem;font-weight:600;min-height:48px;}
 
+/* ── PERFIL & ASSINATURA ── */
+.perfil-tabs{display:flex;gap:0;margin-bottom:1.2rem;background:var(--bg);border-radius:10px;padding:.25rem;}
+.perfil-tab{flex:1;padding:.55rem;text-align:center;font-size:.82rem;font-weight:700;cursor:pointer;color:var(--texto2);border-radius:8px;border:none;background:none;}
+.perfil-tab.ac{background:var(--card);color:var(--verde);}
+.perfil-secao{display:none;}
+.perfil-secao.ac{display:block;}
+.perfil-foto-wrap{display:flex;align-items:center;gap:1rem;margin-bottom:1.2rem;}
+.perfil-foto{width:72px;height:72px;border-radius:50%;object-fit:cover;border:2px solid var(--verde);background:var(--bg);display:flex;align-items:center;justify-content:center;font-size:1.8rem;flex-shrink:0;overflow:hidden;}
+.perfil-foto img{width:100%;height:100%;object-fit:cover;}
+.perfil-foto-btn{background:var(--bg);border:1px solid var(--borda);color:var(--texto2);border-radius:9px;padding:.5rem .9rem;font-size:.78rem;cursor:pointer;min-height:44px;}
+.perfil-field{margin-bottom:.9rem;}
+.perfil-field label{display:block;font-size:.72rem;font-weight:700;color:var(--texto2);text-transform:uppercase;letter-spacing:.4px;margin-bottom:.35rem;}
+.perfil-field input{width:100%;background:var(--bg);border:1.5px solid var(--borda);border-radius:10px;padding:.72rem 1rem;color:var(--texto);font-size:1rem;outline:none;}
+.perfil-field input:focus{border-color:var(--verde);}
+.perfil-field input[readonly]{opacity:.5;cursor:not-allowed;}
+.perfil-field .pfhint{font-size:.7rem;color:var(--texto2);margin-top:.3rem;}
+.perfil-save-btn{width:100%;background:var(--verde);border:none;color:#0E1720;border-radius:12px;padding:.9rem;font-weight:800;font-size:.95rem;cursor:pointer;min-height:48px;margin-top:.5rem;}
+.perfil-senha-btn{width:100%;background:var(--bg);border:1px solid var(--borda);color:var(--texto2);border-radius:12px;padding:.75rem;font-size:.85rem;cursor:pointer;min-height:44px;margin-bottom:.9rem;}
+.cnpj-busca-wrap{position:relative;}
+.cnpj-busca-btn{position:absolute;right:.5rem;top:50%;transform:translateY(-50%);background:var(--verde);border:none;color:#0E1720;border-radius:7px;padding:.35rem .65rem;font-size:.72rem;font-weight:800;cursor:pointer;}
+/* Assinatura */
+.ass-card{background:var(--card);border:1px solid var(--borda);border-radius:16px;padding:1.2rem;margin-bottom:.9rem;}
+.ass-status{display:flex;align-items:center;gap:.6rem;margin-bottom:.5rem;}
+.ass-status-dot{width:10px;height:10px;border-radius:50%;background:var(--verde);flex-shrink:0;}
+.ass-status-dot.inativo{background:var(--vermelho);}
+.ass-status-txt{font-size:.88rem;font-weight:800;}
+.ass-valor{font-size:1.5rem;font-weight:900;color:var(--verde);margin-bottom:.3rem;}
+.ass-desc{font-size:.75rem;color:var(--texto2);}
+.ass-wpp-btn{width:100%;background:#25D366;border:none;color:#fff;border-radius:12px;padding:.9rem;font-weight:800;font-size:.9rem;cursor:pointer;min-height:48px;display:flex;align-items:center;justify-content:center;gap:.5rem;}
+.ass-politica{background:rgba(255,209,102,.06);border:1px solid rgba(255,209,102,.2);border-radius:12px;padding:.85rem;margin-top:.9rem;}
+.ass-politica-titulo{font-size:.78rem;font-weight:800;color:var(--amarelo);margin-bottom:.4rem;}
+.ass-politica-txt{font-size:.73rem;color:var(--texto2);line-height:1.6;}
+/* ── DOCUMENTOS NOVO UPLOAD ── */
+.doc-tipo-grid{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;margin-bottom:.9rem;}
+.doc-tipo-btn{background:var(--bg);border:2px solid var(--borda);border-radius:12px;padding:.75rem .5rem;cursor:pointer;text-align:center;position:relative;min-height:52px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.2rem;}
+.doc-tipo-btn.sel{border-color:var(--verde);background:rgba(0,196,140,.08);}
+.doc-tipo-btn .dti{font-size:1.1rem;}
+.doc-tipo-btn .dtl{font-size:.72rem;font-weight:700;color:var(--texto);}
+.doc-tipo-btn.sel .dtl{color:var(--verde);}
+.doc-tipo-info{position:absolute;top:.35rem;right:.35rem;font-size:.65rem;color:var(--texto2);background:var(--card);border-radius:50%;width:16px;height:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;border:1px solid var(--borda);}
+.doc-tooltip{display:none;position:absolute;bottom:calc(100% + 6px);left:50%;transform:translateX(-50%);background:#1c2a3d;border:1px solid var(--borda);border-radius:9px;padding:.55rem .7rem;font-size:.7rem;color:var(--texto2);z-index:300;width:180px;text-align:left;line-height:1.5;box-shadow:0 4px 16px rgba(0,0,0,.3);}
+.doc-tipo-btn:hover .doc-tooltip,.doc-tipo-btn:focus-within .doc-tooltip{display:block;}
+.doc-upload-area{border:2px dashed var(--borda);border-radius:12px;padding:1.2rem;text-align:center;cursor:pointer;margin-bottom:.9rem;transition:border-color .2s;}
+.doc-upload-area.tem-arquivo{border-color:var(--verde);background:rgba(0,196,140,.06);}
+.doc-upload-icone{font-size:1.8rem;margin-bottom:.4rem;}
+.doc-upload-txt{font-size:.82rem;color:var(--texto2);}
+.doc-upload-sub{font-size:.7rem;color:var(--texto2);margin-top:.2rem;}
+.doc-upload-nome{font-size:.82rem;color:var(--verde);font-weight:700;margin-top:.3rem;}
+/* Agenda melhorias */
+.ag-item{background:var(--card2);border-radius:12px;padding:.85rem;margin-bottom:.6rem;border-left:3px solid var(--borda);}
+.ag-item.vencida{border-left-color:var(--vermelho);}
+.ag-item.pendente{border-left-color:var(--amarelo);}
+.ag-item.paga{border-left-color:var(--verde);opacity:.75;}
+.ag-mes-badge{display:inline-block;background:rgba(0,196,140,.12);color:var(--verde);font-size:.68rem;font-weight:800;padding:.2rem .6rem;border-radius:99px;margin-bottom:.75rem;}
 </style>
 </head>
 <body>
@@ -772,14 +826,7 @@ input[type=date]{color-scheme:dark;}
         <strong>NF_Cliente_Joao_Fev2025.pdf</strong><br>
         <strong>Despesa_Internet_Marco2025.pdf</strong></div>
       </div>
-      <div class="ib" style="background:rgba(176,107,255,.06);border-color:rgba(176,107,255,.18)">
-        <div class="ibt" style="color:var(--roxo)">📱 Como transformar foto em PDF</div>
-        <div class="ibx">
-        <strong>iPhone:</strong> Abra a foto → Compartilhar → Imprimir → Aperte zoom na prévia → Compartilhar → Salvar como PDF<br><br>
-        <strong>Android:</strong> Abra a foto → Menu ⋮ → Imprimir → Salvar como PDF<br><br>
-        <strong>Google Drive:</strong> Tire foto com o app → clique nos 3 pontinhos → Compartilhar como PDF
-        </div>
-      </div>
+
       <div style="display:flex;gap:.5rem;margin-bottom:.7rem">
         <div style="flex:1">
           <label class="lbl">Mês do documento</label>
@@ -793,10 +840,50 @@ input[type=date]{color-scheme:dark;}
           </select>
         </div>
       </div>
-      <div class="up-area" onclick="simUpload('cnpj')">
-        <div class="ui">📤</div>
-        <div class="ul">Enviar documento CNPJ (PDF)</div>
-        <div class="us">Apenas arquivos .pdf — máx. 5MB</div>
+      <!-- NOVO UPLOAD CNPJ -->
+      <div id="doc-upload-form-cnpj">
+        <label class="lbl" style="margin-bottom:.5rem;display:block">Tipo do documento *</label>
+        <div class="doc-tipo-grid" id="doc-tipo-cnpj">
+          <div class="doc-tipo-btn" id="dbt-cnpj-extrato" onclick="setDocTipo('cnpj','extrato',this)">
+            <span class="doc-tipo-info" onclick="event.stopPropagation();toggleTooltip('tt-cnpj-extrato')">ℹ</span>
+            <div class="doc-tooltip" id="tt-cnpj-extrato">Salve o extrato completo do mês anterior. Baixe direto no app do seu banco em PDF.</div>
+            <span class="dti">📄</span><span class="dtl">Extrato Bancário</span>
+          </div>
+          <div class="doc-tipo-btn" id="dbt-cnpj-nf" onclick="setDocTipo('cnpj','nf',this)">
+            <span class="doc-tipo-info" onclick="event.stopPropagation();toggleTooltip('tt-cnpj-nf')">ℹ</span>
+            <div class="doc-tooltip" id="tt-cnpj-nf">NFS-e, NF-e emitidas ou recebidas.</div>
+            <span class="dti">🧾</span><span class="dtl">Nota Fiscal</span>
+          </div>
+          <div class="doc-tipo-btn" id="dbt-cnpj-comp" onclick="setDocTipo('cnpj','comprovante',this)">
+            <span class="doc-tipo-info" onclick="event.stopPropagation();toggleTooltip('tt-cnpj-comp')">ℹ</span>
+            <div class="doc-tooltip" id="tt-cnpj-comp">Prints de Pix, transferências, recibos.</div>
+            <span class="dti">📱</span><span class="dtl">Comprovante</span>
+          </div>
+          <div class="doc-tipo-btn" id="dbt-cnpj-das" onclick="setDocTipo('cnpj','das',this)">
+            <span class="doc-tipo-info" onclick="event.stopPropagation();toggleTooltip('tt-cnpj-das')">ℹ</span>
+            <div class="doc-tooltip" id="tt-cnpj-das">Comprovante de pagamento do DAS mensal.</div>
+            <span class="dti">✅</span><span class="dtl">Comprovante DAS</span>
+          </div>
+        </div>
+        <div class="perfil-field">
+          <label>Data do documento *</label>
+          <input type="date" id="doc-data-cnpj" style="font-size:1rem">
+        </div>
+        <div class="perfil-field">
+          <label>Descrição <span style="color:var(--texto2);font-weight:400">(opcional)</span></label>
+          <input type="text" id="doc-desc-cnpj" placeholder="Ex: Claro, Fornecedor João, DAS Abril..." style="font-size:1rem">
+        </div>
+        <div class="perfil-field">
+          <label>Valor <span style="color:var(--texto2);font-weight:400">(opcional)</span></label>
+          <input type="text" id="doc-valor-cnpj" placeholder="Ex: 38,84" style="font-size:1rem">
+        </div>
+        <div class="doc-upload-area" id="doc-drop-cnpj" onclick="simUploadNovo('cnpj')">
+          <div class="doc-upload-icone">📤</div>
+          <div class="doc-upload-txt">Toque para enviar</div>
+          <div class="doc-upload-sub">Foto, imagem ou PDF — máx. 10MB</div>
+          <div class="doc-upload-nome" id="doc-arquivo-nome-cnpj" style="display:none"></div>
+        </div>
+        <button class="perfil-save-btn" onclick="confirmarUpload('cnpj')" style="margin-bottom:.9rem">Salvar documento</button>
       </div>
       <div style="display:flex;gap:.5rem;align-items:center;margin-bottom:.7rem;flex-wrap:wrap;margin-top:.5rem">
         <select id="mes-filtro-cnpj" style="flex:1;background:var(--bg);border:1.5px solid var(--borda);border-radius:9px;padding:.5rem .7rem;color:var(--texto);font-size:.8rem;outline:none">
@@ -826,14 +913,7 @@ input[type=date]{color-scheme:dark;}
         <strong>Escola_Boleto_Fev2025.pdf</strong><br>
         <strong>IR_Informe_Rendimentos_2024.pdf</strong></div>
       </div>
-      <div class="ib" style="background:rgba(176,107,255,.06);border-color:rgba(176,107,255,.18)">
-        <div class="ibt" style="color:var(--roxo)">📱 Como transformar foto em PDF</div>
-        <div class="ibx">
-        <strong>iPhone:</strong> Abra a foto → Compartilhar → Imprimir → Aperte zoom na prévia → Compartilhar → Salvar como PDF<br><br>
-        <strong>Android:</strong> Abra a foto → Menu ⋮ → Imprimir → Salvar como PDF<br><br>
-        <strong>Google Drive:</strong> Tire foto com o app → clique nos 3 pontinhos → Compartilhar como PDF
-        </div>
-      </div>
+
       <div style="display:flex;gap:.5rem;margin-bottom:.7rem">
         <div style="flex:1">
           <label class="lbl">Mês do documento</label>
@@ -847,10 +927,50 @@ input[type=date]{color-scheme:dark;}
           </select>
         </div>
       </div>
-      <div class="up-area" onclick="simUpload('cpf')">
-        <div class="ui">📤</div>
-        <div class="ul">Enviar documento CPF (PDF)</div>
-        <div class="us">Apenas arquivos .pdf — máx. 5MB</div>
+      <!-- NOVO UPLOAD CPF -->
+      <div id="doc-upload-form-cpf">
+        <label class="lbl" style="margin-bottom:.5rem;display:block">Tipo do documento *</label>
+        <div class="doc-tipo-grid" id="doc-tipo-cpf">
+          <div class="doc-tipo-btn" id="dbt-cpf-extrato" onclick="setDocTipo('cpf','extrato',this)">
+            <span class="doc-tipo-info" onclick="event.stopPropagation();toggleTooltip('tt-cpf-extrato')">ℹ</span>
+            <div class="doc-tooltip" id="tt-cpf-extrato">Salve o extrato completo do mês anterior. Baixe direto no app do seu banco em PDF.</div>
+            <span class="dti">📄</span><span class="dtl">Extrato Bancário</span>
+          </div>
+          <div class="doc-tipo-btn" id="dbt-cpf-nf" onclick="setDocTipo('cpf','nf',this)">
+            <span class="doc-tipo-info" onclick="event.stopPropagation();toggleTooltip('tt-cpf-nf')">ℹ</span>
+            <div class="doc-tooltip" id="tt-cpf-nf">NFS-e, NF-e emitidas ou recebidas.</div>
+            <span class="dti">🧾</span><span class="dtl">Nota Fiscal</span>
+          </div>
+          <div class="doc-tipo-btn" id="dbt-cpf-comp" onclick="setDocTipo('cpf','comprovante',this)">
+            <span class="doc-tipo-info" onclick="event.stopPropagation();toggleTooltip('tt-cpf-comp')">ℹ</span>
+            <div class="doc-tooltip" id="tt-cpf-comp">Prints de Pix, transferências, recibos.</div>
+            <span class="dti">📱</span><span class="dtl">Comprovante</span>
+          </div>
+          <div class="doc-tipo-btn" id="dbt-cpf-das" onclick="setDocTipo('cpf','das',this)">
+            <span class="doc-tipo-info" onclick="event.stopPropagation();toggleTooltip('tt-cpf-das')">ℹ</span>
+            <div class="doc-tooltip" id="tt-cpf-das">Comprovante de pagamento do DAS mensal.</div>
+            <span class="dti">✅</span><span class="dtl">Comprovante DAS</span>
+          </div>
+        </div>
+        <div class="perfil-field">
+          <label>Data do documento *</label>
+          <input type="date" id="doc-data-cpf" style="font-size:1rem">
+        </div>
+        <div class="perfil-field">
+          <label>Descrição <span style="color:var(--texto2);font-weight:400">(opcional)</span></label>
+          <input type="text" id="doc-desc-cpf" placeholder="Ex: Médico, Escola, IR..." style="font-size:1rem">
+        </div>
+        <div class="perfil-field">
+          <label>Valor <span style="color:var(--texto2);font-weight:400">(opcional)</span></label>
+          <input type="text" id="doc-valor-cpf" placeholder="Ex: 150,00" style="font-size:1rem">
+        </div>
+        <div class="doc-upload-area" id="doc-drop-cpf" onclick="simUploadNovo('cpf')">
+          <div class="doc-upload-icone">📤</div>
+          <div class="doc-upload-txt">Toque para enviar</div>
+          <div class="doc-upload-sub">Foto, imagem ou PDF — máx. 10MB</div>
+          <div class="doc-upload-nome" id="doc-arquivo-nome-cpf" style="display:none"></div>
+        </div>
+        <button class="perfil-save-btn" onclick="confirmarUpload('cpf')" style="margin-bottom:.9rem">Salvar documento</button>
       </div>
       <div style="display:flex;gap:.5rem;align-items:center;margin-bottom:.7rem;flex-wrap:wrap;margin-top:.5rem">
         <select id="mes-filtro-cpf" style="flex:1;background:var(--bg);border:1.5px solid var(--borda);border-radius:9px;padding:.5rem .7rem;color:var(--texto);font-size:.8rem;outline:none">
@@ -1009,8 +1129,103 @@ input[type=date]{color-scheme:dark;}
       <button id="ag-st-all" onclick="setAgStatus('todas')" style="flex:1;padding:.45rem .3rem;border-radius:8px;font-size:.72rem;font-weight:700;cursor:pointer;border:1.5px solid var(--borda);background:var(--card);color:var(--texto2)">📋 Todas</button>
     </div>
 
+    <div class="ag-mes-badge" id="ag-mes-badge"></div>
     <div id="ag-lista"><div class="empty">Nenhuma conta cadastrada ainda.</div></div>
   </div>
+
+  <!-- PERFIL & EMPRESA -->
+  <div id="scr-perfil" class="scr">
+    <div class="greet" style="font-size:1.05rem;margin-bottom:.25rem">Meu Perfil & Empresa 👤</div>
+    <p style="color:var(--texto2);font-size:.78rem;margin-bottom:.9rem">Seus dados pessoais e do seu MEI</p>
+    <div class="perfil-tabs">
+      <button class="perfil-tab ac" id="ptab-pessoal" onclick="setPTab('pessoal')">👤 Pessoal</button>
+      <button class="perfil-tab" id="ptab-negocio" onclick="setPTab('negocio')">🏪 Negócio</button>
+    </div>
+
+    <!-- ABA PESSOAL -->
+    <div class="perfil-secao ac" id="psec-pessoal">
+      <div class="perfil-foto-wrap">
+        <div class="perfil-foto" id="perfil-foto-preview">😊</div>
+        <div>
+          <div style="font-size:.82rem;font-weight:700;margin-bottom:.4rem">Foto de perfil</div>
+          <div style="font-size:.72rem;color:var(--texto2);margin-bottom:.5rem">Aparece no dashboard</div>
+          <button class="perfil-foto-btn" onclick="escolherFotoPerfil()">📷 Alterar foto</button>
+          <input type="file" id="perfil-foto-input" accept="image/*" style="display:none" onchange="processarFotoPerfil(this)">
+        </div>
+      </div>
+      <div class="perfil-field">
+        <label>Nome que aparece no app</label>
+        <input type="text" id="pf-nome" placeholder="Ex: Fernanda, Zênitth..." maxlength="50">
+        <div class="pfhint">Este é o nome exibido no dashboard</div>
+      </div>
+      <div class="perfil-field">
+        <label>E-mail de acesso</label>
+        <input type="email" id="pf-email" readonly>
+        <div class="pfhint">Vinculado à sua conta — não pode ser alterado aqui</div>
+      </div>
+      <button class="perfil-senha-btn" onclick="enviarTrocaSenha()">🔑 Enviar link para trocar senha</button>
+      <button class="perfil-save-btn" onclick="salvarPerfilCompleto()">Salvar alterações</button>
+    </div>
+
+    <!-- ABA NEGÓCIO -->
+    <div class="perfil-secao" id="psec-negocio">
+      <div class="perfil-field">
+        <label>CNPJ do MEI</label>
+        <div class="cnpj-busca-wrap">
+          <input type="text" id="pf-cnpj" placeholder="00.000.000/0001-00" maxlength="18" oninput="mascaraCNPJ(this)">
+          <button class="cnpj-busca-btn" onclick="buscarCNPJ()">🔍 Buscar</button>
+        </div>
+        <div class="pfhint" id="cnpj-status"></div>
+      </div>
+      <div class="perfil-field">
+        <label>Razão Social</label>
+        <input type="text" id="pf-razao" placeholder="Preenchido automaticamente ao buscar CNPJ">
+      </div>
+      <div class="perfil-field">
+        <label>Nome Fantasia</label>
+        <input type="text" id="pf-fantasia" placeholder="Como seu negócio é conhecido">
+      </div>
+      <div class="perfil-field">
+        <label>Tipo de MEI</label>
+        <div class="rg">
+          <div class="rb" id="rb-mei-comum" onclick="setTipoMEI('comum',this)">🏪 MEI Geral</div>
+          <div class="rb" id="rb-mei-caminhoneiro" onclick="setTipoMEI('caminhoneiro',this)">🚛 MEI Caminhoneiro</div>
+        </div>
+      </div>
+      <div class="perfil-field">
+        <label>Data de abertura do MEI</label>
+        <input type="date" id="pf-abertura">
+        <div class="pfhint">Usada para calcular o teto proporcional se abriu no meio do ano</div>
+      </div>
+      <button class="perfil-save-btn" onclick="salvarPerfilCompleto()">Salvar alterações</button>
+    </div>
+  </div>
+
+  <!-- MINHA ASSINATURA -->
+  <div id="scr-assinatura" class="scr">
+    <div class="greet" style="font-size:1.05rem;margin-bottom:.25rem">Minha Assinatura 💳</div>
+    <p style="color:var(--texto2);font-size:.78rem;margin-bottom:.9rem">Gerencie seu plano MEIFácil</p>
+    <div class="ass-card">
+      <div class="ass-status">
+        <div class="ass-status-dot" id="ass-dot"></div>
+        <div class="ass-status-txt" id="ass-status-txt">Plano Ativo</div>
+      </div>
+      <div class="ass-valor">R$ 99,90<span style="font-size:.85rem;font-weight:400;color:var(--texto2)">/mês</span></div>
+      <div class="ass-desc">MEIFácil — CNPJ e CPF sob controle</div>
+    </div>
+    <button class="ass-wpp-btn" onclick="abrirSuporteWpp()">
+      <span>💬</span> Precisa de ajuda? Fale conosco
+    </button>
+    <div class="ass-politica">
+      <div class="ass-politica-titulo">📋 Política de dados</div>
+      <div class="ass-politica-txt">
+        Ao cancelar sua assinatura, seus dados ficam <strong>congelados e seguros</strong> por até 8 meses.<br><br>
+        Após 8 meses sem renovar, você receberá um aviso por e-mail com <strong>30 dias de antecedência</strong> antes de qualquer exclusão.<br><br>
+        Reativando sua assinatura a qualquer momento, tudo volta exatamente como estava. ✅
+      </div>
+    </div>
+  </div>
+
 
   <nav class="nav-bot">
     <button class="nav-i ac" onclick="goTo('home')"><span class="ni">🏠</span>Início</button>
@@ -1027,6 +1242,8 @@ input[type=date]{color-scheme:dark;}
   <div class="menu-mais-box" onclick="event.stopPropagation()">
     <div class="menu-mais-titulo">Mais recursos</div>
     <div class="menu-mais-grid">
+      <button class="menu-mais-btn" onclick="fecharMenuMais();goTo('perfil')"><span class="mmi">👤</span><span class="mml">Meu Perfil & Empresa</span></button>
+      <button class="menu-mais-btn" onclick="fecharMenuMais();goTo('assinatura')"><span class="mmi">💳</span><span class="mml">Minha Assinatura</span></button>
       <button class="menu-mais-btn" onclick="fecharMenuMais();goTo('ir')"><span class="mmi">📋</span><span class="mml">Simulador IR</span></button>
       <button class="menu-mais-btn" onclick="fecharMenuMais();goTo('docs')"><span class="mmi">📁</span><span class="mml">Documentos</span></button>
       <button class="menu-mais-btn" onclick="fecharMenuMais();goTo('relatorio')"><span class="mmi">📄</span><span class="mml">Relatório Anual</span></button>
@@ -1278,6 +1495,15 @@ async function carregarDadosUsuario(){
       S.negocio=perfil.negocio||'servico';
       S.dataAbertura=perfil.data_abertura?new Date(perfil.data_abertura+'T00:00:00'):null;
       S.outrasVal=perfil.outras_rendas||0;
+      S.cnpj=perfil.cnpj||'';
+      S.razaoSocial=perfil.razao_social||'';
+      S.nomeFantasia=perfil.nome_fantasia||'';
+      S.fotoPerfil=perfil.foto_perfil||null;
+      // Atualiza foto no dashboard se existir
+      if(S.fotoPerfil){
+        var dashFoto=document.getElementById('dash-foto-perfil');
+        if(dashFoto)dashFoto.innerHTML='<img src="'+S.fotoPerfil+'" alt="foto" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';
+      }
       var{data:lancs}=await supa.from('lancamentos').select('*').eq('user_id',usuarioAtual.id);
       S.lancs=(lancs||[]).map(function(l){return{id:l.id,cart:l.cart,tipo:l.tipo,desc:l.descricao,val:parseFloat(l.valor),mes:l.mes,ano:l.ano,data:l.data_lanc?new Date(l.data_lanc+'T00:00:00').toLocaleDateString('pt-BR'):'',cat:l.categoria||''};});
       var{data:docs}=await supa.from('documentos').select('*').eq('user_id',usuarioAtual.id);
@@ -1414,7 +1640,7 @@ window.addEventListener('load',async function(){
   });
 });
 
-var S={nome:'',tipo:'',negocio:'',dataAbertura:null,outrasVal:0,lancs:[],agenda:[],docs:{cnpj:[],cpf:[]},mes:new Date().getMonth(),lancTab:'cnpj',dreTab:'cnpj',docTab:'cnpj'};
+var S={nome:'',tipo:'',negocio:'',dataAbertura:null,outrasVal:0,lancs:[],agenda:[],docs:{cnpj:[],cpf:[]},mes:new Date().getMonth(),cnpj:'',razaoSocial:'',nomeFantasia:'',fotoPerfil:null,lancTab:'cnpj',dreTab:'cnpj',docTab:'cnpj'};
 var TETOS={comum:81000,caminhoneiro:251600};
 var MES=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
 var IR_F=[{min:0,max:33888,aliq:0,ded:0},{min:33889,max:45012,aliq:.075,ded:2541.6},{min:45013,max:55976,aliq:.15,ded:5808.06},{min:55977,max:82469,aliq:.225,ded:9997.56},{min:82470,max:Infinity,aliq:.275,ded:14101.19}];
@@ -1484,7 +1710,8 @@ function goTo(id){
   if(id==='lanc'){document.getElementById('fab').className='fab'+(S.lancTab==='cpf'?' b':'');renderLancs();}
   if(id==='dre')atualizarDRE();
   if(id==='ir')atualizarIR();
-  if(id==='agenda')renderAgenda();
+  if(id==='agenda'){inicializarFiltroAgenda();renderAgenda();}
+  if(id==='perfil')abrirPerfil();
   if(id==='relatorio'){
     var wrap=document.getElementById('rel-anos');
     if(wrap&&wrap.children.length===0)inicializarRelAno();
@@ -1494,6 +1721,403 @@ function goTo(id){
 function abrirMenuMais(){document.getElementById('menu-mais').classList.add('op');}
 function fecharMenuMais(){document.getElementById('menu-mais').classList.remove('op');}
 
+
+// ── PERFIL COMPLETO ──
+var docTipoSel={cnpj:null,cpf:null};
+var docArquivoSel={cnpj:null,cpf:null};
+
+function setPTab(t){
+  document.querySelectorAll('.perfil-tab').forEach(function(b){b.classList.remove('ac');});
+  document.querySelectorAll('.perfil-secao').forEach(function(s){s.classList.remove('ac');});
+  document.getElementById('ptab-'+t).classList.add('ac');
+  document.getElementById('psec-'+t).classList.add('ac');
+}
+
+function abrirPerfil(){
+  // Preenche campos com dados atuais
+  var nomeEl=document.getElementById('pf-nome');
+  var emailEl=document.getElementById('pf-email');
+  var cnpjEl=document.getElementById('pf-cnpj');
+  var razaoEl=document.getElementById('pf-razao');
+  var fantasiaEl=document.getElementById('pf-fantasia');
+  var aberturaEl=document.getElementById('pf-abertura');
+  if(nomeEl)nomeEl.value=S.nome||'';
+  if(emailEl)emailEl.value=usuarioAtual?usuarioAtual.email:'';
+  if(cnpjEl)cnpjEl.value=S.cnpj||'';
+  if(razaoEl)razaoEl.value=S.razaoSocial||'';
+  if(fantasiaEl)fantasiaEl.value=S.nomeFantasia||'';
+  if(aberturaEl)aberturaEl.value=S.dataAbertura?S.dataAbertura.toISOString().split('T')[0]:'';
+  // Foto
+  if(S.fotoPerfil){
+    var fotoEl=document.getElementById('perfil-foto-preview');
+    if(fotoEl)fotoEl.innerHTML='<img src="'+S.fotoPerfil+'" alt="foto">';
+  }
+  // Tipo MEI
+  setTipoMEIVisual(S.tipo||'comum');
+}
+
+function setTipoMEI(t,el){
+  S.tipo=t;
+  setTipoMEIVisual(t);
+}
+
+function setTipoMEIVisual(t){
+  var comum=document.getElementById('rb-mei-comum');
+  var cam=document.getElementById('rb-mei-caminhoneiro');
+  if(comum)comum.className='rb'+(t==='comum'?' sg':'');
+  if(cam)cam.className='rb'+(t==='caminhoneiro'?' sg':'');
+}
+
+function escolherFotoPerfil(){
+  document.getElementById('perfil-foto-input').click();
+}
+
+function processarFotoPerfil(input){
+  var file=input.files[0];
+  if(!file)return;
+  var reader=new FileReader();
+  reader.onload=function(e){
+    var img=new Image();
+    img.onload=function(){
+      // Comprime para 200x200
+      var canvas=document.createElement('canvas');
+      var size=Math.min(img.width,img.height);
+      canvas.width=200;canvas.height=200;
+      var ctx=canvas.getContext('2d');
+      var ox=(img.width-size)/2,oy=(img.height-size)/2;
+      ctx.drawImage(img,ox,oy,size,size,0,0,200,200);
+      var base64=canvas.toDataURL('image/jpeg',0.75);
+      S.fotoPerfil=base64;
+      var fotoEl=document.getElementById('perfil-foto-preview');
+      if(fotoEl)fotoEl.innerHTML='<img src="'+base64+'" alt="foto">';
+      // Atualiza dashboard
+      var dashFoto=document.getElementById('dash-foto-perfil');
+      if(dashFoto)dashFoto.innerHTML='<img src="'+base64+'" alt="foto" style="width:100%;height:100%;object-fit:cover;border-radius:50%">';
+    };
+    img.src=e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+async function salvarPerfilCompleto(){
+  if(!usuarioAtual)return;
+  var nome=document.getElementById('pf-nome')?document.getElementById('pf-nome').value.trim():'';
+  var cnpj=document.getElementById('pf-cnpj')?document.getElementById('pf-cnpj').value.trim():'';
+  var razao=document.getElementById('pf-razao')?document.getElementById('pf-razao').value.trim():'';
+  var fantasia=document.getElementById('pf-fantasia')?document.getElementById('pf-fantasia').value.trim():'';
+  var abertura=document.getElementById('pf-abertura')?document.getElementById('pf-abertura').value:'';
+  if(nome)S.nome=nome;
+  if(cnpj)S.cnpj=cnpj;
+  if(razao)S.razaoSocial=razao;
+  if(fantasia)S.nomeFantasia=fantasia;
+  if(abertura)S.dataAbertura=new Date(abertura+'T00:00:00');
+  showLoad('Salvando perfil...');
+  try{
+    await supa.from('perfis').upsert({
+      id:usuarioAtual.id,
+      nome:S.nome,
+      tipo_mei:S.tipo,
+      negocio:S.negocio,
+      data_abertura:S.dataAbertura?S.dataAbertura.toISOString().split('T')[0]:null,
+      outras_rendas:S.outrasVal,
+      cnpj:S.cnpj||null,
+      razao_social:S.razaoSocial||null,
+      nome_fantasia:S.nomeFantasia||null,
+      foto_perfil:S.fotoPerfil||null
+    });
+    // Atualiza nome no dashboard
+    var hNome=document.getElementById('h-nome');
+    var dNome=document.getElementById('d-nome');
+    if(hNome)hNome.textContent=S.nome;
+    if(dNome)dNome.textContent=S.nome;
+    hideLoad();
+    alert('Perfil salvo com sucesso! ✅');
+  }catch(e){
+    hideLoad();
+    alert('Erro ao salvar: '+e.message);
+  }
+}
+
+async function enviarTrocaSenha(){
+  if(!usuarioAtual)return;
+  showLoad('Enviando link...');
+  var{error}=await supa.auth.resetPasswordForEmail(usuarioAtual.email);
+  hideLoad();
+  if(error){alert('Erro: '+error.message);}
+  else{alert('Link enviado para '+usuarioAtual.email+'! Verifique sua caixa de entrada. 📧');}
+}
+
+function mascaraCNPJ(el){
+  var v=el.value.replace(/\D/g,'');
+  if(v.length<=2)el.value=v;
+  else if(v.length<=5)el.value=v.slice(0,2)+'.'+v.slice(2);
+  else if(v.length<=8)el.value=v.slice(0,2)+'.'+v.slice(2,5)+'.'+v.slice(5);
+  else if(v.length<=12)el.value=v.slice(0,2)+'.'+v.slice(2,5)+'.'+v.slice(5,8)+'/'+v.slice(8);
+  else el.value=v.slice(0,2)+'.'+v.slice(2,5)+'.'+v.slice(5,8)+'/'+v.slice(8,12)+'-'+v.slice(12,14);
+}
+
+async function buscarCNPJ(){
+  var cnpjEl=document.getElementById('pf-cnpj');
+  var statusEl=document.getElementById('cnpj-status');
+  if(!cnpjEl)return;
+  var cnpj=cnpjEl.value.replace(/\D/g,'');
+  if(cnpj.length!==14){alert('Digite um CNPJ válido com 14 dígitos.');return;}
+  statusEl.textContent='🔍 Buscando...';statusEl.style.color='var(--texto2)';
+  try{
+    var resp=await fetch('https://brasilapi.com.br/api/cnpj/v1/'+cnpj);
+    if(!resp.ok){statusEl.textContent='❌ CNPJ não encontrado.';statusEl.style.color='var(--vermelho)';return;}
+    var dados=await resp.json();
+    var razaoEl=document.getElementById('pf-razao');
+    var fantasiaEl=document.getElementById('pf-fantasia');
+    if(razaoEl)razaoEl.value=dados.razao_social||'';
+    if(fantasiaEl)fantasiaEl.value=dados.nome_fantasia||dados.razao_social||'';
+    statusEl.textContent='✅ Dados preenchidos automaticamente!';
+    statusEl.style.color='var(--verde)';
+  }catch(e){
+    statusEl.textContent='❌ Erro ao buscar. Verifique sua internet.';
+    statusEl.style.color='var(--vermelho)';
+  }
+}
+
+// ── ASSINATURA ──
+function abrirSuporteWpp(){
+  var num='5500000000000'; // placeholder — trocar pelo número real
+  var msg=encodeURIComponent('Olá! Preciso de ajuda com minha assinatura MEIFácil.');
+  window.open('https://wa.me/'+num+'?text='+msg,'_blank');
+}
+
+// ── DOCUMENTOS NOVO ──
+function toggleTooltip(id){
+  var el=document.getElementById(id);
+  if(!el)return;
+  el.style.display=el.style.display==='block'?'none':'block';
+  // Fecha outros tooltips
+  document.querySelectorAll('.doc-tooltip').forEach(function(t){
+    if(t.id!==id)t.style.display='none';
+  });
+}
+
+function setDocTipo(cart,tipo,el){
+  docTipoSel[cart]=tipo;
+  // Reset visual
+  document.querySelectorAll('#doc-tipo-'+cart+' .doc-tipo-btn').forEach(function(b){b.classList.remove('sel');});
+  el.classList.add('sel');
+}
+
+var docArquivoFile={cnpj:null,cpf:null};
+
+function simUploadNovo(cart){
+  var input=document.createElement('input');
+  input.type='file';
+  input.accept='image/*,.pdf,application/pdf';
+  input.capture='environment'; // abre câmera no mobile se disponível
+  input.onchange=function(){
+    var file=input.files[0];
+    if(!file)return;
+    if(file.size>10*1024*1024){alert('Arquivo muito grande! Máximo 10MB.');return;}
+    docArquivoFile[cart]=file;
+    var nomeEl=document.getElementById('doc-arquivo-nome-'+cart);
+    var areaEl=document.getElementById('doc-drop-'+cart);
+    if(nomeEl){nomeEl.textContent='📎 '+file.name;nomeEl.style.display='block';}
+    if(areaEl)areaEl.classList.add('tem-arquivo');
+  };
+  input.click();
+}
+
+async function confirmarUpload(cart){
+  if(!docTipoSel[cart]){alert('Selecione o tipo do documento.');return;}
+  var dataEl=document.getElementById('doc-data-'+cart);
+  if(!dataEl||!dataEl.value){alert('Informe a data do documento.');return;}
+  if(!docArquivoFile[cart]){alert('Selecione um arquivo para enviar.');return;}
+  if(!usuarioAtual){alert('Você precisa estar logado!');return;}
+
+  var file=docArquivoFile[cart];
+  var dataVal=dataEl.value;
+  var descVal=document.getElementById('doc-desc-'+cart)?document.getElementById('doc-desc-'+cart).value.trim():'';
+  var valorVal=document.getElementById('doc-valor-'+cart)?document.getElementById('doc-valor-'+cart).value.trim():'';
+
+  // Montar nome do arquivo: AAAA-MM-DD_Valor_Descricao.pdf
+  var partes=[dataVal];
+  if(valorVal)partes.push(valorVal.replace(/[^0-9,.]/g,''));
+  if(descVal)partes.push(descVal.replace(/[^a-zA-Z0-9À-ÿ\s]/g,'').trim().replace(/\s+/g,'_'));
+  var nomeBase=partes.join('_');
+  var nomeArquivo=limparNomeArquivo(nomeBase)+'.pdf';
+
+  var mesNum=dataVal.substring(5,7);
+  var tipoLabel={extrato:'01_Extratos',nf:'02_Notas_Fiscais',comprovante:'03_Comprovantes',das:'04_DAS'};
+  var subpasta=tipoLabel[docTipoSel[cart]]||'Outros';
+
+  showLoad('Processando documento...');
+
+  try{
+    var pdfBlob;
+    var isImage=file.type.startsWith('image/');
+
+    if(isImage){
+      // Converte imagem para PDF usando jsPDF
+      if(typeof jspdf==='undefined'&&typeof window.jspdf==='undefined'){
+        // Load jsPDF dynamically
+        await new Promise(function(resolve,reject){
+          var s=document.createElement('script');
+          s.src='https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+          s.onload=resolve;s.onerror=reject;
+          document.head.appendChild(s);
+        });
+      }
+      var imgData=await new Promise(function(resolve){
+        var r=new FileReader();
+        r.onload=function(e){
+          // Comprime a imagem primeiro
+          var img=new Image();
+          img.onload=function(){
+            var canvas=document.createElement('canvas');
+            var maxW=1200;
+            var ratio=Math.min(maxW/img.width,maxW/img.height,1);
+            canvas.width=Math.round(img.width*ratio);
+            canvas.height=Math.round(img.height*ratio);
+            canvas.getContext('2d').drawImage(img,0,0,canvas.width,canvas.height);
+            resolve({data:canvas.toDataURL('image/jpeg',0.82),w:canvas.width,h:canvas.height});
+          };
+          img.src=e.target.result;
+        };
+        r.readAsDataURL(file);
+      });
+      var jsPDF=window.jspdf?window.jspdf.jsPDF:(window.jsPDF||jspdf.jsPDF);
+      var pxToMm=function(px){return px*0.264583;};
+      var pw=pxToMm(imgData.w),ph=pxToMm(imgData.h);
+      var doc=new jsPDF({orientation:pw>ph?'landscape':'portrait',unit:'mm',format:[pw,ph]});
+      doc.addImage(imgData.data,'JPEG',0,0,pw,ph);
+      pdfBlob=doc.output('blob');
+    } else {
+      pdfBlob=file;
+    }
+
+    var caminho=usuarioAtual.id+'/'+cart+'/'+mesNum+'/'+subpasta+'/'+Date.now()+'_'+nomeArquivo;
+    var{error}=await supa.storage.from('documentos').upload(caminho,pdfBlob,{contentType:'application/pdf'});
+    if(error){hideLoad();alert('Erro ao enviar: '+error.message);return;}
+
+    var mesNome=MESES_NOMES[mesNum];
+    var ano=dataVal.substring(0,4);
+    var{data:docSalvo}=await supa.from('documentos').insert({
+      user_id:usuarioAtual.id,
+      nome:nomeArquivo,
+      carteira:cart,
+      data_upload:dataVal,
+      caminho:caminho,
+      mes:mesNum,
+      tipo_doc:docTipoSel[cart],
+      descricao:descVal||null,
+      valor:valorVal||null
+    }).select().single();
+
+    S.docs[cart].push({
+      id:docSalvo?docSalvo.id:Date.now(),
+      nome:nomeArquivo,
+      data:mesNome+'/'+ano,
+      caminho:caminho,
+      mes:mesNum,
+      tipo_doc:docTipoSel[cart]
+    });
+
+    // Reset form
+    docTipoSel[cart]=null;
+    docArquivoFile[cart]=null;
+    document.querySelectorAll('#doc-tipo-'+cart+' .doc-tipo-btn').forEach(function(b){b.classList.remove('sel');});
+    var dataElR=document.getElementById('doc-data-'+cart);
+    if(dataElR)dataElR.value='';
+    var descElR=document.getElementById('doc-desc-'+cart);
+    if(descElR)descElR.value='';
+    var valElR=document.getElementById('doc-valor-'+cart);
+    if(valElR)valElR.value='';
+    var nomeElR=document.getElementById('doc-arquivo-nome-'+cart);
+    if(nomeElR){nomeElR.style.display='none';nomeElR.textContent='';}
+    var areaElR=document.getElementById('doc-drop-'+cart);
+    if(areaElR)areaElR.classList.remove('tem-arquivo');
+
+    renderDocs(cart);
+    hideLoad();
+    alert('Documento salvo com sucesso! ✅');
+  }catch(e){
+    hideLoad();
+    alert('Erro: '+e.message);
+  }
+}
+
+// ── DOWNLOAD ZIP ──
+async function baixarTodosMes(c){
+  var mesFiltro=document.getElementById('mes-filtro-'+c).value;
+  if(!mesFiltro){alert('Selecione um mês para baixar!');return;}
+  var lista=S.docs[c].filter(function(d){return d.mes===mesFiltro;});
+  if(!lista.length){alert('Nenhum documento encontrado em '+MESES_NOMES[mesFiltro]+'.');return;}
+
+  showLoad('Gerando ZIP com '+lista.length+' documento(s)...');
+
+  try{
+    // Load JSZip dynamically
+    if(typeof JSZip==='undefined'){
+      await new Promise(function(resolve,reject){
+        var s=document.createElement('script');
+        s.src='https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
+        s.onload=resolve;s.onerror=reject;
+        document.head.appendChild(s);
+      });
+    }
+
+    var zip=new JSZip();
+    var mesNome=MESES_NOMES[mesFiltro];
+    var mesIdx=String(parseInt(mesFiltro)).padStart(2,'0');
+    var MESES_PT=['JANEIRO','FEVEREIRO','MARÇO','ABRIL','MAIO','JUNHO','JULHO','AGOSTO','SETEMBRO','OUTUBRO','NOVEMBRO','DEZEMBRO'];
+    var mesNomePT=MESES_PT[parseInt(mesFiltro)-1];
+    var anoAtual=new Date().getFullYear();
+    var pastaBase='Movimentação_Mensal/'+mesIdx+'_'+mesNomePT+'/';
+
+    // Cria subpastas vazias
+    zip.folder(pastaBase+'01_Extratos');
+    zip.folder(pastaBase+'02_Notas_Fiscais');
+    zip.folder(pastaBase+'03_Comprovantes');
+    zip.folder(pastaBase+'04_DAS');
+
+    var tipoParaPasta={extrato:'01_Extratos',nf:'02_Notas_Fiscais',comprovante:'03_Comprovantes',das:'04_DAS'};
+
+    for(var i=0;i<lista.length;i++){
+      var d=lista[i];
+      if(!d.caminho)continue;
+      showLoad('Baixando '+( i+1)+'/'+lista.length+'...');
+      var{data,error}=await supa.storage.from('documentos').download(d.caminho);
+      if(!error&&data){
+        var subpasta=tipoParaPasta[d.tipo_doc]||'03_Comprovantes';
+        zip.file(pastaBase+subpasta+'/'+d.nome,data);
+      }
+    }
+
+    showLoad('Compactando ZIP...');
+    var blob=await zip.generateAsync({type:'blob',compression:'DEFLATE',compressionOptions:{level:6}});
+    var url=URL.createObjectURL(blob);
+    var a=document.createElement('a');
+    a.href=url;
+    a.download='MEIFácil_'+S.nome.replace(/\s+/g,'_')+'_'+mesNomePT+'_'+anoAtual+'.zip';
+    a.click();
+    URL.revokeObjectURL(url);
+    hideLoad();
+  }catch(e){
+    hideLoad();
+    alert('Erro ao gerar ZIP: '+e.message);
+  }
+}
+
+// ── AGENDA: DEFAULT MÊS ATUAL ──
+function inicializarFiltroAgenda(){
+  var sel=document.getElementById('ag-mes-sel');
+  if(!sel)return;
+  var mesAtual=new Date().getMonth(); // 0-11
+  sel.value=String(mesAtual);
+  // Atualiza badge
+  var MESES_FULL=['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+  var badge=document.getElementById('ag-mes-badge');
+  if(badge)badge.textContent='📅 '+MESES_FULL[mesAtual]+' '+new Date().getFullYear();
+}
+
+// ── GOTO: adicionar perfil e assinatura ──
 // ── CÁLCULOS ──
 function calcTeto(){
   var t=TETOS[S.tipo]||81000;if(!S.dataAbertura)return t;
@@ -2322,7 +2946,7 @@ function abrirModalAgenda(){
   document.getElementById('mag-titulo').textContent='Nova conta';
   document.getElementById('mag-desc').value='';
   document.getElementById('mag-val').value='';
-  document.getElementById('mag-data').value=new Date().toISOString().split('T')[0];
+  var hj=new Date();document.getElementById('mag-data').value=new Date(hj.getFullYear(),hj.getMonth(),1).toISOString().split('T')[0];
   document.getElementById('mag-rec').value='unica';
   document.getElementById('mag-parcelas-wrap').style.display='none';
   if(document.getElementById('mag-parcelas'))document.getElementById('mag-parcelas').value='';
