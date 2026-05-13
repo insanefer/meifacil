@@ -438,7 +438,9 @@ input[type=date]{color-scheme:dark;}
 @media (min-width: 1024px) {
 
   /* Reset body */
-  body { overflow-x: hidden; }
+  body { overflow-x: hidden; overflow-y: auto; }
+  /* Sidebar não cria scroll duplo */
+  .sidebar { overflow-y: auto; overflow-x: hidden; }
 
   /* ── SIDEBAR ── */
   .sidebar {
@@ -583,6 +585,7 @@ input[type=date]{color-scheme:dark;}
   #app {
     margin-left: 260px;
     min-height: 100vh;
+    display: block;
   }
 
   /* ── HEADER — some no desktop ── */
@@ -596,9 +599,9 @@ input[type=date]{color-scheme:dark;}
 
   /* ── CONTEÚDO — max-width confortável ── */
   .scr {
-    max-width: 860px;
+    max-width: 900px;
     margin: 0 auto;
-    padding: 2rem 2.5rem 3rem;
+    padding: 1.5rem 2.5rem 2rem;
   }
 
   /* ── MODAL — centralizado no desktop ── */
@@ -656,11 +659,11 @@ input[type=date]{color-scheme:dark;}
   .sb-divider { margin: .5rem .5rem; }
   .sb-user { padding: .75rem; justify-content: center; }
   .sb-user-info, .sb-user-sair { display: none; }
-  #app { margin-left: 72px; }
+  #app { margin-left: 72px; display: block; }
   .hdr { display: none !important; }
   .nav-bot { display: none !important; }
   .fab { display: none !important; }
-  .scr { padding: 1.5rem; }
+  .scr { padding: 1.2rem 1.5rem 1.5rem; }
 }
 
 
