@@ -1685,7 +1685,7 @@ function goTo(id){
   if(navIdx>=0)document.querySelectorAll('.nav-i')[navIdx].classList.add('ac');
   curScr=id;
   var sf=id==='home'||id==='lanc';document.getElementById('fab').style.display=sf?'flex':'none';
-  if(id==='home')atualizar();
+  if(id==='home'){S.mes=new Date().getMonth();atualizar();}
   if(id==='lanc'){document.getElementById('fab').className='fab'+(S.lancTab==='cpf'?' b':'');renderLancs();}
   if(id==='dre')atualizarDRE();
   if(id==='ir')atualizarIR();
