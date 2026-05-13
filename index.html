@@ -821,12 +821,10 @@ input[type=date]{color-scheme:dark;}
         <div class="ibt">🏪 Documentos do CNPJ</div>
         <div class="ibx">Guarde: notas fiscais, comprovantes de DAS, recibos de clientes, comprovantes de despesas. Esses docs comprovam seus custos e aumentam o lucro isento de IR!</div>
       </div>
-      <div class="ib" style="background:rgba(75,139,245,.06);border-color:rgba(75,139,245,.18)">
-        <div class="ibt" style="color:var(--azul)">💡 Dica de nomenclatura</div>
-        <div class="ibx">Nomeie seus arquivos de forma clara:<br>
-        <strong>DAS_Janeiro_2025.pdf</strong><br>
-        <strong>NF_Cliente_Joao_Fev2025.pdf</strong><br>
-        <strong>Despesa_Internet_Marco2025.pdf</strong></div>
+      <div class="ib" style="background:rgba(0,196,140,.06);border-color:rgba(0,196,140,.2)" id="preview-nome-cnpj-box">
+        <div class="ibt" style="color:var(--verde)">📄 Nome do arquivo gerado</div>
+        <div class="ibx">Preencha os campos abaixo e veja como ficará o nome:<br>
+        <strong id="preview-nome-cnpj" style="color:var(--verde);font-size:.88rem;word-break:break-all">—</strong></div>
       </div>
 
       <!-- NOVO UPLOAD CNPJ -->
@@ -856,16 +854,16 @@ input[type=date]{color-scheme:dark;}
         </div>
         <div class="perfil-field">
           <label>Data do documento *</label>
-          <input type="date" id="doc-data-cnpj" style="font-size:1rem">
+          <input type="date" id="doc-data-cnpj" style="font-size:1rem" oninput="atualizarPreviewNome('cnpj')">
           <div class="pfhint">💡 Use a data da NF ou do pagamento — não a data de hoje</div>
         </div>
         <div class="perfil-field">
           <label>Descrição *</label>
-          <input type="text" id="doc-desc-cnpj" placeholder="Ex: Claro, Fornecedor João, DAS Abril..." style="font-size:1rem">
+          <input type="text" id="doc-desc-cnpj" placeholder="Ex: Claro, Fornecedor João, DAS Abril..." style="font-size:1rem" oninput="atualizarPreviewNome('cnpj')">
         </div>
         <div class="perfil-field">
           <label>Valor <span style="color:var(--texto2);font-weight:400">(opcional)</span></label>
-          <input type="text" id="doc-valor-cnpj" placeholder="Ex: 38,84" style="font-size:1rem">
+          <input type="text" id="doc-valor-cnpj" placeholder="Ex: 38,84" style="font-size:1rem" oninput="atualizarPreviewNome('cnpj')">
         </div>
         <div class="doc-upload-area" id="doc-drop-cnpj" onclick="simUploadNovo('cnpj')">
           <div class="doc-upload-icone">📤</div>
@@ -901,12 +899,10 @@ input[type=date]{color-scheme:dark;}
         <div class="ibt">👤 Documentos do CPF</div>
         <div class="ibx">Guarde: recibos médicos, educação, dependentes, extratos pessoais, comprovantes de IR. Garantem suas deduções no IRPF!</div>
       </div>
-      <div class="ib" style="background:rgba(75,139,245,.06);border-color:rgba(75,139,245,.18)">
-        <div class="ibt" style="color:var(--azul)">💡 Dica de nomenclatura</div>
-        <div class="ibx">Nomeie seus arquivos de forma clara:<br>
-        <strong>Medico_Consulta_Janeiro2025.pdf</strong><br>
-        <strong>Escola_Boleto_Fev2025.pdf</strong><br>
-        <strong>IR_Informe_Rendimentos_2024.pdf</strong></div>
+      <div class="ib" style="background:rgba(0,196,140,.06);border-color:rgba(0,196,140,.2)" id="preview-nome-cpf-box">
+        <div class="ibt" style="color:var(--verde)">📄 Nome do arquivo gerado</div>
+        <div class="ibx">Preencha os campos abaixo e veja como ficará o nome:<br>
+        <strong id="preview-nome-cpf" style="color:var(--verde);font-size:.88rem;word-break:break-all">—</strong></div>
       </div>
 
       <!-- NOVO UPLOAD CPF -->
@@ -936,16 +932,16 @@ input[type=date]{color-scheme:dark;}
         </div>
         <div class="perfil-field">
           <label>Data do documento *</label>
-          <input type="date" id="doc-data-cpf" style="font-size:1rem">
+          <input type="date" id="doc-data-cpf" style="font-size:1rem" oninput="atualizarPreviewNome('cpf')">
           <div class="pfhint">💡 Use a data da NF ou do pagamento — não a data de hoje</div>
         </div>
         <div class="perfil-field">
           <label>Descrição *</label>
-          <input type="text" id="doc-desc-cpf" placeholder="Ex: Médico João, Escola Ana, Pix Mercado..." style="font-size:1rem">
+          <input type="text" id="doc-desc-cpf" placeholder="Ex: Médico João, Escola Ana, Pix Mercado..." style="font-size:1rem" oninput="atualizarPreviewNome('cpf')">
         </div>
         <div class="perfil-field">
           <label>Valor <span style="color:var(--texto2);font-weight:400">(opcional)</span></label>
-          <input type="text" id="doc-valor-cpf" placeholder="Ex: 150,00" style="font-size:1rem">
+          <input type="text" id="doc-valor-cpf" placeholder="Ex: 150,00" style="font-size:1rem" oninput="atualizarPreviewNome('cpf')">
         </div>
         <div class="doc-upload-area" id="doc-drop-cpf" onclick="simUploadNovo('cpf')">
           <div class="doc-upload-icone">📤</div>
@@ -1708,6 +1704,32 @@ function goTo(id){
 function abrirMenuMais(){document.getElementById('menu-mais').classList.add('op');}
 function fecharMenuMais(){document.getElementById('menu-mais').classList.remove('op');}
 
+
+
+// ── PREVIEW NOME DO ARQUIVO ──
+function atualizarPreviewNome(cart){
+  var dataEl=document.getElementById('doc-data-'+cart);
+  var descEl=document.getElementById('doc-desc-'+cart);
+  var valorEl=document.getElementById('doc-valor-'+cart);
+  var previewEl=document.getElementById('preview-nome-'+cart);
+  if(!previewEl)return;
+
+  var data=dataEl?dataEl.value:'';
+  var desc=descEl?descEl.value.trim():'';
+  var valor=valorEl?valorEl.value.trim():'';
+
+  if(!data&&!desc){
+    previewEl.textContent='—';
+    return;
+  }
+
+  var partes=[];
+  if(data)partes.push(data);
+  if(desc)partes.push(desc.replace(/[^a-zA-Z0-9À-ÿ\s]/g,'').trim().replace(/\s+/g,'_'));
+  if(valor)partes.push(valor.replace(/[^0-9,.]/g,''));
+  var nome=partes.join('_')+'.pdf';
+  previewEl.textContent=nome;
+}
 
 // ── PERFIL COMPLETO ──
 var docTipoSel={cnpj:null,cpf:null};
