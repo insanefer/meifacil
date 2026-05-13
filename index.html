@@ -876,19 +876,23 @@ input[type=date]{color-scheme:dark;}
         </div>
         <button class="perfil-save-btn" onclick="confirmarUpload('cnpj')" style="margin-bottom:.9rem">Salvar documento</button>
       </div>
-      <div style="display:flex;gap:.5rem;align-items:center;margin-bottom:.7rem;flex-wrap:wrap;margin-top:.5rem">
-        <select id="mes-filtro-cnpj" style="flex:1;background:var(--bg);border:1.5px solid var(--borda);border-radius:9px;padding:.5rem .7rem;color:var(--texto);font-size:.8rem;outline:none">
-          <option value="">Todos os meses</option>
-          <option value="01">Janeiro</option><option value="02">Fevereiro</option>
-          <option value="03">Março</option><option value="04">Abril</option>
-          <option value="05">Maio</option><option value="06">Junho</option>
-          <option value="07">Julho</option><option value="08">Agosto</option>
-          <option value="09">Setembro</option><option value="10">Outubro</option>
-          <option value="11">Novembro</option><option value="12">Dezembro</option>
-        </select>
-        <button onclick="renderDocs('cnpj')" style="background:var(--card);color:var(--texto2);border:1px solid var(--borda);border-radius:9px;padding:.5rem .7rem;font-size:.78rem;cursor:pointer;min-height:44px">🔍 Filtrar</button>
-        <button onclick="baixarTodosMes('cnpj')" style="background:var(--azul);color:#fff;border:none;border-radius:9px;padding:.5rem .7rem;font-size:.78rem;cursor:pointer;min-height:44px">⬇ Baixar mês</button>
-        <button onclick="baixarAnoCompleto('cnpj')" style="background:var(--roxo);color:#fff;border:none;border-radius:9px;padding:.5rem .7rem;font-size:.78rem;cursor:pointer;min-height:44px">📦 Baixar ano</button>
+      <div style="margin-bottom:.7rem;margin-top:.5rem">
+        <div style="display:flex;gap:.5rem;align-items:center;margin-bottom:.5rem">
+          <select id="mes-filtro-cnpj" style="flex:1;background:var(--bg);border:1.5px solid var(--borda);border-radius:9px;padding:.5rem .7rem;color:var(--texto);font-size:.8rem;outline:none">
+            <option value="">Todos os meses</option>
+            <option value="01">Janeiro</option><option value="02">Fevereiro</option>
+            <option value="03">Março</option><option value="04">Abril</option>
+            <option value="05">Maio</option><option value="06">Junho</option>
+            <option value="07">Julho</option><option value="08">Agosto</option>
+            <option value="09">Setembro</option><option value="10">Outubro</option>
+            <option value="11">Novembro</option><option value="12">Dezembro</option>
+          </select>
+          <button onclick="renderDocs('cnpj')" style="background:var(--card);color:var(--texto2);border:1px solid var(--borda);border-radius:9px;padding:.5rem .7rem;font-size:.78rem;cursor:pointer;min-height:44px;white-space:nowrap">🔍 Filtrar</button>
+        </div>
+        <div style="display:flex;gap:.5rem">
+          <button onclick="baixarTodosMes('cnpj')" style="flex:1;background:var(--azul);color:#fff;border:none;border-radius:9px;padding:.65rem .5rem;font-size:.78rem;cursor:pointer;min-height:44px;font-weight:700">⬇ Baixar mês</button>
+          <button onclick="baixarAnoCompleto('cnpj')" style="flex:1;background:var(--roxo);color:#fff;border:none;border-radius:9px;padding:.65rem .5rem;font-size:.78rem;cursor:pointer;min-height:44px;font-weight:700">📦 Baixar ano</button>
+        </div>
       </div>
       <div id="docs-cnpj"><div class="empty">Nenhum documento salvo ainda.</div></div>
     </div>
@@ -952,19 +956,23 @@ input[type=date]{color-scheme:dark;}
         </div>
         <button class="perfil-save-btn" onclick="confirmarUpload('cpf')" style="margin-bottom:.9rem">Salvar documento</button>
       </div>
-      <div style="display:flex;gap:.5rem;align-items:center;margin-bottom:.7rem;flex-wrap:wrap;margin-top:.5rem">
-        <select id="mes-filtro-cpf" style="flex:1;background:var(--bg);border:1.5px solid var(--borda);border-radius:9px;padding:.5rem .7rem;color:var(--texto);font-size:.8rem;outline:none">
-          <option value="">Todos os meses</option>
-          <option value="01">Janeiro</option><option value="02">Fevereiro</option>
-          <option value="03">Março</option><option value="04">Abril</option>
-          <option value="05">Maio</option><option value="06">Junho</option>
-          <option value="07">Julho</option><option value="08">Agosto</option>
-          <option value="09">Setembro</option><option value="10">Outubro</option>
-          <option value="11">Novembro</option><option value="12">Dezembro</option>
-        </select>
-        <button onclick="renderDocs('cpf')" style="background:var(--card);color:var(--texto2);border:1px solid var(--borda);border-radius:9px;padding:.5rem .7rem;font-size:.78rem;cursor:pointer;min-height:44px">🔍 Filtrar</button>
-        <button onclick="baixarTodosMes('cpf')" style="background:var(--azul);color:#fff;border:none;border-radius:9px;padding:.5rem .7rem;font-size:.78rem;cursor:pointer;min-height:44px">⬇ Baixar mês</button>
-        <button onclick="baixarAnoCompleto('cpf')" style="background:var(--roxo);color:#fff;border:none;border-radius:9px;padding:.5rem .7rem;font-size:.78rem;cursor:pointer;min-height:44px">📦 Baixar ano</button>
+      <div style="margin-bottom:.7rem;margin-top:.5rem">
+        <div style="display:flex;gap:.5rem;align-items:center;margin-bottom:.5rem">
+          <select id="mes-filtro-cpf" style="flex:1;background:var(--bg);border:1.5px solid var(--borda);border-radius:9px;padding:.5rem .7rem;color:var(--texto);font-size:.8rem;outline:none">
+            <option value="">Todos os meses</option>
+            <option value="01">Janeiro</option><option value="02">Fevereiro</option>
+            <option value="03">Março</option><option value="04">Abril</option>
+            <option value="05">Maio</option><option value="06">Junho</option>
+            <option value="07">Julho</option><option value="08">Agosto</option>
+            <option value="09">Setembro</option><option value="10">Outubro</option>
+            <option value="11">Novembro</option><option value="12">Dezembro</option>
+          </select>
+          <button onclick="renderDocs('cpf')" style="background:var(--card);color:var(--texto2);border:1px solid var(--borda);border-radius:9px;padding:.5rem .7rem;font-size:.78rem;cursor:pointer;min-height:44px;white-space:nowrap">🔍 Filtrar</button>
+        </div>
+        <div style="display:flex;gap:.5rem">
+          <button onclick="baixarTodosMes('cpf')" style="flex:1;background:var(--azul);color:#fff;border:none;border-radius:9px;padding:.65rem .5rem;font-size:.78rem;cursor:pointer;min-height:44px;font-weight:700">⬇ Baixar mês</button>
+          <button onclick="baixarAnoCompleto('cpf')" style="flex:1;background:var(--roxo);color:#fff;border:none;border-radius:9px;padding:.65rem .5rem;font-size:.78rem;cursor:pointer;min-height:44px;font-weight:700">📦 Baixar ano</button>
+        </div>
       </div>
       <div id="docs-cpf"><div class="empty">Nenhum documento salvo ainda.</div></div>
     </div>
