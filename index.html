@@ -868,9 +868,10 @@ input[type=date]{color-scheme:dark;}
         <div class="perfil-field">
           <label>Data do documento *</label>
           <input type="date" id="doc-data-cnpj" style="font-size:1rem">
+          <div class="pfhint">💡 Use a data da NF ou do pagamento — não a data de hoje</div>
         </div>
         <div class="perfil-field">
-          <label>Descrição <span style="color:var(--texto2);font-weight:400">(opcional)</span></label>
+          <label>Descrição *</label>
           <input type="text" id="doc-desc-cnpj" placeholder="Ex: Claro, Fornecedor João, DAS Abril..." style="font-size:1rem">
         </div>
         <div class="perfil-field">
@@ -933,32 +934,33 @@ input[type=date]{color-scheme:dark;}
         <div class="doc-tipo-grid" id="doc-tipo-cpf">
           <div class="doc-tipo-btn" id="dbt-cpf-extrato" onclick="setDocTipo('cpf','extrato',this)">
             <span class="doc-tipo-info" onclick="event.stopPropagation();toggleTooltip('tt-cpf-extrato')">ℹ</span>
-            <div class="doc-tooltip" id="tt-cpf-extrato">Salve o extrato completo do mês anterior. Baixe direto no app do seu banco em PDF.</div>
+            <div class="doc-tooltip" id="tt-cpf-extrato">Extrato da sua conta pessoal. Baixe direto no app do seu banco em PDF.</div>
             <span class="dti">📄</span><span class="dtl">Extrato Bancário</span>
           </div>
-          <div class="doc-tipo-btn" id="dbt-cpf-nf" onclick="setDocTipo('cpf','nf',this)">
-            <span class="doc-tipo-info" onclick="event.stopPropagation();toggleTooltip('tt-cpf-nf')">ℹ</span>
-            <div class="doc-tooltip" id="tt-cpf-nf">NFS-e, NF-e emitidas ou recebidas.</div>
-            <span class="dti">🧾</span><span class="dtl">Nota Fiscal</span>
+          <div class="doc-tipo-btn" id="dbt-cpf-medico" onclick="setDocTipo('cpf','medico',this)">
+            <span class="doc-tipo-info" onclick="event.stopPropagation();toggleTooltip('tt-cpf-medico')">ℹ</span>
+            <div class="doc-tooltip" id="tt-cpf-medico">Consultas, exames, plano de saúde.</div>
+            <span class="dti">🏥</span><span class="dtl">Recibo Médico</span>
+          </div>
+          <div class="doc-tipo-btn" id="dbt-cpf-educacao" onclick="setDocTipo('cpf','educacao',this)">
+            <span class="doc-tipo-info" onclick="event.stopPropagation();toggleTooltip('tt-cpf-educacao')">ℹ</span>
+            <div class="doc-tooltip" id="tt-cpf-educacao">Boletos de escola, curso, faculdade.</div>
+            <span class="dti">📚</span><span class="dtl">Educação</span>
           </div>
           <div class="doc-tipo-btn" id="dbt-cpf-comp" onclick="setDocTipo('cpf','comprovante',this)">
             <span class="doc-tipo-info" onclick="event.stopPropagation();toggleTooltip('tt-cpf-comp')">ℹ</span>
-            <div class="doc-tooltip" id="tt-cpf-comp">Prints de Pix, transferências, recibos.</div>
+            <div class="doc-tooltip" id="tt-cpf-comp">Pix, transferências pessoais, recibos.</div>
             <span class="dti">📱</span><span class="dtl">Comprovante</span>
-          </div>
-          <div class="doc-tipo-btn" id="dbt-cpf-das" onclick="setDocTipo('cpf','das',this)">
-            <span class="doc-tipo-info" onclick="event.stopPropagation();toggleTooltip('tt-cpf-das')">ℹ</span>
-            <div class="doc-tooltip" id="tt-cpf-das">Comprovante de pagamento do DAS mensal.</div>
-            <span class="dti">✅</span><span class="dtl">Comprovante DAS</span>
           </div>
         </div>
         <div class="perfil-field">
           <label>Data do documento *</label>
           <input type="date" id="doc-data-cpf" style="font-size:1rem">
+          <div class="pfhint">💡 Use a data da NF ou do pagamento — não a data de hoje</div>
         </div>
         <div class="perfil-field">
-          <label>Descrição <span style="color:var(--texto2);font-weight:400">(opcional)</span></label>
-          <input type="text" id="doc-desc-cpf" placeholder="Ex: Médico, Escola, IR..." style="font-size:1rem">
+          <label>Descrição *</label>
+          <input type="text" id="doc-desc-cpf" placeholder="Ex: Médico João, Escola Ana, Pix Mercado..." style="font-size:1rem">
         </div>
         <div class="perfil-field">
           <label>Valor <span style="color:var(--texto2);font-weight:400">(opcional)</span></label>
@@ -1928,18 +1930,20 @@ async function confirmarUpload(cart){
   if(!docTipoSel[cart]){alert('Selecione o tipo do documento.');return;}
   var dataEl=document.getElementById('doc-data-'+cart);
   if(!dataEl||!dataEl.value){alert('Informe a data do documento.');return;}
+  var descEl=document.getElementById('doc-desc-'+cart);
+  var descVal=descEl?descEl.value.trim():'';
+  if(!descVal){alert('A descrição é obrigatória.');return;}
   if(!docArquivoFile[cart]){alert('Selecione um arquivo para enviar.');return;}
   if(!usuarioAtual){alert('Você precisa estar logado!');return;}
 
   var file=docArquivoFile[cart];
   var dataVal=dataEl.value;
-  var descVal=document.getElementById('doc-desc-'+cart)?document.getElementById('doc-desc-'+cart).value.trim():'';
   var valorVal=document.getElementById('doc-valor-'+cart)?document.getElementById('doc-valor-'+cart).value.trim():'';
 
-  // Montar nome do arquivo: AAAA-MM-DD_Valor_Descricao.pdf
+  // Nomenclatura: AAAA-MM-DD_Descrição_Valor.pdf
   var partes=[dataVal];
+  partes.push(descVal.replace(/[^a-zA-Z0-9À-ÿ\s]/g,'').trim().replace(/\s+/g,'_'));
   if(valorVal)partes.push(valorVal.replace(/[^0-9,.]/g,''));
-  if(descVal)partes.push(descVal.replace(/[^a-zA-Z0-9À-ÿ\s]/g,'').trim().replace(/\s+/g,'_'));
   var nomeBase=partes.join('_');
   var nomeArquivo=limparNomeArquivo(nomeBase)+'.pdf';
 
@@ -2044,66 +2048,6 @@ async function confirmarUpload(cart){
 }
 
 // ── DOWNLOAD ZIP ──
-async function baixarTodosMes(c){
-  var mesFiltro=document.getElementById('mes-filtro-'+c).value;
-  if(!mesFiltro){alert('Selecione um mês para baixar!');return;}
-  var lista=S.docs[c].filter(function(d){return d.mes===mesFiltro;});
-  if(!lista.length){alert('Nenhum documento encontrado em '+MESES_NOMES[mesFiltro]+'.');return;}
-
-  showLoad('Gerando ZIP com '+lista.length+' documento(s)...');
-
-  try{
-    // Load JSZip dynamically
-    if(typeof JSZip==='undefined'){
-      await new Promise(function(resolve,reject){
-        var s=document.createElement('script');
-        s.src='https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
-        s.onload=resolve;s.onerror=reject;
-        document.head.appendChild(s);
-      });
-    }
-
-    var zip=new JSZip();
-    var mesNome=MESES_NOMES[mesFiltro];
-    var mesIdx=String(parseInt(mesFiltro)).padStart(2,'0');
-    var MESES_PT=['JANEIRO','FEVEREIRO','MARÇO','ABRIL','MAIO','JUNHO','JULHO','AGOSTO','SETEMBRO','OUTUBRO','NOVEMBRO','DEZEMBRO'];
-    var mesNomePT=MESES_PT[parseInt(mesFiltro)-1];
-    var anoAtual=new Date().getFullYear();
-    var pastaBase='Movimentação_Mensal/'+mesIdx+'_'+mesNomePT+'/';
-
-    // Cria subpastas vazias
-    zip.folder(pastaBase+'01_Extratos');
-    zip.folder(pastaBase+'02_Notas_Fiscais');
-    zip.folder(pastaBase+'03_Comprovantes');
-    zip.folder(pastaBase+'04_DAS');
-
-    var tipoParaPasta={extrato:'01_Extratos',nf:'02_Notas_Fiscais',comprovante:'03_Comprovantes',das:'04_DAS'};
-
-    for(var i=0;i<lista.length;i++){
-      var d=lista[i];
-      if(!d.caminho)continue;
-      showLoad('Baixando '+( i+1)+'/'+lista.length+'...');
-      var{data,error}=await supa.storage.from('documentos').download(d.caminho);
-      if(!error&&data){
-        var subpasta=tipoParaPasta[d.tipo_doc]||'03_Comprovantes';
-        zip.file(pastaBase+subpasta+'/'+d.nome,data);
-      }
-    }
-
-    showLoad('Compactando ZIP...');
-    var blob=await zip.generateAsync({type:'blob',compression:'DEFLATE',compressionOptions:{level:6}});
-    var url=URL.createObjectURL(blob);
-    var a=document.createElement('a');
-    a.href=url;
-    a.download='MEIFácil_'+S.nome.replace(/\s+/g,'_')+'_'+mesNomePT+'_'+anoAtual+'.zip';
-    a.click();
-    URL.revokeObjectURL(url);
-    hideLoad();
-  }catch(e){
-    hideLoad();
-    alert('Erro ao gerar ZIP: '+e.message);
-  }
-}
 
 // ── AGENDA: DEFAULT MÊS ATUAL ──
 function inicializarFiltroAgenda(){
@@ -2599,20 +2543,68 @@ async function baixarTodosMes(c){
   if(!mesFiltro){alert('Selecione um mês para baixar!');return;}
   var lista=S.docs[c].filter(function(d){return d.mes===mesFiltro;});
   if(!lista.length){alert('Nenhum documento encontrado em '+MESES_NOMES[mesFiltro]+'.');return;}
-  showLoad('Baixando '+lista.length+' documento(s) de '+MESES_NOMES[mesFiltro]+'...');
-  for(var i=0;i<lista.length;i++){
-    var d=lista[i];
-    if(!d.caminho)continue;
-    var{data,error}=await supa.storage.from('documentos').download(d.caminho);
-    if(!error){
-      var url=URL.createObjectURL(data);
-      var a=document.createElement('a');
-      a.href=url;a.download=d.nome;a.click();
-      URL.revokeObjectURL(url);
-      await new Promise(function(r){setTimeout(r,600);});
+
+  showLoad('Gerando ZIP com '+lista.length+' documento(s)...');
+
+  try{
+    if(typeof JSZip==='undefined'){
+      await new Promise(function(resolve,reject){
+        var s=document.createElement('script');
+        s.src='https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js';
+        s.onload=resolve;s.onerror=reject;
+        document.head.appendChild(s);
+      });
     }
+
+    var zip=new JSZip();
+    var mesIdx=String(parseInt(mesFiltro)).padStart(2,'0');
+    var MESES_PT=['JANEIRO','FEVEREIRO','MARCO','ABRIL','MAIO','JUNHO','JULHO','AGOSTO','SETEMBRO','OUTUBRO','NOVEMBRO','DEZEMBRO'];
+    var mesNomePT=MESES_PT[parseInt(mesFiltro)-1];
+    var anoAtual=new Date().getFullYear();
+    var isCNPJ=c==='cnpj';
+    var pastaRaiz=isCNPJ?'Movimentacao_Mensal':'Movimentacao_Pessoal';
+    var pastaBase=pastaRaiz+'/'+mesIdx+'_'+mesNomePT+'/';
+
+    var tipoParaPasta;
+    if(isCNPJ){
+      tipoParaPasta={extrato:'01_Extratos',nf:'02_Notas_Fiscais',comprovante:'03_Comprovantes',das:'04_DAS'};
+      zip.folder(pastaBase+'01_Extratos');
+      zip.folder(pastaBase+'02_Notas_Fiscais');
+      zip.folder(pastaBase+'03_Comprovantes');
+      zip.folder(pastaBase+'04_DAS');
+      zip.folder(pastaBase+'00_Outros');
+    } else {
+      tipoParaPasta={extrato:'01_Extratos',medico:'02_Recibos_Medicos',educacao:'03_Educacao',comprovante:'04_Comprovantes'};
+      zip.folder(pastaBase+'01_Extratos');
+      zip.folder(pastaBase+'02_Recibos_Medicos');
+      zip.folder(pastaBase+'03_Educacao');
+      zip.folder(pastaBase+'04_Comprovantes');
+      zip.folder(pastaBase+'00_Outros');
+    }
+
+    for(var i=0;i<lista.length;i++){
+      var d=lista[i];
+      if(!d.caminho)continue;
+      showLoad('Baixando '+(i+1)+'/'+lista.length+'...');
+      var dl=await supa.storage.from('documentos').download(d.caminho);
+      if(!dl.error&&dl.data){
+        var subpasta=d.tipo_doc&&tipoParaPasta[d.tipo_doc]?tipoParaPasta[d.tipo_doc]:'00_Outros';
+        zip.file(pastaBase+subpasta+'/'+d.nome,dl.data);
+      }
+    }
+
+    showLoad('Compactando ZIP...');
+    var blob=await zip.generateAsync({type:'blob',compression:'DEFLATE',compressionOptions:{level:6}});
+    var url=URL.createObjectURL(blob);
+    var a=document.createElement('a');
+    var nomeZip='MEIFacil_'+S.nome.replace(/\s+/g,'_')+'_'+(isCNPJ?'CNPJ':'CPF')+'_'+mesNomePT+'_'+anoAtual+'.zip';
+    a.href=url;a.download=nomeZip;a.click();
+    URL.revokeObjectURL(url);
+    hideLoad();
+  }catch(e){
+    hideLoad();
+    alert('Erro ao gerar ZIP: '+e.message);
   }
-  hideLoad();
 }
 
 // ── RELATÓRIO ──
