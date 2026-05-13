@@ -377,6 +377,7 @@ input[type=date]{color-scheme:dark;}
 .menu-mais-btn .mml{font-size:.8rem;font-weight:700;}
 .menu-mais-fechar{width:100%;background:var(--bg);border:1px solid var(--borda);color:var(--texto2);border-radius:12px;padding:.8rem;cursor:pointer;font-size:.88rem;font-weight:600;min-height:48px;}
 
+.sidebar{display:none;}
 /* ── PERFIL & ASSINATURA ── */
 .perfil-tabs{display:flex;gap:0;margin-bottom:1.2rem;background:var(--bg);border-radius:10px;padding:.25rem;}
 .perfil-tab{flex:1;padding:.55rem;text-align:center;font-size:.82rem;font-weight:700;cursor:pointer;color:var(--texto2);border-radius:8px;border:none;background:none;}
@@ -431,6 +432,238 @@ input[type=date]{color-scheme:dark;}
 .ag-item.pendente{border-left-color:var(--amarelo);}
 .ag-item.paga{border-left-color:var(--verde);opacity:.75;}
 .ag-mes-badge{display:inline-block;background:rgba(0,196,140,.12);color:var(--verde);font-size:.68rem;font-weight:800;padding:.2rem .6rem;border-radius:99px;margin-bottom:.75rem;}
+/* ═══════════════════════════════════════
+   DESKTOP LAYOUT — acima de 1024px
+   ═══════════════════════════════════════ */
+@media (min-width: 1024px) {
+
+  /* Reset body */
+  body { overflow-x: hidden; }
+
+  /* ── SIDEBAR ── */
+  .sidebar {
+    display: flex;
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    width: 260px;
+    background: #0a2e1f;
+    display: flex;
+    flex-direction: column;
+    z-index: 200;
+    border-right: 1px solid rgba(0,196,140,.2);
+  }
+
+  .sb-logo {
+    padding: 1.8rem 1.5rem 1.4rem;
+    font-size: 1.55rem;
+    font-weight: 900;
+    letter-spacing: -1.5px;
+    border-bottom: 1px solid rgba(0,196,140,.15);
+    flex-shrink: 0;
+  }
+  .sb-logo .ml { color: #00C48C; }
+  .sb-logo .mf { color: #fff; }
+  .sb-logo .sub {
+    font-size: .68rem;
+    font-weight: 400;
+    color: rgba(255,255,255,.4);
+    letter-spacing: .5px;
+    margin-top: .2rem;
+    display: block;
+  }
+
+  .sb-nav {
+    flex: 1;
+    padding: 1rem 0;
+    overflow-y: auto;
+  }
+
+  .sb-section {
+    font-size: .62rem;
+    font-weight: 800;
+    color: rgba(255,255,255,.3);
+    text-transform: uppercase;
+    letter-spacing: .8px;
+    padding: .6rem 1.5rem .3rem;
+  }
+
+  .sb-item {
+    display: flex;
+    align-items: center;
+    gap: .85rem;
+    padding: .8rem 1.5rem;
+    cursor: pointer;
+    color: rgba(255,255,255,.6);
+    font-size: .88rem;
+    font-weight: 600;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    border-radius: 0;
+    transition: all .15s;
+    position: relative;
+  }
+  .sb-item:hover {
+    background: rgba(0,196,140,.1);
+    color: #fff;
+  }
+  .sb-item.ac {
+    background: #00C48C;
+    color: #0a2e1f;
+    font-weight: 800;
+  }
+  .sb-item.ac:hover { background: #00d49a; }
+  .sb-item .sb-icon { font-size: 1.15rem; width: 22px; text-align: center; flex-shrink: 0; }
+  .sb-item .sb-badge {
+    margin-left: auto;
+    background: rgba(255,107,107,.25);
+    color: #FF6B6B;
+    font-size: .62rem;
+    font-weight: 800;
+    padding: .15rem .45rem;
+    border-radius: 99px;
+  }
+  .sb-item.ac .sb-badge {
+    background: rgba(14,23,32,.2);
+    color: #0a2e1f;
+  }
+
+  .sb-divider {
+    height: 1px;
+    background: rgba(0,196,140,.12);
+    margin: .5rem 1.5rem;
+  }
+
+  /* Botão Novo Lançamento na sidebar */
+  .sb-lanc-btn {
+    margin: .5rem 1rem;
+    background: #00C48C;
+    border: none;
+    border-radius: 12px;
+    padding: .85rem 1rem;
+    color: #0a2e1f;
+    font-weight: 800;
+    font-size: .9rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: .6rem;
+    width: calc(100% - 2rem);
+    justify-content: center;
+    transition: background .15s;
+  }
+  .sb-lanc-btn:hover { background: #00d49a; }
+
+  /* Usuário embaixo da sidebar */
+  .sb-user {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid rgba(0,196,140,.15);
+    display: flex;
+    align-items: center;
+    gap: .75rem;
+    flex-shrink: 0;
+  }
+  .sb-user-foto {
+    width: 38px; height: 38px;
+    border-radius: 50%;
+    background: rgba(0,196,140,.2);
+    border: 2px solid rgba(0,196,140,.4);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1rem; flex-shrink: 0; overflow: hidden;
+  }
+  .sb-user-foto img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+  .sb-user-info { flex: 1; min-width: 0; }
+  .sb-user-nome { font-size: .82rem; font-weight: 700; color: #fff; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .sb-user-plano { font-size: .68rem; color: rgba(0,196,140,.7); }
+  .sb-user-sair { background: none; border: none; color: rgba(255,255,255,.35); cursor: pointer; font-size: .8rem; padding: .3rem; flex-shrink: 0; }
+  .sb-user-sair:hover { color: #FF6B6B; }
+
+  /* ── APP WRAPPER — desloca conteúdo para a direita ── */
+  #app {
+    margin-left: 260px;
+    min-height: 100vh;
+  }
+
+  /* ── HEADER — some no desktop ── */
+  .hdr { display: none !important; }
+
+  /* ── NAV BOT — some no desktop ── */
+  .nav-bot { display: none !important; }
+
+  /* ── FAB — some no desktop ── */
+  .fab { display: none !important; }
+
+  /* ── CONTEÚDO — max-width confortável ── */
+  .scr {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 2rem 2.5rem 3rem;
+  }
+
+  /* ── MODAL — centralizado no desktop ── */
+  .mo {
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+  }
+  .mb {
+    border-radius: 20px !important;
+    max-width: 520px;
+    width: 100%;
+    max-height: 90vh;
+    padding-bottom: 1.3rem !important;
+  }
+
+  /* ── MENU MAIS — centralizado ── */
+  .menu-mais-overlay {
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+  }
+  .menu-mais-box {
+    border-radius: 20px !important;
+    max-width: 480px;
+    width: 100%;
+    padding-bottom: 1.2rem !important;
+  }
+
+  /* ── AÇÕES RÁPIDAS — 3 colunas no desktop ── */
+  .aq { grid-template-columns: repeat(3, 1fr) !important; }
+
+  /* ── CARDS DO DASHBOARD — mais espaço ── */
+  .sc-val { font-size: 2rem !important; }
+
+  /* ── DRE — 2 colunas ── */
+  .dre-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+
+  /* PWA banner — some no desktop ── */
+  .pwa-banner { display: none !important; }
+}
+
+/* Tablet intermediário 768-1023px — sidebar compacta */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .sidebar { display: flex; width: 72px; }
+  .sb-logo { padding: 1.4rem .8rem; text-align: center; }
+  .sb-logo .mf, .sb-logo .sub { display: none; }
+  .sb-item { padding: .85rem; justify-content: center; }
+  .sb-item .sb-icon { width: auto; font-size: 1.3rem; }
+  .sb-item span:not(.sb-icon):not(.sb-badge) { display: none; }
+  .sb-item .sb-badge { display: none; }
+  .sb-section { display: none; }
+  .sb-lanc-btn span:last-child { display: none; }
+  .sb-lanc-btn { padding: .85rem; justify-content: center; }
+  .sb-divider { margin: .5rem .5rem; }
+  .sb-user { padding: .75rem; justify-content: center; }
+  .sb-user-info, .sb-user-sair { display: none; }
+  #app { margin-left: 72px; }
+  .hdr { display: none !important; }
+  .nav-bot { display: none !important; }
+  .fab { display: none !important; }
+  .scr { padding: 1.5rem; }
+}
+
+
 </style>
 </head>
 <body>
@@ -548,6 +781,73 @@ input[type=date]{color-scheme:dark;}
 
 <!-- APP -->
 <div id="app">
+
+  <!-- ═══ SIDEBAR DESKTOP ═══ -->
+  <aside class="sidebar" id="sidebar">
+    <!-- Logo -->
+    <div class="sb-logo">
+      <span class="ml">MEI</span><span class="mf">Fácil</span>
+      <span class="sub">CNPJ e CPF sob controle</span>
+    </div>
+
+    <!-- Nav -->
+    <div class="sb-nav">
+      <div class="sb-section">Principal</div>
+      <button class="sb-item ac" id="sbi-home" onclick="goTo('home')">
+        <span class="sb-icon">🏠</span> Início
+      </button>
+      <button class="sb-item" id="sbi-lanc" onclick="goTo('lanc')">
+        <span class="sb-icon">💵</span> Lançamentos
+      </button>
+      <button class="sb-item" id="sbi-agenda" onclick="goTo('agenda')">
+        <span class="sb-icon">📅</span> Agenda
+      </button>
+      <button class="sb-item" id="sbi-dre" onclick="goTo('dre')">
+        <span class="sb-icon">📊</span> Resultados
+      </button>
+
+      <div class="sb-divider"></div>
+      <div class="sb-section">Ferramentas</div>
+      <button class="sb-item" id="sbi-ir" onclick="goTo('ir')">
+        <span class="sb-icon">📋</span> Simulador IR
+      </button>
+      <button class="sb-item" id="sbi-docs" onclick="goTo('docs')">
+        <span class="sb-icon">📁</span> Documentos
+      </button>
+      <button class="sb-item" id="sbi-relatorio" onclick="goTo('relatorio')">
+        <span class="sb-icon">📄</span> Relatório Anual
+      </button>
+      <button class="sb-item" id="sbi-guias" onclick="goTo('guias')">
+        <span class="sb-icon">📚</span> Guias MEI
+      </button>
+
+      <div class="sb-divider"></div>
+      <div class="sb-section">Conta</div>
+      <button class="sb-item" id="sbi-perfil" onclick="goTo('perfil')">
+        <span class="sb-icon">👤</span> Meu Perfil & Empresa
+      </button>
+      <button class="sb-item" id="sbi-assinatura" onclick="goTo('assinatura')">
+        <span class="sb-icon">💳</span> Minha Assinatura
+      </button>
+
+      <div class="sb-divider"></div>
+      <!-- Botão novo lançamento -->
+      <button class="sb-lanc-btn" onclick="abrirModalCtx()">
+        <span>＋</span> <span>Novo lançamento</span>
+      </button>
+    </div>
+
+    <!-- Usuário -->
+    <div class="sb-user">
+      <div class="sb-user-foto" id="sb-foto">😊</div>
+      <div class="sb-user-info">
+        <div class="sb-user-nome" id="sb-nome">—</div>
+        <div class="sb-user-plano">✅ Plano Ativo</div>
+      </div>
+      <button class="sb-user-sair" onclick="fazerLogout()" title="Sair">⏻</button>
+    </div>
+  </aside>
+  <!-- ═══ FIM SIDEBAR ═══ -->
   <div class="hdr">
     <div class="hdr-logo">MEIFácil</div>
     <div style="display:flex;align-items:center;gap:.8rem">
@@ -1514,6 +1814,8 @@ async function carregarDadosUsuario(){
       document.getElementById('d-nome').textContent=S.nome;
       hideLoad();
       carregando=false;
+      // Atualiza sidebar desktop
+      atualizarSidebarUsuario();
       // Atualiza imediatamente
       atualizarGuiaNF();renderMeses();inicializarRelAno();atualizar();
       // Atualiza de novo após 300ms — garante que o CSS transition terminou
@@ -1680,12 +1982,16 @@ function goTo(id){
   document.querySelectorAll('.scr').forEach(function(s){s.classList.remove('ac');});
   document.querySelectorAll('.nav-i').forEach(function(n){n.classList.remove('ac');});
   document.getElementById('scr-'+id).classList.add('ac');
-  // Nav principal: home, lanc, agenda, dre (índices 0-3)
+  // Nav mobile — bottom bar
   var navIdx=['home','lanc','agenda','dre'].indexOf(id);
   if(navIdx>=0)document.querySelectorAll('.nav-i')[navIdx].classList.add('ac');
+  // Sidebar desktop — highlight active item
+  document.querySelectorAll('.sb-item').forEach(function(b){b.classList.remove('ac');});
+  var sbi=document.getElementById('sbi-'+id);
+  if(sbi)sbi.classList.add('ac');
   curScr=id;
   var sf=id==='home'||id==='lanc';document.getElementById('fab').style.display=sf?'flex':'none';
-  if(id==='home'){S.mes=new Date().getMonth();atualizar();}
+  if(id==='home'){S.mes=new Date().getMonth();atualizar();atualizarSidebarUsuario();}
   if(id==='lanc'){document.getElementById('fab').className='fab'+(S.lancTab==='cpf'?' b':'');renderLancs();}
   if(id==='dre')atualizarDRE();
   if(id==='ir')atualizarIR();
@@ -1695,6 +2001,13 @@ function goTo(id){
     var wrap=document.getElementById('rel-anos');
     if(wrap&&wrap.children.length===0)inicializarRelAno();
   }
+}
+
+function atualizarSidebarUsuario(){
+  var sbNome=document.getElementById('sb-nome');
+  if(sbNome)sbNome.textContent=S.nome||'—';
+  var sbFoto=document.getElementById('sb-foto');
+  if(sbFoto&&S.fotoPerfil)sbFoto.innerHTML='<img src="'+S.fotoPerfil+'" alt="foto">';
 }
 
 function abrirMenuMais(){document.getElementById('menu-mais').classList.add('op');}
