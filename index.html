@@ -974,54 +974,74 @@ input[type=date]{color-scheme:dark;}
   </div>
 
   <!-- RELATÓRIO -->
+  <!-- RELATÓRIO ANUAL — ENTRADA (escolha CNPJ ou CPF) -->
   <div id="scr-relatorio" class="scr">
     <div class="greet" style="font-size:1.05rem;margin-bottom:.25rem">Relatório Anual 📄</div>
-    <p style="color:var(--texto2);font-size:.78rem;margin-bottom:1rem">Tudo mastigado para o seu contador</p>
+    <p style="color:var(--texto2);font-size:.78rem;margin-bottom:1.5rem">Escolha o tipo de relatório</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:1rem">
+      <button class="menu-mais-btn" style="min-height:90px;flex-direction:column;align-items:center;justify-content:center;gap:.4rem;border:2px solid var(--verde)" onclick="abrirRelAnual('cnpj')">
+        <span style="font-size:1.8rem">🏪</span>
+        <span style="font-size:.85rem;font-weight:800;color:var(--verde)">CNPJ</span>
+        <span style="font-size:.68rem;color:var(--texto2);text-align:center">Faturamento & Negócio</span>
+      </button>
+      <button class="menu-mais-btn" style="min-height:90px;flex-direction:column;align-items:center;justify-content:center;gap:.4rem;border:2px solid var(--azul)" onclick="abrirRelAnual('cpf')">
+        <span style="font-size:1.8rem">👤</span>
+        <span style="font-size:.85rem;font-weight:800;color:var(--azul)">CPF</span>
+        <span style="font-size:.68rem;color:var(--texto2);text-align:center">Rendimentos & Pessoal</span>
+      </button>
+    </div>
+    <div class="edu-box azul">
+      <div class="et">📤 Como funciona</div>
+      <div class="ex">Escolha CNPJ para o relatório do negócio ou CPF para rendimentos pessoais → Selecione o ano → Gere e envie pelo <strong>WhatsApp</strong> ou <strong>Baixe o PDF</strong> para o contador.</div>
+    </div>
+  </div>
 
-    <div id="rel-acoes">
+  <!-- RELATÓRIO ANUAL CNPJ -->
+  <div id="scr-relatorio-anual-cnpj" class="scr">
+    <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.25rem">
+      <button onclick="goTo('relatorio')" style="background:none;border:none;color:var(--texto2);font-size:1.1rem;cursor:pointer;padding:0">‹</button>
+      <div class="greet" style="font-size:1.05rem;margin-bottom:0">Relatório Anual CNPJ 🏪</div>
+    </div>
+    <p style="color:var(--texto2);font-size:.78rem;margin-bottom:1rem">Faturamento & negócio — para o contador</p>
+    <div id="rel-cnpj-acoes">
       <label class="lbl">Ano de referência</label>
-      <div style="display:flex;gap:.5rem;margin-bottom:.9rem" id="rel-anos"></div>
-      <button onclick="gerarRelatorio()" class="btn-p" style="margin-bottom:.6rem">📄 Gerar Relatório</button>
+      <div id="rel-cnpj-anos" style="margin-bottom:.9rem"></div>
+      <button onclick="gerarRelCnpj()" class="btn-p" style="margin-bottom:.6rem">📄 Gerar Relatório CNPJ</button>
       <div class="edu-box azul">
         <div class="et">📤 Como funciona</div>
-        <div class="ex">Selecione o ano → Gere o relatório → Escolha enviar pelo <strong>WhatsApp</strong> (resumo detalhado) ou <strong>Baixar PDF</strong> (relatório completo com DRE e planilha para o contador).</div>
+        <div class="ex">Selecione o ano → Gere o relatório → Escolha enviar pelo <strong>WhatsApp</strong> ou <strong>Baixar PDF</strong> para o contador.</div>
       </div>
     </div>
-
-    <div id="rel-conteudo" class="hidden">
+    <div id="rel-cnpj-conteudo" class="hidden">
       <div class="rel-btn-group">
-        <button onclick="compartilharWpp()" class="rel-btn wpp">📲 WhatsApp</button>
-        <button onclick="baixarPDF()" class="rel-btn pdf">⬇️ Baixar PDF</button>
-        <button onclick="voltarRelatorio()" class="rel-btn cinza">🔄 Voltar</button>
+        <button onclick="compartilharWppCnpj()" class="rel-btn wpp">📲 WhatsApp</button>
+        <button onclick="baixarPDFCnpj()" class="rel-btn pdf">⬇️ Baixar PDF</button>
+        <button onclick="voltarRelCnpj()" class="rel-btn cinza">🔄 Voltar</button>
       </div>
-
       <div style="background:linear-gradient(135deg,#0d2e1a,#1a5c38);border-radius:16px;padding:1.3rem;margin-bottom:.8rem;color:#fff">
-        <div style="font-size:.65rem;opacity:.7;text-transform:uppercase;letter-spacing:.5px;margin-bottom:.3rem">MEIFácil — Relatório Anual</div>
-        <div style="font-size:1.2rem;font-weight:900;margin-bottom:.2rem" id="rel-nome-topo">—</div>
-        <div style="font-size:.78rem;opacity:.8" id="rel-tipo-topo">—</div>
-        <div style="margin-top:.8rem;background:rgba(255,255,255,.1);border-radius:8px;padding:.6rem .8rem;font-size:.72rem;opacity:.9" id="rel-data-topo">—</div>
+        <div style="font-size:.65rem;opacity:.7;text-transform:uppercase;letter-spacing:.5px;margin-bottom:.3rem">MEIFácil — Relatório Anual CNPJ</div>
+        <div style="font-size:1.2rem;font-weight:900;margin-bottom:.2rem" id="rel-cnpj-nome-topo">—</div>
+        <div style="font-size:.78rem;opacity:.8" id="rel-cnpj-tipo-topo">—</div>
+        <div style="margin-top:.8rem;background:rgba(255,255,255,.1);border-radius:8px;padding:.6rem .8rem;font-size:.72rem;opacity:.9" id="rel-cnpj-data-topo">—</div>
       </div>
-
       <div class="dc"><h3>1. Dados do MEI</h3>
-        <div class="dr"><span class="drl">Nome</span><span id="rel-nome">—</span></div>
-        <div class="dr"><span class="drl">Tipo de MEI</span><span id="rel-tipo">—</span></div>
-        <div class="dr"><span class="drl">Tipo de negócio</span><span id="rel-neg">—</span></div>
-        <div class="dr"><span class="drl">Data de abertura</span><span id="rel-abertura">—</span></div>
-        <div class="dr"><span class="drl">Teto anual</span><span class="drv g" id="rel-teto">—</span></div>
-        <div class="dr"><span class="drl">Ano de referência</span><span id="rel-ano">—</span></div>
+        <div class="dr"><span class="drl">Nome</span><span id="rel-cnpj-nome">—</span></div>
+        <div class="dr"><span class="drl">Tipo de MEI</span><span id="rel-cnpj-tipo">—</span></div>
+        <div class="dr"><span class="drl">Tipo de negócio</span><span id="rel-cnpj-neg">—</span></div>
+        <div class="dr"><span class="drl">Data de abertura</span><span id="rel-cnpj-abertura">—</span></div>
+        <div class="dr"><span class="drl">Teto anual</span><span class="drv g" id="rel-cnpj-teto">—</span></div>
+        <div class="dr"><span class="drl">Ano de referência</span><span id="rel-cnpj-ano">—</span></div>
       </div>
-
       <div class="dc"><h3>2. DRE — CNPJ</h3>
-        <div class="dr"><span class="drl">Faturamento total</span><span class="drv g" id="rel-rec">—</span></div>
-        <div class="dr"><span class="drl">(-) Total de despesas</span><span class="drv r" id="rel-des">—</span></div>
-        <div class="dr"><span class="drl">(-) Retirado como lucros</span><span class="drv p" id="rel-ret">—</span></div>
-        <div class="dr tot"><span class="drl">Lucro retido no CNPJ</span><span class="drv g" id="rel-luc">—</span></div>
-        <div class="dr"><span class="drl">Margem de lucro</span><span id="rel-margem">—</span></div>
-        <div class="dr"><span class="drl">% do teto utilizado</span><span id="rel-pct">—</span></div>
+        <div class="dr"><span class="drl">Faturamento total</span><span class="drv g" id="rel-cnpj-rec">—</span></div>
+        <div class="dr"><span class="drl">(-) Total de despesas</span><span class="drv r" id="rel-cnpj-des">—</span></div>
+        <div class="dr"><span class="drl">(-) Retirado como lucros</span><span class="drv p" id="rel-cnpj-ret">—</span></div>
+        <div class="dr tot"><span class="drl">Lucro retido no CNPJ</span><span class="drv g" id="rel-cnpj-luc">—</span></div>
+        <div class="dr"><span class="drl">Margem de lucro</span><span id="rel-cnpj-margem">—</span></div>
+        <div class="dr"><span class="drl">% do teto utilizado</span><span id="rel-cnpj-pct">—</span></div>
       </div>
-
       <div class="dc"><h3>Movimentação mês a mês — CNPJ</h3>
-        <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:.76rem" id="rel-tabela">
+        <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:.76rem" id="rel-cnpj-tabela">
           <tr style="background:rgba(255,255,255,.04)">
             <th style="padding:.5rem .4rem;text-align:left;color:var(--texto2);font-size:.63rem;text-transform:uppercase">Mês</th>
             <th style="padding:.5rem .4rem;text-align:right;color:var(--verde);font-size:.63rem;text-transform:uppercase">Entradas</th>
@@ -1032,48 +1052,240 @@ input[type=date]{color-scheme:dark;}
           </tr>
         </table></div>
       </div>
-
-      <div class="dc"><h3>Despesas por categoria — CNPJ</h3>
-        <div id="rel-cats-cnpj"><div class="empty" style="padding:.3rem 0">Nenhuma despesa categorizada</div></div>
+      <div class="dc"><h3>3. Despesas por categoria — CNPJ</h3>
+        <div id="rel-cnpj-cats"><div class="empty" style="padding:.3rem 0">Nenhuma despesa categorizada</div></div>
       </div>
-
-      <div class="dc"><h3>3. Rendimentos CPF</h3>
-        <div class="dr"><span class="drl">⭐ Dist. Lucros (ISENTO IR)</span><span class="drv g" id="rel-lc">—</span></div>
-        <div class="dr"><span class="drl">⚠️ Retiradas avulsas (tributável)</span><span class="drv r" id="rel-av">—</span></div>
-        <div class="dr"><span class="drl">Outras entradas CPF</span><span class="drv b" id="rel-oc">—</span></div>
-        <div class="dr"><span class="drl">Outras rendas informadas</span><span class="drv b" id="rel-ob">—</span></div>
-        <div class="dr"><span class="drl">(-) Gastos pessoais</span><span class="drv r" id="rel-gas">—</span></div>
-        <div class="dr tot"><span class="drl">Saldo acumulado CPF</span><span class="drv b" id="rel-sal">—</span></div>
+      <div class="dc"><h3>4. Documentos guardados — CNPJ</h3>
+        <div style="font-size:.72rem;color:var(--verde);font-weight:700;margin-bottom:.35rem">🏪 CNPJ (<span id="rel-cnpj-ndc">0</span>)</div>
+        <div id="rel-cnpj-docs" style="font-size:.78rem;color:var(--texto2)">—</div>
       </div>
+      <div class="dc"><h3>5. Checklist para o contador</h3>
+        <div id="rel-cnpj-checklist"></div>
+      </div>
+      <div class="ib"><div class="ibt">⚠️ Aviso para o contador</div><div class="ibx">Relatório gerado pelo app MEIFácil com base nos lançamentos informados. Validar todos os valores antes da declaração oficial.</div></div>
+      <div class="rel-btn-group" style="margin-top:.5rem">
+        <button onclick="compartilharWppCnpj()" class="rel-btn wpp">📲 WhatsApp</button>
+        <button onclick="baixarPDFCnpj()" class="rel-btn pdf">⬇️ Baixar PDF</button>
+      </div>
+    </div>
+  </div>
 
+  <!-- RELATÓRIO ANUAL CPF -->
+  <div id="scr-relatorio-anual-cpf" class="scr">
+    <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.25rem">
+      <button onclick="goTo('relatorio')" style="background:none;border:none;color:var(--texto2);font-size:1.1rem;cursor:pointer;padding:0">‹</button>
+      <div class="greet" style="font-size:1.05rem;margin-bottom:0">Relatório Anual CPF 👤</div>
+    </div>
+    <p style="color:var(--texto2);font-size:.78rem;margin-bottom:1rem">Rendimentos & pessoal — para o contador</p>
+    <div id="rel-cpf-acoes">
+      <label class="lbl">Ano de referência</label>
+      <div id="rel-cpf-anos" style="margin-bottom:.9rem"></div>
+      <button onclick="gerarRelCpf()" class="btn-p" style="margin-bottom:.6rem;background:var(--azul)">📄 Gerar Relatório CPF</button>
+      <div class="edu-box azul">
+        <div class="et">📤 Como funciona</div>
+        <div class="ex">Selecione o ano → Gere o relatório → Escolha enviar pelo <strong>WhatsApp</strong> ou <strong>Baixar PDF</strong> para o contador.</div>
+      </div>
+    </div>
+    <div id="rel-cpf-conteudo" class="hidden">
+      <div class="rel-btn-group">
+        <button onclick="compartilharWppCpf()" class="rel-btn wpp">📲 WhatsApp</button>
+        <button onclick="baixarPDFCpf()" class="rel-btn pdf">⬇️ Baixar PDF</button>
+        <button onclick="voltarRelCpf()" class="rel-btn cinza">🔄 Voltar</button>
+      </div>
+      <div style="background:linear-gradient(135deg,#0d1e3a,#1a3a5c);border-radius:16px;padding:1.3rem;margin-bottom:.8rem;color:#fff">
+        <div style="font-size:.65rem;opacity:.7;text-transform:uppercase;letter-spacing:.5px;margin-bottom:.3rem">MEIFácil — Relatório Anual CPF</div>
+        <div style="font-size:1.2rem;font-weight:900;margin-bottom:.2rem" id="rel-cpf-nome-topo">—</div>
+        <div style="font-size:.78rem;opacity:.8" id="rel-cpf-subtopo">—</div>
+        <div style="margin-top:.8rem;background:rgba(255,255,255,.1);border-radius:8px;padding:.6rem .8rem;font-size:.72rem;opacity:.9" id="rel-cpf-data-topo">—</div>
+      </div>
+      <div class="dc"><h3>1. Identificação</h3>
+        <div class="dr"><span class="drl">Nome</span><span id="rel-cpf-nome">—</span></div>
+        <div class="dr"><span class="drl">Ano de referência</span><span id="rel-cpf-ano">—</span></div>
+      </div>
+      <div class="dc"><h3>2. Rendimentos CPF</h3>
+        <div class="dr"><span class="drl">⭐ Dist. Lucros (ISENTO IR)</span><span class="drv g" id="rel-cpf-lc">—</span></div>
+        <div class="dr"><span class="drl">⚠️ Retiradas avulsas (tributável)</span><span class="drv r" id="rel-cpf-av">—</span></div>
+        <div class="dr"><span class="drl">Outras entradas CPF</span><span class="drv b" id="rel-cpf-oc">—</span></div>
+        <div class="dr"><span class="drl">Outras rendas informadas</span><span class="drv b" id="rel-cpf-ob">—</span></div>
+        <div class="dr"><span class="drl">(-) Gastos pessoais</span><span class="drv r" id="rel-cpf-gas">—</span></div>
+        <div class="dr tot"><span class="drl">Saldo acumulado CPF</span><span class="drv b" id="rel-cpf-sal">—</span></div>
+      </div>
+      <div class="dc"><h3>Movimentação mês a mês — CPF</h3>
+        <div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:.76rem" id="rel-cpf-tabela">
+          <tr style="background:rgba(255,255,255,.04)">
+            <th style="padding:.5rem .4rem;text-align:left;color:var(--texto2);font-size:.63rem;text-transform:uppercase">Mês</th>
+            <th style="padding:.5rem .4rem;text-align:right;color:var(--verde);font-size:.63rem;text-transform:uppercase">Entradas</th>
+            <th style="padding:.5rem .4rem;text-align:right;color:var(--vermelho);font-size:.63rem;text-transform:uppercase">Gastos</th>
+            <th style="padding:.5rem .4rem;text-align:right;color:var(--roxo);font-size:.63rem;text-transform:uppercase">Retiradas</th>
+            <th style="padding:.5rem .4rem;text-align:right;color:var(--azul);font-size:.63rem;text-transform:uppercase">Acumulado</th>
+          </tr>
+        </table></div>
+      </div>
       <div style="background:rgba(0,196,140,.07);border:1px solid rgba(0,196,140,.2);border-radius:14px;padding:1rem;margin-bottom:.8rem">
         <div style="font-size:.75rem;font-weight:800;color:var(--verde);margin-bottom:.6rem">Resumo IRPF para o contador</div>
-        <div class="dr" style="border-color:rgba(0,196,140,.15)"><span class="drl">Base tributável estimada</span><span id="rel-base">—</span></div>
-        <div class="dr" style="border-color:rgba(0,196,140,.15)"><span class="drl">Faixa do IR</span><span id="rel-faixa">—</span></div>
-        <div class="dr" style="border-color:rgba(0,196,140,.15)"><span class="drl">IR estimado a pagar</span><span id="rel-ir">—</span></div>
-        <div class="dr" style="border-bottom:none"><span style="color:var(--verde);font-size:.78rem;font-weight:700">⭐ Lançar em "Rendimentos Isentos"</span><span class="drv g" id="rel-isentos">—</span></div>
+        <div class="dr" style="border-color:rgba(0,196,140,.15)"><span class="drl">Base tributável estimada</span><span id="rel-cpf-base">—</span></div>
+        <div class="dr" style="border-color:rgba(0,196,140,.15)"><span class="drl">Faixa do IR</span><span id="rel-cpf-faixa">—</span></div>
+        <div class="dr" style="border-color:rgba(0,196,140,.15)"><span class="drl">IR estimado a pagar</span><span id="rel-cpf-ir">—</span></div>
+        <div class="dr" style="border-bottom:none"><span style="color:var(--verde);font-size:.78rem;font-weight:700">⭐ Lançar em "Rendimentos Isentos"</span><span class="drv g" id="rel-cpf-isentos">—</span></div>
       </div>
-
-      <div class="dc"><h3>4. Gastos pessoais por categoria — CPF</h3>
-        <div id="rel-cats-cpf"><div class="empty" style="padding:.3rem 0">Nenhum gasto categorizado</div></div>
+      <div class="dc"><h3>3. Gastos pessoais por categoria — CPF</h3>
+        <div id="rel-cpf-cats"><div class="empty" style="padding:.3rem 0">Nenhum gasto categorizado</div></div>
       </div>
-
-      <div class="dc"><h3>5. Documentos guardados</h3>
-        <div style="font-size:.72rem;color:var(--verde);font-weight:700;margin-bottom:.35rem">🏪 CNPJ (<span id="rel-ndc">0</span>)</div>
-        <div id="rel-docs-cnpj" style="font-size:.78rem;color:var(--texto2);margin-bottom:.8rem">—</div>
-        <div style="font-size:.72rem;color:var(--azul);font-weight:700;margin-bottom:.35rem">👤 CPF (<span id="rel-ndp">0</span>)</div>
-        <div id="rel-docs-cpf" style="font-size:.78rem;color:var(--texto2)">—</div>
+      <div class="dc"><h3>4. Documentos guardados — CPF</h3>
+        <div style="font-size:.72rem;color:var(--azul);font-weight:700;margin-bottom:.35rem">👤 CPF (<span id="rel-cpf-ndc">0</span>)</div>
+        <div id="rel-cpf-docs" style="font-size:.78rem;color:var(--texto2)">—</div>
       </div>
-
-      <div class="dc"><h3>6. Checklist para o contador</h3>
-        <div id="rel-checklist"></div>
+      <div class="dc"><h3>5. Checklist para o contador</h3>
+        <div id="rel-cpf-checklist"></div>
       </div>
-
       <div class="ib"><div class="ibt">⚠️ Aviso para o contador</div><div class="ibx">Relatório gerado pelo app MEIFácil. Valores de IR são estimativas sem deduções de saúde, educação e dependentes. A distribuição de lucros isenta requer escrituração contábil com comprovantes de despesas.</div></div>
-
       <div class="rel-btn-group" style="margin-top:.5rem">
-        <button onclick="compartilharWpp()" class="rel-btn wpp">📲 WhatsApp</button>
-        <button onclick="baixarPDF()" class="rel-btn pdf">⬇️ Baixar PDF</button>
+        <button onclick="compartilharWppCpf()" class="rel-btn wpp">📲 WhatsApp</button>
+        <button onclick="baixarPDFCpf()" class="rel-btn pdf">⬇️ Baixar PDF</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RELATÓRIO MENSAL — ENTRADA (escolha CNPJ ou CPF) -->
+  <div id="scr-relatorio-mensal" class="scr">
+    <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.25rem">
+      <button onclick="fecharMenuMais()" style="background:none;border:none;color:var(--texto2);font-size:1.1rem;cursor:pointer;padding:0"></button>
+      <div class="greet" style="font-size:1.05rem;margin-bottom:0">Relatório Mensal 📅</div>
+    </div>
+    <p style="color:var(--texto2);font-size:.78rem;margin-bottom:1.5rem">Escolha o tipo de relatório</p>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:.8rem;margin-bottom:1rem">
+      <button class="menu-mais-btn" style="min-height:90px;flex-direction:column;align-items:center;justify-content:center;gap:.4rem;border:2px solid var(--verde)" onclick="abrirRelMensal('cnpj')">
+        <span style="font-size:1.8rem">🏪</span>
+        <span style="font-size:.85rem;font-weight:800;color:var(--verde)">CNPJ</span>
+        <span style="font-size:.68rem;color:var(--texto2);text-align:center">Faturamento & Negócio</span>
+      </button>
+      <button class="menu-mais-btn" style="min-height:90px;flex-direction:column;align-items:center;justify-content:center;gap:.4rem;border:2px solid var(--azul)" onclick="abrirRelMensal('cpf')">
+        <span style="font-size:1.8rem">👤</span>
+        <span style="font-size:.85rem;font-weight:800;color:var(--azul)">CPF</span>
+        <span style="font-size:.68rem;color:var(--texto2);text-align:center">Rendimentos & Pessoal</span>
+      </button>
+    </div>
+    <div class="edu-box azul">
+      <div class="et">📅 Como funciona</div>
+      <div class="ex">Escolha CNPJ ou CPF → Selecione o mês e ano → Gere e envie pelo <strong>WhatsApp</strong> ou <strong>Baixe o PDF</strong>.</div>
+    </div>
+  </div>
+
+  <!-- RELATÓRIO MENSAL CNPJ -->
+  <div id="scr-relatorio-mensal-cnpj" class="scr">
+    <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.25rem">
+      <button onclick="goTo('relatorio-mensal')" style="background:none;border:none;color:var(--texto2);font-size:1.1rem;cursor:pointer;padding:0">‹</button>
+      <div class="greet" style="font-size:1.05rem;margin-bottom:0">Relatório Mensal CNPJ 🏪</div>
+    </div>
+    <p style="color:var(--texto2);font-size:.78rem;margin-bottom:1rem">Faturamento mensal — para o contador</p>
+    <div id="rel-mcnpj-acoes">
+      <label class="lbl">Ano de referência</label>
+      <div id="rel-mcnpj-anos" style="margin-bottom:.7rem"></div>
+      <label class="lbl">Mês de referência</label>
+      <div id="rel-mcnpj-meses" style="display:grid;grid-template-columns:repeat(4,1fr);gap:.35rem;margin-bottom:.9rem"></div>
+      <button onclick="gerarRelMensalCnpj()" class="btn-p" style="margin-bottom:.6rem">📄 Gerar Relatório Mensal CNPJ</button>
+      <div class="edu-box azul">
+        <div class="et">📤 Como funciona</div>
+        <div class="ex">Selecione o ano e o mês → Gere → Envie pelo <strong>WhatsApp</strong> ou <strong>Baixe o PDF</strong>.</div>
+      </div>
+    </div>
+    <div id="rel-mcnpj-conteudo" class="hidden">
+      <div class="rel-btn-group">
+        <button onclick="compartilharWppMensalCnpj()" class="rel-btn wpp">📲 WhatsApp</button>
+        <button onclick="baixarPDFMensalCnpj()" class="rel-btn pdf">⬇️ Baixar PDF</button>
+        <button onclick="voltarRelMensalCnpj()" class="rel-btn cinza">🔄 Voltar</button>
+      </div>
+      <div style="background:linear-gradient(135deg,#0d2e1a,#1a5c38);border-radius:16px;padding:1.3rem;margin-bottom:.8rem;color:#fff">
+        <div style="font-size:.65rem;opacity:.7;text-transform:uppercase;letter-spacing:.5px;margin-bottom:.3rem">MEIFácil — Relatório Mensal CNPJ</div>
+        <div style="font-size:1.2rem;font-weight:900;margin-bottom:.2rem" id="rel-mcnpj-nome-topo">—</div>
+        <div style="font-size:.78rem;opacity:.8" id="rel-mcnpj-tipo-topo">—</div>
+        <div style="margin-top:.8rem;background:rgba(255,255,255,.1);border-radius:8px;padding:.6rem .8rem;font-size:.72rem;opacity:.9" id="rel-mcnpj-data-topo">—</div>
+      </div>
+      <div class="dc"><h3>1. Dados do MEI</h3>
+        <div class="dr"><span class="drl">Nome</span><span id="rel-mcnpj-nome">—</span></div>
+        <div class="dr"><span class="drl">Tipo de MEI</span><span id="rel-mcnpj-tipo">—</span></div>
+        <div class="dr"><span class="drl">Mês de referência</span><span id="rel-mcnpj-mes">—</span></div>
+        <div class="dr"><span class="drl">Teto anual</span><span class="drv g" id="rel-mcnpj-teto">—</span></div>
+      </div>
+      <div class="dc"><h3>2. DRE Mensal — CNPJ</h3>
+        <div class="dr"><span class="drl">Faturamento do mês</span><span class="drv g" id="rel-mcnpj-rec">—</span></div>
+        <div class="dr"><span class="drl">(-) Despesas do mês</span><span class="drv r" id="rel-mcnpj-des">—</span></div>
+        <div class="dr"><span class="drl">(-) Retiradas do mês</span><span class="drv p" id="rel-mcnpj-ret">—</span></div>
+        <div class="dr tot"><span class="drl">Lucro do mês</span><span class="drv g" id="rel-mcnpj-luc">—</span></div>
+        <div class="dr"><span class="drl">Margem de lucro</span><span id="rel-mcnpj-margem">—</span></div>
+        <div class="dr"><span class="drl">% do teto utilizado no mês</span><span id="rel-mcnpj-pct">—</span></div>
+      </div>
+      <div class="dc"><h3>3. Despesas por categoria — CNPJ</h3>
+        <div id="rel-mcnpj-cats"><div class="empty" style="padding:.3rem 0">Nenhuma despesa categorizada</div></div>
+      </div>
+      <div class="dc"><h3>4. Documentos do mês — CNPJ</h3>
+        <div id="rel-mcnpj-docs" style="font-size:.78rem;color:var(--texto2)">—</div>
+      </div>
+      <div class="dc"><h3>5. Checklist do mês</h3>
+        <div id="rel-mcnpj-checklist"></div>
+      </div>
+      <div class="ib"><div class="ibt">⚠️ Aviso</div><div class="ibx">Relatório mensal gerado pelo app MEIFácil com base nos lançamentos informados. Validar valores com o contador.</div></div>
+      <div class="rel-btn-group" style="margin-top:.5rem">
+        <button onclick="compartilharWppMensalCnpj()" class="rel-btn wpp">📲 WhatsApp</button>
+        <button onclick="baixarPDFMensalCnpj()" class="rel-btn pdf">⬇️ Baixar PDF</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- RELATÓRIO MENSAL CPF -->
+  <div id="scr-relatorio-mensal-cpf" class="scr">
+    <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:.25rem">
+      <button onclick="goTo('relatorio-mensal')" style="background:none;border:none;color:var(--texto2);font-size:1.1rem;cursor:pointer;padding:0">‹</button>
+      <div class="greet" style="font-size:1.05rem;margin-bottom:0">Relatório Mensal CPF 👤</div>
+    </div>
+    <p style="color:var(--texto2);font-size:.78rem;margin-bottom:1rem">Rendimentos mensais — para o contador</p>
+    <div id="rel-mcpf-acoes">
+      <label class="lbl">Ano de referência</label>
+      <div id="rel-mcpf-anos" style="margin-bottom:.7rem"></div>
+      <label class="lbl">Mês de referência</label>
+      <div id="rel-mcpf-meses" style="display:grid;grid-template-columns:repeat(4,1fr);gap:.35rem;margin-bottom:.9rem"></div>
+      <button onclick="gerarRelMensalCpf()" class="btn-p" style="margin-bottom:.6rem;background:var(--azul)">📄 Gerar Relatório Mensal CPF</button>
+      <div class="edu-box azul">
+        <div class="et">📤 Como funciona</div>
+        <div class="ex">Selecione o ano e o mês → Gere → Envie pelo <strong>WhatsApp</strong> ou <strong>Baixe o PDF</strong>.</div>
+      </div>
+    </div>
+    <div id="rel-mcpf-conteudo" class="hidden">
+      <div class="rel-btn-group">
+        <button onclick="compartilharWppMensalCpf()" class="rel-btn wpp">📲 WhatsApp</button>
+        <button onclick="baixarPDFMensalCpf()" class="rel-btn pdf">⬇️ Baixar PDF</button>
+        <button onclick="voltarRelMensalCpf()" class="rel-btn cinza">🔄 Voltar</button>
+      </div>
+      <div style="background:linear-gradient(135deg,#0d1e3a,#1a3a5c);border-radius:16px;padding:1.3rem;margin-bottom:.8rem;color:#fff">
+        <div style="font-size:.65rem;opacity:.7;text-transform:uppercase;letter-spacing:.5px;margin-bottom:.3rem">MEIFácil — Relatório Mensal CPF</div>
+        <div style="font-size:1.2rem;font-weight:900;margin-bottom:.2rem" id="rel-mcpf-nome-topo">—</div>
+        <div style="font-size:.78rem;opacity:.8" id="rel-mcpf-subtopo">—</div>
+        <div style="margin-top:.8rem;background:rgba(255,255,255,.1);border-radius:8px;padding:.6rem .8rem;font-size:.72rem;opacity:.9" id="rel-mcpf-data-topo">—</div>
+      </div>
+      <div class="dc"><h3>1. Identificação</h3>
+        <div class="dr"><span class="drl">Nome</span><span id="rel-mcpf-nome">—</span></div>
+        <div class="dr"><span class="drl">Mês de referência</span><span id="rel-mcpf-mes">—</span></div>
+      </div>
+      <div class="dc"><h3>2. Rendimentos do mês — CPF</h3>
+        <div class="dr"><span class="drl">⭐ Dist. Lucros (ISENTO IR)</span><span class="drv g" id="rel-mcpf-lc">—</span></div>
+        <div class="dr"><span class="drl">⚠️ Retiradas avulsas (tributável)</span><span class="drv r" id="rel-mcpf-av">—</span></div>
+        <div class="dr"><span class="drl">Outras entradas CPF</span><span class="drv b" id="rel-mcpf-oc">—</span></div>
+        <div class="dr"><span class="drl">(-) Gastos pessoais</span><span class="drv r" id="rel-mcpf-gas">—</span></div>
+        <div class="dr tot"><span class="drl">Saldo do mês CPF</span><span class="drv b" id="rel-mcpf-sal">—</span></div>
+      </div>
+      <div class="dc"><h3>3. Gastos por categoria — CPF</h3>
+        <div id="rel-mcpf-cats"><div class="empty" style="padding:.3rem 0">Nenhum gasto categorizado</div></div>
+      </div>
+      <div class="dc"><h3>4. Documentos do mês — CPF</h3>
+        <div id="rel-mcpf-docs" style="font-size:.78rem;color:var(--texto2)">—</div>
+      </div>
+      <div class="dc"><h3>5. Checklist do mês</h3>
+        <div id="rel-mcpf-checklist"></div>
+      </div>
+      <div class="ib"><div class="ibt">⚠️ Aviso</div><div class="ibx">Relatório mensal gerado pelo app MEIFácil. Valores estimados — validar com o contador.</div></div>
+      <div class="rel-btn-group" style="margin-top:.5rem">
+        <button onclick="compartilharWppMensalCpf()" class="rel-btn wpp">📲 WhatsApp</button>
+        <button onclick="baixarPDFMensalCpf()" class="rel-btn pdf">⬇️ Baixar PDF</button>
       </div>
     </div>
   </div>
@@ -1231,6 +1443,7 @@ input[type=date]{color-scheme:dark;}
       <button class="menu-mais-btn" onclick="fecharMenuMais();goTo('ir')"><span class="mmi">📋</span><span class="mml">Simulador IR</span></button>
       <button class="menu-mais-btn" onclick="fecharMenuMais();goTo('docs')"><span class="mmi">📁</span><span class="mml">Documentos</span></button>
       <button class="menu-mais-btn" onclick="fecharMenuMais();goTo('relatorio')"><span class="mmi">📄</span><span class="mml">Relatório Anual</span></button>
+      <button class="menu-mais-btn" onclick="fecharMenuMais();goTo('relatorio-mensal')"><span class="mmi">📅</span><span class="mml">Relatório Mensal</span></button>
       <button class="menu-mais-btn" onclick="fecharMenuMais();goTo('guias')"><span class="mmi">📚</span><span class="mml">Guias MEI</span></button>
     </div>
     <button class="menu-mais-fechar" onclick="fecharMenuMais()">Fechar</button>
@@ -1520,11 +1733,11 @@ async function carregarDadosUsuario(){
       hideLoad();
       carregando=false;
       // Atualiza imediatamente
-      atualizarGuiaNF();renderMeses();inicializarRelAno();atualizar();
+      atualizarGuiaNF();renderMeses();atualizar();
       // Atualiza de novo após 300ms — garante que o CSS transition terminou
       setTimeout(function(){atualizar();},300);
       // Atualiza de novo após 1s — garante que o browser renderizou tudo
-      setTimeout(function(){atualizar();inicializarRelAno();},1000);
+      setTimeout(function(){atualizar();},1000);
     } else {
       clearTimeout(tSeg);
       hideLoad();
@@ -1629,6 +1842,9 @@ var TETOS={comum:81000,caminhoneiro:251600};
 var MES=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
 var IR_F=[{min:0,max:33888,aliq:0,ded:0},{min:33889,max:45012,aliq:.075,ded:2541.6},{min:45013,max:55976,aliq:.15,ded:5808.06},{min:55977,max:82469,aliq:.225,ded:9997.56},{min:82470,max:Infinity,aliq:.275,ded:14101.19}];
 var mCart='cnpj',mTipo='entrada',mSub='lucros',mCat='📦 Outros',curScr='home',relAno=new Date().getFullYear()-1;
+var relAnoCnpj=new Date().getFullYear()-1,relAnoCpf=new Date().getFullYear()-1;
+var relAnoMCnpj=new Date().getFullYear(),relMesMCnpj=new Date().getMonth();
+var relAnoMCpf=new Date().getFullYear(),relMesMCpf=new Date().getMonth();
 
 function sTM(t,el){S.tipo=t;document.querySelectorAll('.tipo-btn').forEach(function(b){b.classList.remove('sel');});el.classList.add('sel');}
 function sNeg(n,el){S.negocio=n;document.querySelectorAll('.neg-btn').forEach(function(b){b.classList.remove('sel');});el.classList.add('sel');}
@@ -1652,34 +1868,9 @@ function entrar(){
   document.getElementById('app').style.display='block';
   document.getElementById('h-nome').textContent=S.nome;
   document.getElementById('d-nome').textContent=S.nome;
-  atualizarGuiaNF();renderMeses();inicializarRelAno();atualizar();
+  atualizarGuiaNF();renderMeses();atualizar();
 }
 
-function inicializarRelAno(){
-  var a=new Date().getFullYear();
-  relAno=a-1;
-  var wrap=document.getElementById('rel-anos');
-  if(!wrap)return;
-  wrap.innerHTML='';
-  wrap.style.display='grid';
-  wrap.style.gridTemplateColumns='1fr 1fr 1fr';
-  wrap.style.gap='.5rem';
-  wrap.style.marginBottom='.9rem';
-  [a-2,a-1,a].forEach(function(yr){
-    var sel=yr===relAno;
-    var el=document.createElement('button');
-    el.style.cssText='width:100%;padding:.8rem .4rem;border-radius:10px;font-weight:800;font-size:.95rem;cursor:pointer;border:2px solid '+(sel?'var(--verde)':'var(--borda)')+';background:'+(sel?'rgba(0,196,140,.15)':'var(--card)')+';color:'+(sel?'var(--verde)':'var(--texto2)')+';';
-    el.textContent=yr;
-    el.onclick=function(){
-      relAno=yr;
-      wrap.querySelectorAll('button').forEach(function(x){
-        x.style.borderColor='var(--borda)';x.style.background='var(--card)';x.style.color='var(--texto2)';
-      });
-      el.style.borderColor='var(--verde)';el.style.background='rgba(0,196,140,.15)';el.style.color='var(--verde)';
-    };
-    wrap.appendChild(el);
-  });
-}
 
 function goTo(id){
   document.querySelectorAll('.scr').forEach(function(s){s.classList.remove('ac');});
@@ -1695,9 +1886,21 @@ function goTo(id){
   if(id==='ir')atualizarIR();
   if(id==='agenda'){inicializarFiltroAgenda();renderAgenda();}
   if(id==='perfil')abrirPerfil();
-  if(id==='relatorio'){
-    var wrap=document.getElementById('rel-anos');
-    if(wrap&&wrap.children.length===0)inicializarRelAno();
+  if(id==='relatorio-anual-cnpj'){
+    var w=document.getElementById('rel-cnpj-anos');
+    if(w&&w.children.length===0)inicializarSeletorAno('rel-cnpj-anos',function(yr){relAnoCnpj=yr;});
+  }
+  if(id==='relatorio-anual-cpf'){
+    var w2=document.getElementById('rel-cpf-anos');
+    if(w2&&w2.children.length===0)inicializarSeletorAno('rel-cpf-anos',function(yr){relAnoCpf=yr;});
+  }
+  if(id==='relatorio-mensal-cnpj'){
+    var w3=document.getElementById('rel-mcnpj-anos');
+    if(w3&&w3.children.length===0){inicializarSeletorAno('rel-mcnpj-anos',function(yr){relAnoMCnpj=yr;});inicializarSeletorMes('rel-mcnpj-meses',function(m){relMesMCnpj=m;},relAnoMCnpj);}
+  }
+  if(id==='relatorio-mensal-cpf'){
+    var w4=document.getElementById('rel-mcpf-anos');
+    if(w4&&w4.children.length===0){inicializarSeletorAno('rel-mcpf-anos',function(yr){relAnoMCpf=yr;});inicializarSeletorMes('rel-mcpf-meses',function(m){relMesMCpf=m;},relAnoMCpf);}
   }
 }
 
@@ -2176,6 +2379,7 @@ function sumMes(c,t,mes,ano){
   return S.lancs.filter(function(l){return l.cart===c&&l.tipo===t&&l.mes===mes&&matchAno(l,ano);}).reduce(function(a,l){return a+l.val;},0);
 }
 function matchAno(l,ano){return l.ano===ano||(ano===new Date().getFullYear()&&!l.ano);}
+function matchMes(l,mes,ano){return matchAno(l,ano)&&l.mes===mes;}
 
 // Saldo acumulado até determinado mês (carrega de mês em mês)
 function calcSaldoAcum(cart,mesAte,ano){
@@ -2665,265 +2869,264 @@ async function baixarTodosMes(c){
 }
 
 // ── RELATÓRIO ──
-function voltarRelatorio(){
-  document.getElementById('rel-acoes').classList.remove('hidden');
-  document.getElementById('rel-conteudo').classList.add('hidden');
+function abrirRelAnual(tipo){goTo('relatorio-anual-'+tipo);}
+function abrirRelMensal(tipo){goTo('relatorio-mensal-'+tipo);}
+
+function inicializarSeletorAno(wrapId,cb){
+  var a=new Date().getFullYear();
+  var wrap=document.getElementById(wrapId);
+  if(!wrap)return;
+  wrap.innerHTML='';
+  wrap.style.cssText='display:grid;grid-template-columns:1fr 1fr 1fr;gap:.5rem;margin-bottom:.9rem;';
+  var curAno=a-1;
+  [a-2,a-1,a].forEach(function(yr){
+    var sel=yr===curAno;
+    var el=document.createElement('button');
+    el.style.cssText='width:100%;padding:.8rem .4rem;border-radius:10px;font-weight:800;font-size:.95rem;cursor:pointer;border:2px solid '+(sel?'var(--verde)':'var(--borda)')+';background:'+(sel?'rgba(0,196,140,.15)':'var(--card)')+';color:'+(sel?'var(--verde)':'var(--texto2)')+';';
+    el.textContent=yr;
+    el.onclick=function(){
+      wrap.querySelectorAll('button').forEach(function(x){x.style.borderColor='var(--borda)';x.style.background='var(--card)';x.style.color='var(--texto2)';});
+      el.style.borderColor='var(--verde)';el.style.background='rgba(0,196,140,.15)';el.style.color='var(--verde)';
+      cb(yr);
+    };
+    if(sel){el.style.borderColor='var(--verde)';el.style.background='rgba(0,196,140,.15)';el.style.color='var(--verde)';}
+    wrap.appendChild(el);
+  });
 }
 
-function gerarRelatorio(){
-  var ano=relAno;
-  var ir=calcIRAno(ano);
+function inicializarSeletorMes(wrapId,cb,ano){
+  var wrap=document.getElementById(wrapId);
+  if(!wrap)return;
+  wrap.innerHTML='';
+  var mesAtual=new Date().getMonth();
+  MES.forEach(function(m,i){
+    var sel=i===mesAtual;
+    var el=document.createElement('button');
+    el.style.cssText='padding:.45rem .2rem;border-radius:8px;font-weight:700;font-size:.72rem;cursor:pointer;border:2px solid '+(sel?'var(--verde)':'var(--borda)')+';background:'+(sel?'rgba(0,196,140,.15)':'var(--card)')+';color:'+(sel?'var(--verde)':'var(--texto2)')+';';
+    el.textContent=m;
+    el.onclick=function(){
+      wrap.querySelectorAll('button').forEach(function(x){x.style.borderColor='var(--borda)';x.style.background='var(--card)';x.style.color='var(--texto2)';});
+      el.style.borderColor='var(--verde)';el.style.background='rgba(0,196,140,.15)';el.style.color='var(--verde)';
+      cb(i);
+    };
+    if(sel){el.style.borderColor='var(--verde)';el.style.background='rgba(0,196,140,.15)';el.style.color='var(--verde)';}
+    wrap.appendChild(el);
+  });
+}
+
+// ── RELATÓRIO ANUAL CNPJ ──
+function voltarRelCnpj(){document.getElementById('rel-cnpj-acoes').classList.remove('hidden');document.getElementById('rel-cnpj-conteudo').classList.add('hidden');}
+function gerarRelCnpj(){
+  var ano=relAnoCnpj;
   var teto=calcTeto();
   var rec=sumAno('cnpj','entrada',ano),des=sumAno('cnpj','saida',ano),ret=sumAno('cnpj','retirada',ano),luc=rec-des-ret;
-  var cpRet=sumAno('cpf','retirada_entrada',ano),cpEnt=sumAno('cpf','entrada',ano),cpSai=sumAno('cpf','saida',ano);
-  var faixaLabel='✅ Isenta';
-  if(ir.base>82469)faixaLabel='🔴 27,5%';else if(ir.base>55976)faixaLabel='🔴 22,5%';
-  else if(ir.base>45012)faixaLabel='🟡 15%';else if(ir.base>33888)faixaLabel='🟡 7,5%';
-
-  document.getElementById('rel-nome-topo').textContent=S.nome;
-  document.getElementById('rel-tipo-topo').textContent=(S.tipo==='caminhoneiro'?'MEI Caminhoneiro':'MEI Comum')+' • '+S.negocio;
-  document.getElementById('rel-data-topo').textContent='Gerado em '+new Date().toLocaleDateString('pt-BR')+' — Ano-base: '+ano;
-  document.getElementById('rel-nome').textContent=S.nome;
-  document.getElementById('rel-tipo').textContent=S.tipo==='caminhoneiro'?'MEI Caminhoneiro':'MEI Comum';
-  document.getElementById('rel-neg').textContent=S.negocio;
-  document.getElementById('rel-abertura').textContent=S.dataAbertura?S.dataAbertura.toLocaleDateString('pt-BR'):'Não informada';
-  document.getElementById('rel-teto').textContent=fmt(teto);
-  document.getElementById('rel-ano').textContent=ano;
-  document.getElementById('rel-rec').textContent=fmt(rec);
-  document.getElementById('rel-des').textContent=fmt(des);
-  document.getElementById('rel-ret').textContent=fmt(ret);
-  document.getElementById('rel-luc').textContent=fmt(luc);
-  document.getElementById('rel-margem').textContent=rec>0?(luc/rec*100).toFixed(1)+'%':'—';
-  document.getElementById('rel-pct').textContent=rec>0?((rec/teto)*100).toFixed(1)+'%':'0%';
-
-  // tabela mês a mês com acumulado
-  var tab=document.getElementById('rel-tabela');
+  document.getElementById('rel-cnpj-nome-topo').textContent=S.nome;
+  document.getElementById('rel-cnpj-tipo-topo').textContent=(S.tipo==='caminhoneiro'?'MEI Caminhoneiro':'MEI Comum')+' • '+S.negocio;
+  document.getElementById('rel-cnpj-data-topo').textContent='Gerado em '+new Date().toLocaleDateString('pt-BR')+' — Ano-base: '+ano;
+  document.getElementById('rel-cnpj-nome').textContent=S.nome;
+  document.getElementById('rel-cnpj-tipo').textContent=S.tipo==='caminhoneiro'?'MEI Caminhoneiro':'MEI Comum';
+  document.getElementById('rel-cnpj-neg').textContent=S.negocio;
+  document.getElementById('rel-cnpj-abertura').textContent=S.dataAbertura?S.dataAbertura.toLocaleDateString('pt-BR'):'Não informada';
+  document.getElementById('rel-cnpj-teto').textContent=fmt(teto);
+  document.getElementById('rel-cnpj-ano').textContent=ano;
+  document.getElementById('rel-cnpj-rec').textContent=fmt(rec);
+  document.getElementById('rel-cnpj-des').textContent=fmt(des);
+  document.getElementById('rel-cnpj-ret').textContent=fmt(ret);
+  document.getElementById('rel-cnpj-luc').textContent=fmt(luc);
+  document.getElementById('rel-cnpj-margem').textContent=rec>0?(luc/rec*100).toFixed(1)+'%':'—';
+  document.getElementById('rel-cnpj-pct').textContent=rec>0?((rec/teto)*100).toFixed(1)+'%':'0%';
+  var tab=document.getElementById('rel-cnpj-tabela');
   while(tab.rows.length>1)tab.deleteRow(1);
-  var acumRel=0,temDados=false;
+  var acum=0,temDados=false;
   MES.forEach(function(m,i){
     var e=sumMes('cnpj','entrada',i,ano),d=sumMes('cnpj','saida',i,ano),r=sumMes('cnpj','retirada',i,ano);
-    if(e>0||d>0||r>0){
-      temDados=true;acumRel+=e-d-r;
-      var tr=tab.insertRow();tr.style.borderBottom='1px solid var(--borda)';
-      tr.innerHTML='<td style="padding:.4rem .3rem;font-size:.72rem">'+m+'/'+ano+'</td>'+
-        '<td style="padding:.4rem .3rem;font-size:.72rem;text-align:right;color:var(--verde)">'+fmt(e)+'</td>'+
-        '<td style="padding:.4rem .3rem;font-size:.72rem;text-align:right;color:var(--vermelho)">'+fmt(d)+'</td>'+
-        '<td style="padding:.4rem .3rem;font-size:.72rem;text-align:right;color:var(--roxo)">'+fmt(r)+'</td>'+
-        '<td style="padding:.4rem .3rem;font-size:.72rem;text-align:right;font-weight:700">'+fmt(e-d-r)+'</td>'+
-        '<td style="padding:.4rem .3rem;font-size:.72rem;text-align:right;color:var(--azul);font-weight:700">'+fmt(acumRel)+'</td>';
-    }
+    if(e>0||d>0||r>0){temDados=true;acum+=e-d-r;var tr=tab.insertRow();tr.style.borderBottom='1px solid var(--borda)';
+      tr.innerHTML='<td style="padding:.4rem .3rem;font-size:.72rem">'+m+'/'+ano+'</td>'+'<td style="padding:.4rem .3rem;font-size:.72rem;text-align:right;color:var(--verde)">'+fmt(e)+'</td>'+'<td style="padding:.4rem .3rem;font-size:.72rem;text-align:right;color:var(--vermelho)">'+fmt(d)+'</td>'+'<td style="padding:.4rem .3rem;font-size:.72rem;text-align:right;color:var(--roxo)">'+fmt(r)+'</td>'+'<td style="padding:.4rem .3rem;font-size:.72rem;text-align:right;font-weight:700">'+fmt(e-d-r)+'</td>'+'<td style="padding:.4rem .3rem;font-size:.72rem;text-align:right;color:var(--azul);font-weight:700">'+fmt(acum)+'</td>';}
   });
   if(!temDados){var tr=tab.insertRow();tr.innerHTML='<td colspan="6" style="padding:.6rem;text-align:center;color:var(--texto2);font-size:.76rem">Nenhum lançamento em '+ano+'</td>';}
-
-  // categorias CNPJ
-  var catsCnpj={};S.lancs.filter(function(l){return l.cart==='cnpj'&&l.tipo==='saida'&&l.cat&&matchAno(l,ano);}).forEach(function(l){catsCnpj[l.cat]=(catsCnpj[l.cat]||0)+l.val;});
-  var rcCnpj=document.getElementById('rel-cats-cnpj'),kcCnpj=Object.keys(catsCnpj);
-  rcCnpj.innerHTML=kcCnpj.length?kcCnpj.map(function(k){return'<div class="dr"><span class="drl">'+k+'</span><span class="drv r">'+fmt(catsCnpj[k])+'</span></div>';}).join(''):'<div class="empty" style="padding:.3rem 0">Nenhuma despesa categorizada</div>';
-
-  document.getElementById('rel-lc').textContent=fmt(cpRet-ir.av);
-  document.getElementById('rel-av').textContent=fmt(ir.av);
-  document.getElementById('rel-oc').textContent=fmt(ir.oc);
-  document.getElementById('rel-ob').textContent=fmt(ir.ob);
-  document.getElementById('rel-gas').textContent=fmt(cpSai);
-  document.getElementById('rel-sal').textContent=fmt(cpRet+cpEnt-cpSai);
-  var bEl=document.getElementById('rel-base');bEl.textContent=fmt(ir.base);bEl.className='drv'+(ir.base>33888?' r':' g');
-  document.getElementById('rel-faixa').textContent=faixaLabel;
-  var irEl=document.getElementById('rel-ir');irEl.textContent=fmt(ir.impL);irEl.className='drv'+(ir.impL>0?' r':' g');
-  document.getElementById('rel-isentos').textContent=fmt(cpRet-ir.av);
-
-  // categorias CPF
-  var catsCpf={};S.lancs.filter(function(l){return l.cart==='cpf'&&l.tipo==='saida'&&l.cat&&matchAno(l,ano);}).forEach(function(l){catsCpf[l.cat]=(catsCpf[l.cat]||0)+l.val;});
-  var rcCpf=document.getElementById('rel-cats-cpf'),kcCpf=Object.keys(catsCpf);
-  rcCpf.innerHTML=kcCpf.length?kcCpf.map(function(k){return'<div class="dr"><span class="drl">'+k+'</span><span class="drv r">'+fmt(catsCpf[k])+'</span></div>';}).join(''):'<div class="empty" style="padding:.3rem 0">Nenhum gasto categorizado</div>';
-
-  document.getElementById('rel-ndc').textContent=S.docs.cnpj.length;
-  document.getElementById('rel-ndp').textContent=S.docs.cpf.length;
-  document.getElementById('rel-docs-cnpj').innerHTML=S.docs.cnpj.length?S.docs.cnpj.map(function(d){return'<div style="padding:.3rem 0;border-bottom:1px solid var(--borda)">📄 '+d.nome+' <span style="color:var(--texto2);font-size:.68rem">('+d.data+')</span></div>';}).join(''):'<span style="color:var(--texto2)">Nenhum documento salvo</span>';
-  document.getElementById('rel-docs-cpf').innerHTML=S.docs.cpf.length?S.docs.cpf.map(function(d){return'<div style="padding:.3rem 0;border-bottom:1px solid var(--borda)">📄 '+d.nome+' <span style="color:var(--texto2);font-size:.68rem">('+d.data+')</span></div>';}).join(''):'<span style="color:var(--texto2)">Nenhum documento salvo</span>';
-
-  var checks=[
-    {ok:rec>0,txt:'Faturamento CNPJ registrado no app'},
-    {ok:des>0,txt:'Despesas do negócio registradas'},
-    {ok:ret>0,txt:'Retiradas de lucro registradas'},
-    {ok:S.docs.cnpj.length>0,txt:'Comprovantes de despesa CNPJ salvos'},
-    {ok:S.docs.cpf.length>0,txt:'Documentos pessoais CPF salvos'},
-    {ok:false,txt:'PENDENTE — Enviar extrato bancário CNPJ ao contador'},
-    {ok:false,txt:'PENDENTE — Enviar informe de rendimentos (banco/corretora)'},
-    {ok:false,txt:'PENDENTE — Enviar comprovantes de DAS de todos os meses'},
-  ];
-  document.getElementById('rel-checklist').innerHTML=checks.map(function(c){
-    return'<div style="display:flex;align-items:flex-start;gap:.5rem;padding:.45rem 0;border-bottom:1px solid var(--borda);font-size:.78rem">'+
-      '<span style="flex-shrink:0">'+(c.ok?'✅':'⚠️')+'</span>'+
-      '<span style="color:'+(c.ok?'var(--texto)':'var(--amarelo)')+'">'+c.txt+'</span></div>';
-  }).join('');
-
-  document.getElementById('rel-acoes').classList.add('hidden');
-  document.getElementById('rel-conteudo').classList.remove('hidden');
+  var cats={};S.lancs.filter(function(l){return l.cart==='cnpj'&&l.tipo==='saida'&&l.cat&&matchAno(l,ano);}).forEach(function(l){cats[l.cat]=(cats[l.cat]||0)+l.val;});
+  var rc=document.getElementById('rel-cnpj-cats'),kc=Object.keys(cats);
+  rc.innerHTML=kc.length?kc.map(function(k){return'<div class="dr"><span class="drl">'+k+'</span><span class="drv r">'+fmt(cats[k])+'</span></div>';}).join(''):'<div class="empty" style="padding:.3rem 0">Nenhuma despesa categorizada</div>';
+  document.getElementById('rel-cnpj-ndc').textContent=S.docs.cnpj.length;
+  document.getElementById('rel-cnpj-docs').innerHTML=S.docs.cnpj.length?S.docs.cnpj.map(function(d){return'<div style="padding:.3rem 0;border-bottom:1px solid var(--borda)">📄 '+d.nome+' <span style="color:var(--texto2);font-size:.68rem">('+d.data+')</span></div>';}).join(''):'<span style="color:var(--texto2)">Nenhum documento salvo</span>';
+  var checks=[{ok:rec>0,txt:'Faturamento CNPJ registrado'},{ok:des>0,txt:'Despesas do negócio registradas'},{ok:ret>0,txt:'Retiradas de lucro registradas'},{ok:S.docs.cnpj.length>0,txt:'Comprovantes de despesa CNPJ salvos'},{ok:false,txt:'PENDENTE — Enviar extrato bancário CNPJ'},{ok:false,txt:'PENDENTE — Enviar comprovantes de DAS de todos os meses'}];
+  document.getElementById('rel-cnpj-checklist').innerHTML=checks.map(function(c){return'<div style="display:flex;align-items:flex-start;gap:.5rem;padding:.45rem 0;border-bottom:1px solid var(--borda);font-size:.78rem"><span style="flex-shrink:0">'+(c.ok?'✅':'⚠️')+'</span><span style="color:'+(c.ok?'var(--texto)':'var(--amarelo)')+'">'+c.txt+'</span></div>';}).join('');
+  document.getElementById('rel-cnpj-acoes').classList.add('hidden');
+  document.getElementById('rel-cnpj-conteudo').classList.remove('hidden');
 }
-
-function compartilharWpp(){
-  var ano=relAno;
-  var ir=calcIRAno(ano);var teto=calcTeto();
+function compartilharWppCnpj(){
+  var ano=relAnoCnpj,teto=calcTeto();
   var rec=sumAno('cnpj','entrada',ano),des=sumAno('cnpj','saida',ano),ret=sumAno('cnpj','retirada',ano),luc=rec-des-ret;
-  var cpRet=sumAno('cpf','retirada_entrada',ano);
   var linhasMes='';
-  MES.forEach(function(m,i){
-    var e=sumMes('cnpj','entrada',i,ano),d=sumMes('cnpj','saida',i,ano),r=sumMes('cnpj','retirada',i,ano);
-    if(e>0||d>0||r>0)linhasMes+='• '+m+': Ent '+fmt(e)+' | Desp '+fmt(d)+' | Ret '+fmt(r)+' | Lucro '+fmt(e-d-r)+'\n';
-  });
-  var txt='📄 *RELATÓRIO ANUAL MEI '+ano+'*\n'+'Gerado: '+new Date().toLocaleDateString('pt-BR')+' | App MEIFácil\n\n'+
-    '👤 *'+S.nome+' — '+(S.tipo==='caminhoneiro'?'MEI Caminhoneiro':'MEI Comum')+'*\n'+
-    (S.dataAbertura?'Abertura: '+S.dataAbertura.toLocaleDateString('pt-BR')+'\n':'')+'\n'+
-    '━━━━━━━━━━━━━━━━━━\n'+
-    '🏪 *DRE CNPJ — '+ano+'*\n'+
-    '━━━━━━━━━━━━━━━━━━\n'+
-    'Faturamento total: *'+fmt(rec)+'*\n'+
-    '(-) Despesas: '+fmt(des)+'\n'+
-    '(-) Retiradas como lucros: '+fmt(ret)+'\n'+
-    'Lucro retido CNPJ: *'+fmt(luc)+'*\n'+
-    'Margem: '+(rec>0?(luc/rec*100).toFixed(1):'0')+'%\n'+
-    'Teto utilizado: '+(rec>0?((rec/teto)*100).toFixed(1):'0')+'%\n\n'+
-    '📅 *Mês a mês:*\n'+linhasMes+'\n'+
-    '━━━━━━━━━━━━━━━━━━\n'+
-    '👤 *IRPF — '+ano+'*\n'+
-    '━━━━━━━━━━━━━━━━━━\n'+
-    '⭐ Lucros isentos IR: *'+fmt(cpRet-ir.av)+'*\n'+
-    '   → Lançar em "Rendimentos Isentos"\n'+
-    '⚠️ Retiradas tributáveis: '+fmt(ir.av)+'\n'+
-    'Outras rendas: '+fmt(ir.oc+ir.ob)+'\n'+
-    'Base tributável: *'+fmt(ir.base)+'*\n'+
-    'IR estimado: *'+fmt(ir.impL)+'*\n\n'+
-    '━━━━━━━━━━━━━━━━━━\n'+
-    '📋 *PENDÊNCIAS:*\n'+
-    '━━━━━━━━━━━━━━━━━━\n'+
-    '⚠️ Enviar extrato bancário CNPJ\n'+
-    '⚠️ Enviar informe de rendimentos\n'+
-    '⚠️ Enviar comprovantes de DAS\n'+
-    (S.docs.cnpj.length?'✅ '+S.docs.cnpj.length+' docs CNPJ salvos\n':'⚠️ Nenhum doc CNPJ salvo\n')+
-    (S.docs.cpf.length?'✅ '+S.docs.cpf.length+' docs CPF salvos\n':'⚠️ Nenhum doc CPF salvo\n')+
-    '\n_Gerado pelo app MEIFácil_';
+  MES.forEach(function(m,i){var e=sumMes('cnpj','entrada',i,ano),d=sumMes('cnpj','saida',i,ano),r=sumMes('cnpj','retirada',i,ano);if(e>0||d>0||r>0)linhasMes+='• '+m+': Ent '+fmt(e)+' | Desp '+fmt(d)+' | Ret '+fmt(r)+' | Lucro '+fmt(e-d-r)+'\n';});
+  var txt='📄 *RELATÓRIO ANUAL CNPJ '+ano+'*\nGerado: '+new Date().toLocaleDateString('pt-BR')+' | App MEIFácil\n\n'+'👤 *'+S.nome+' — '+(S.tipo==='caminhoneiro'?'MEI Caminhoneiro':'MEI Comum')+'*\n\n'+'━━━━━━━━━━━━━━━━━━\n'+'🏪 *DRE CNPJ — '+ano+'*\n'+'━━━━━━━━━━━━━━━━━━\n'+'Faturamento total: *'+fmt(rec)+'*\n'+'(-) Despesas: '+fmt(des)+'\n'+'(-) Retiradas como lucros: '+fmt(ret)+'\n'+'Lucro retido CNPJ: *'+fmt(luc)+'*\n'+'Margem: '+(rec>0?(luc/rec*100).toFixed(1):'0')+'%\n'+'Teto utilizado: '+(rec>0?((rec/teto)*100).toFixed(1):'0')+'%\n\n'+'📅 *Mês a mês:*\n'+linhasMes+'\n'+'━━━━━━━━━━━━━━━━━━\n'+'📋 *PENDÊNCIAS:*\n'+'━━━━━━━━━━━━━━━━━━\n'+'⚠️ Enviar extrato bancário CNPJ\n'+'⚠️ Enviar comprovantes de DAS\n'+(S.docs.cnpj.length?'✅ '+S.docs.cnpj.length+' docs CNPJ salvos\n':'⚠️ Nenhum doc CNPJ salvo\n')+'\n_Gerado pelo app MEIFácil_';
   window.open('https://wa.me/?text='+encodeURIComponent(txt),'_blank');
 }
-
-function baixarPDF(){
-  var ano=relAno;
-  var ir=calcIRAno(ano);var teto=calcTeto();
+function baixarPDFCnpj(){
+  var ano=relAnoCnpj,teto=calcTeto();
   var rec=sumAno('cnpj','entrada',ano),des=sumAno('cnpj','saida',ano),ret=sumAno('cnpj','retirada',ano),luc=rec-des-ret;
+  var tMeses='',acumPdf=0;
+  MES.forEach(function(m,i){var e=sumMes('cnpj','entrada',i,ano),d=sumMes('cnpj','saida',i,ano),r=sumMes('cnpj','retirada',i,ano);if(e>0||d>0||r>0){acumPdf+=e-d-r;tMeses+='<tr><td>'+m+'/'+ano+'</td><td class="g">'+fmt(e)+'</td><td class="r">'+fmt(d)+'</td><td class="p">'+fmt(r)+'</td><td class="b">'+fmt(e-d-r)+'</td><td class="az" style="font-weight:700">'+fmt(acumPdf)+'</td></tr>';}});
+  if(!tMeses)tMeses='<tr><td colspan="6" style="text-align:center;color:#888">Nenhum lançamento em '+ano+'</td></tr>';
+  var cats={};S.lancs.filter(function(l){return l.cart==='cnpj'&&l.tipo==='saida'&&l.cat&&matchAno(l,ano);}).forEach(function(l){cats[l.cat]=(cats[l.cat]||0)+l.val;});
+  var tCats=Object.keys(cats).map(function(k){return'<tr><td>'+k+'</td><td class="r" style="text-align:right">'+fmt(cats[k])+'</td><td style="text-align:right;color:#888">'+(des>0?((cats[k]/des)*100).toFixed(1):0)+'%</td></tr>';}).join('');
+  if(!tCats)tCats='<tr><td colspan="3" style="text-align:center;color:#888">Sem categorias</td></tr>';
+  var style='*{margin:0;padding:0;box-sizing:border-box;}body{font-family:Arial,sans-serif;color:#1a1a1a;background:#f5f5f5;font-size:13px;}.page{max-width:820px;margin:0 auto;background:#fff;padding:36px;}.no-print{text-align:center;padding:16px;background:#f5f5f5;display:flex;gap:10px;justify-content:center;}.btn-print{background:#00C48C;color:#0E1720;border:none;border-radius:8px;padding:10px 24px;font-size:14px;font-weight:800;cursor:pointer;}.header{background:linear-gradient(135deg,#0d2e1a,#1a5c38);color:#fff;padding:24px 28px;border-radius:10px;margin-bottom:24px;display:flex;justify-content:space-between;align-items:center;}.header h1{font-size:20px;margin-bottom:3px;}.header .sub{font-size:11px;opacity:.75;}.badge{background:rgba(255,255,255,.15);padding:8px 14px;border-radius:8px;text-align:center;font-size:12px;}h2{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:#555;border-bottom:2px solid #00C48C;padding-bottom:5px;margin:20px 0 12px;}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}.dado{background:#f8f9fa;border-radius:7px;padding:10px 12px;}.dl{font-size:10px;color:#888;text-transform:uppercase;letter-spacing:.3px;margin-bottom:3px;}.dv{font-size:14px;font-weight:700;}.g{color:#00a374;}.r{color:#e55555;}.p{color:#8845cc;}.b{color:#2d6fd4;}.az{color:#2d6fd4;}table{width:100%;border-collapse:collapse;margin-bottom:14px;}th{background:#f0f0f0;padding:7px 9px;text-align:left;font-size:10px;text-transform:uppercase;color:#555;letter-spacing:.3px;}td{padding:7px 9px;border-bottom:1px solid #f0f0f0;font-size:12px;}tr:last-child td{border-bottom:none;}.check{display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-bottom:1px solid #f0f0f0;font-size:12px;}.aviso{background:#fff8e6;border:1px solid #ffd166;border-radius:7px;padding:12px;font-size:11px;color:#664400;line-height:1.6;margin-top:16px;}.footer{text-align:center;font-size:10px;color:#aaa;margin-top:20px;padding-top:14px;border-top:1px solid #eee;}@media print{body{background:#fff;}.page{padding:18px;box-shadow:none;}.no-print{display:none!important;}}';
+  var checks=[{ok:rec>0,txt:'Faturamento CNPJ registrado'},{ok:des>0,txt:'Despesas registradas'},{ok:ret>0,txt:'Retiradas registradas'},{ok:S.docs.cnpj.length>0,txt:'Comprovantes CNPJ salvos'},{ok:false,txt:'PENDENTE — Extrato bancário CNPJ'},{ok:false,txt:'PENDENTE — Comprovantes DAS mensais'}];
+  var html='<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Relatório CNPJ '+ano+'</title><style>'+style+'</style></head><body>'+'<div class="no-print"><button class="btn-print" onclick="window.print()">🖨️ Imprimir / Salvar PDF</button></div>'+'<div class="page">'+'<div class="header"><div><h1>🏪 Relatório Anual CNPJ</h1><div class="sub">Gerado em '+new Date().toLocaleDateString('pt-BR')+' pelo app MEIFácil</div><div class="sub" style="margin-top:3px">Ano-base: '+ano+'</div></div><div class="badge"><div style="font-size:18px;margin-bottom:3px">🏪</div><div style="font-weight:700">'+S.nome+'</div><div style="opacity:.75;margin-top:2px">'+(S.tipo==='caminhoneiro'?'MEI Caminhoneiro':'MEI Comum')+'</div></div></div>'+'<h2>1. Dados do MEI</h2><div class="grid2"><div class="dado"><div class="dl">Nome</div><div class="dv">'+S.nome+'</div></div><div class="dado"><div class="dl">Tipo</div><div class="dv">'+(S.tipo==='caminhoneiro'?'MEI Caminhoneiro':'MEI Comum')+'</div></div><div class="dado"><div class="dl">Negócio</div><div class="dv">'+S.negocio+'</div></div><div class="dado"><div class="dl">Abertura</div><div class="dv">'+(S.dataAbertura?S.dataAbertura.toLocaleDateString('pt-BR'):'Não informada')+'</div></div><div class="dado"><div class="dl">Teto anual</div><div class="dv g">'+fmt(teto)+'</div></div><div class="dado"><div class="dl">Ano</div><div class="dv">'+ano+'</div></div></div>'+'<h2>2. DRE — CNPJ '+ano+'</h2><div class="grid2"><div class="dado"><div class="dl">Faturamento total</div><div class="dv g">'+fmt(rec)+'</div></div><div class="dado"><div class="dl">(-) Despesas</div><div class="dv r">'+fmt(des)+'</div></div><div class="dado"><div class="dl">(-) Retirado como lucros</div><div class="dv p">'+fmt(ret)+'</div></div><div class="dado"><div class="dl">Lucro retido CNPJ</div><div class="dv g">'+fmt(luc)+'</div></div><div class="dado"><div class="dl">Margem de lucro</div><div class="dv">'+(rec>0?(luc/rec*100).toFixed(1):0)+'%</div></div><div class="dado"><div class="dl">% teto utilizado</div><div class="dv">'+(rec>0?((rec/teto)*100).toFixed(1):0)+'%</div></div></div>'+'<h2>Movimentação mês a mês — CNPJ</h2><table><tr><th>Mês</th><th>Entradas</th><th>Despesas</th><th>Retiradas</th><th>Lucro mês</th><th>Acumulado</th></tr>'+tMeses+'</table>'+'<h2>Despesas por categoria — CNPJ</h2><table><tr><th>Categoria</th><th style="text-align:right">Valor</th><th style="text-align:right">% do total</th></tr>'+tCats+'</table>'+'<h2>3. Documentos guardados</h2>'+(S.docs.cnpj.length?S.docs.cnpj.map(function(d){return'<div class="check"><span>📄</span><span>'+d.nome+' ('+d.data+')</span></div>';}).join(''):'<div style="color:#888">Nenhum documento</div>')+'<h2>4. Checklist para o contador</h2>'+checks.map(function(c){return'<div class="check"><span>'+(c.ok?'✅':'⚠️')+'</span><span style="color:'+(c.ok?'#333':'#cc8800')+'">'+c.txt+'</span></div>';}).join('')+'<div class="aviso"><strong>⚠️ Importante:</strong> Relatório gerado pelo app MEIFácil. Validar todos os valores antes da declaração oficial.</div><div class="footer">Relatório gerado pelo MEIFácil • '+new Date().toLocaleDateString('pt-BR')+' • Ano-base: '+ano+'</div></div></body></html>';
+  var w=window.open('','_blank');if(w){w.document.write(html);w.document.close();}else{alert('Permita pop-ups para este site.');}
+}
+
+// ── RELATÓRIO ANUAL CPF ──
+function voltarRelCpf(){document.getElementById('rel-cpf-acoes').classList.remove('hidden');document.getElementById('rel-cpf-conteudo').classList.add('hidden');}
+function gerarRelCpf(){
+  var ano=relAnoCpf;
+  var ir=calcIRAno(ano);
+  var cpRet=sumAno('cpf','retirada_entrada',ano),cpEnt=sumAno('cpf','entrada',ano),cpSai=sumAno('cpf','saida',ano);
+  var faixaLabel='✅ Isenta';
+  if(ir.base>82469)faixaLabel='🔴 27,5%';else if(ir.base>55976)faixaLabel='🔴 22,5%';else if(ir.base>45012)faixaLabel='🟡 15%';else if(ir.base>33888)faixaLabel='🟡 7,5%';
+  document.getElementById('rel-cpf-nome-topo').textContent=S.nome;
+  document.getElementById('rel-cpf-subtopo').textContent='Rendimentos Pessoais — CPF';
+  document.getElementById('rel-cpf-data-topo').textContent='Gerado em '+new Date().toLocaleDateString('pt-BR')+' — Ano-base: '+ano;
+  document.getElementById('rel-cpf-nome').textContent=S.nome;
+  document.getElementById('rel-cpf-ano').textContent=ano;
+  document.getElementById('rel-cpf-lc').textContent=fmt(cpRet-ir.av);
+  document.getElementById('rel-cpf-av').textContent=fmt(ir.av);
+  document.getElementById('rel-cpf-oc').textContent=fmt(ir.oc);
+  document.getElementById('rel-cpf-ob').textContent=fmt(ir.ob);
+  document.getElementById('rel-cpf-gas').textContent=fmt(cpSai);
+  document.getElementById('rel-cpf-sal').textContent=fmt(cpRet+cpEnt-cpSai);
+  // tabela mês a mês CPF
+  var tab=document.getElementById('rel-cpf-tabela');
+  while(tab.rows.length>1)tab.deleteRow(1);
+  var acum=0,temDados=false;
+  MES.forEach(function(m,i){
+    var e=sumMes('cpf','entrada',i,ano)+sumMes('cpf','retirada_entrada',i,ano),d=sumMes('cpf','saida',i,ano),r=sumMes('cpf','retirada_entrada',i,ano);
+    if(e>0||d>0){temDados=true;acum+=e-d;var tr=tab.insertRow();tr.style.borderBottom='1px solid var(--borda)';
+      tr.innerHTML='<td style="padding:.4rem .3rem;font-size:.72rem">'+m+'/'+ano+'</td>'+'<td style="padding:.4rem .3rem;font-size:.72rem;text-align:right;color:var(--verde)">'+fmt(e)+'</td>'+'<td style="padding:.4rem .3rem;font-size:.72rem;text-align:right;color:var(--vermelho)">'+fmt(d)+'</td>'+'<td style="padding:.4rem .3rem;font-size:.72rem;text-align:right;color:var(--roxo)">'+fmt(r)+'</td>'+'<td style="padding:.4rem .3rem;font-size:.72rem;text-align:right;color:var(--azul);font-weight:700">'+fmt(acum)+'</td>';}
+  });
+  if(!temDados){var tr=tab.insertRow();tr.innerHTML='<td colspan="5" style="padding:.6rem;text-align:center;color:var(--texto2);font-size:.76rem">Nenhum lançamento em '+ano+'</td>';}
+  var bEl=document.getElementById('rel-cpf-base');bEl.textContent=fmt(ir.base);bEl.className='drv'+(ir.base>33888?' r':' g');
+  document.getElementById('rel-cpf-faixa').textContent=faixaLabel;
+  var irEl=document.getElementById('rel-cpf-ir');irEl.textContent=fmt(ir.impL);irEl.className='drv'+(ir.impL>0?' r':' g');
+  document.getElementById('rel-cpf-isentos').textContent=fmt(cpRet-ir.av);
+  var cats={};S.lancs.filter(function(l){return l.cart==='cpf'&&l.tipo==='saida'&&l.cat&&matchAno(l,ano);}).forEach(function(l){cats[l.cat]=(cats[l.cat]||0)+l.val;});
+  var rc=document.getElementById('rel-cpf-cats'),kc=Object.keys(cats);
+  rc.innerHTML=kc.length?kc.map(function(k){return'<div class="dr"><span class="drl">'+k+'</span><span class="drv r">'+fmt(cats[k])+'</span></div>';}).join(''):'<div class="empty" style="padding:.3rem 0">Nenhum gasto categorizado</div>';
+  document.getElementById('rel-cpf-ndc').textContent=S.docs.cpf.length;
+  document.getElementById('rel-cpf-docs').innerHTML=S.docs.cpf.length?S.docs.cpf.map(function(d){return'<div style="padding:.3rem 0;border-bottom:1px solid var(--borda)">📄 '+d.nome+' <span style="color:var(--texto2);font-size:.68rem">('+d.data+')</span></div>';}).join(''):'<span style="color:var(--texto2)">Nenhum documento salvo</span>';
+  var checks=[{ok:cpRet>0,txt:'Retiradas de lucro registradas'},{ok:cpEnt>0,txt:'Outras entradas CPF registradas'},{ok:cpSai>0,txt:'Gastos pessoais registrados'},{ok:S.docs.cpf.length>0,txt:'Documentos pessoais CPF salvos'},{ok:false,txt:'PENDENTE — Enviar informe de rendimentos (banco/corretora)'},{ok:false,txt:'PENDENTE — Validar base tributável com contador'}];
+  document.getElementById('rel-cpf-checklist').innerHTML=checks.map(function(c){return'<div style="display:flex;align-items:flex-start;gap:.5rem;padding:.45rem 0;border-bottom:1px solid var(--borda);font-size:.78rem"><span style="flex-shrink:0">'+(c.ok?'✅':'⚠️')+'</span><span style="color:'+(c.ok?'var(--texto)':'var(--amarelo)')+'">'+c.txt+'</span></div>';}).join('');
+  document.getElementById('rel-cpf-acoes').classList.add('hidden');
+  document.getElementById('rel-cpf-conteudo').classList.remove('hidden');
+}
+function compartilharWppCpf(){
+  var ano=relAnoCpf,ir=calcIRAno(ano);
+  var cpRet=sumAno('cpf','retirada_entrada',ano),cpEnt=sumAno('cpf','entrada',ano),cpSai=sumAno('cpf','saida',ano);
+  var txt='📄 *RELATÓRIO ANUAL CPF '+ano+'*\nGerado: '+new Date().toLocaleDateString('pt-BR')+' | App MEIFácil\n\n'+'👤 *'+S.nome+'*\n\n'+'━━━━━━━━━━━━━━━━━━\n'+'💰 *RENDIMENTOS CPF — '+ano+'*\n'+'━━━━━━━━━━━━━━━━━━\n'+'⭐ Lucros isentos IR: *'+fmt(cpRet-ir.av)+'*\n'+'   → Lançar em "Rendimentos Isentos"\n'+'⚠️ Retiradas tributáveis: '+fmt(ir.av)+'\n'+'Outras entradas CPF: '+fmt(cpEnt)+'\n'+'(-) Gastos pessoais: '+fmt(cpSai)+'\n'+'Saldo acumulado CPF: *'+fmt(cpRet+cpEnt-cpSai)+'*\n\n'+'━━━━━━━━━━━━━━━━━━\n'+'📋 *IRPF — ESTIMATIVA*\n'+'━━━━━━━━━━━━━━━━━━\n'+'Base tributável: *'+fmt(ir.base)+'*\n'+'IR estimado: *'+fmt(ir.impL)+'*\n\n'+'━━━━━━━━━━━━━━━━━━\n'+'📋 *PENDÊNCIAS:*\n'+'━━━━━━━━━━━━━━━━━━\n'+'⚠️ Enviar informe de rendimentos\n'+'⚠️ Validar base tributável\n'+(S.docs.cpf.length?'✅ '+S.docs.cpf.length+' docs CPF salvos\n':'⚠️ Nenhum doc CPF salvo\n')+'\n_Gerado pelo app MEIFácil_';
+  window.open('https://wa.me/?text='+encodeURIComponent(txt),'_blank');
+}
+function baixarPDFCpf(){
+  var ano=relAnoCpf,ir=calcIRAno(ano);
   var cpRet=sumAno('cpf','retirada_entrada',ano),cpEnt=sumAno('cpf','entrada',ano),cpSai=sumAno('cpf','saida',ano);
   var faixaLabel=ir.base>82469?'27,5%':ir.base>55976?'22,5%':ir.base>45012?'15%':ir.base>33888?'7,5%':'Isento';
+  var cats={};S.lancs.filter(function(l){return l.cart==='cpf'&&l.tipo==='saida'&&l.cat&&matchAno(l,ano);}).forEach(function(l){cats[l.cat]=(cats[l.cat]||0)+l.val;});
+  var tCats=Object.keys(cats).map(function(k){return'<tr><td>'+k+'</td><td class="r" style="text-align:right">'+fmt(cats[k])+'</td></tr>';}).join('');
+  if(!tCats)tCats='<tr><td colspan="2" style="text-align:center;color:#888">Sem categorias</td></tr>';
+  var style='*{margin:0;padding:0;box-sizing:border-box;}body{font-family:Arial,sans-serif;color:#1a1a1a;background:#f5f5f5;font-size:13px;}.page{max-width:820px;margin:0 auto;background:#fff;padding:36px;}.no-print{text-align:center;padding:16px;background:#f5f5f5;}.btn-print{background:#2d6fd4;color:#fff;border:none;border-radius:8px;padding:10px 24px;font-size:14px;font-weight:800;cursor:pointer;}.header{background:linear-gradient(135deg,#0d1e3a,#1a3a5c);color:#fff;padding:24px 28px;border-radius:10px;margin-bottom:24px;display:flex;justify-content:space-between;align-items:center;}.header h1{font-size:20px;margin-bottom:3px;}.header .sub{font-size:11px;opacity:.75;}.badge{background:rgba(255,255,255,.15);padding:8px 14px;border-radius:8px;text-align:center;font-size:12px;}h2{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:#555;border-bottom:2px solid #2d6fd4;padding-bottom:5px;margin:20px 0 12px;}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}.dado{background:#f8f9fa;border-radius:7px;padding:10px 12px;}.dl{font-size:10px;color:#888;text-transform:uppercase;letter-spacing:.3px;margin-bottom:3px;}.dv{font-size:14px;font-weight:700;}.g{color:#00a374;}.r{color:#e55555;}.b{color:#2d6fd4;}.irpf-box{background:#f0f5ff;border:1px solid #b3c8f0;border-radius:8px;padding:14px;margin-bottom:14px;}.irpf-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #d0d8f0;font-size:12px;}.irpf-row:last-child{border-bottom:none;font-weight:700;}table{width:100%;border-collapse:collapse;margin-bottom:14px;}th{background:#f0f0f0;padding:7px 9px;text-align:left;font-size:10px;text-transform:uppercase;color:#555;}td{padding:7px 9px;border-bottom:1px solid #f0f0f0;font-size:12px;}.check{display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-bottom:1px solid #f0f0f0;font-size:12px;}.aviso{background:#fff8e6;border:1px solid #ffd166;border-radius:7px;padding:12px;font-size:11px;color:#664400;line-height:1.6;margin-top:16px;}.footer{text-align:center;font-size:10px;color:#aaa;margin-top:20px;padding-top:14px;border-top:1px solid #eee;}@media print{body{background:#fff;}.page{padding:18px;}.no-print{display:none!important;}}';
+  var checks=[{ok:cpRet>0,txt:'Retiradas de lucro registradas'},{ok:cpEnt>0,txt:'Outras entradas CPF registradas'},{ok:S.docs.cpf.length>0,txt:'Documentos CPF salvos'},{ok:false,txt:'PENDENTE — Informe de rendimentos'},{ok:false,txt:'PENDENTE — Validar base tributável'}];
+  var html='<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Relatório CPF '+ano+'</title><style>'+style+'</style></head><body><div class="no-print"><button class="btn-print" onclick="window.print()">🖨️ Imprimir / Salvar PDF</button></div><div class="page"><div class="header"><div><h1>👤 Relatório Anual CPF</h1><div class="sub">Gerado em '+new Date().toLocaleDateString('pt-BR')+' pelo app MEIFácil</div><div class="sub" style="margin-top:3px">Ano-base: '+ano+'</div></div><div class="badge"><div style="font-size:18px;margin-bottom:3px">👤</div><div style="font-weight:700">'+S.nome+'</div><div style="opacity:.75;margin-top:2px">Rendimentos Pessoais</div></div></div><h2>1. Identificação</h2><div class="grid2"><div class="dado"><div class="dl">Nome</div><div class="dv">'+S.nome+'</div></div><div class="dado"><div class="dl">Ano</div><div class="dv">'+ano+'</div></div></div><h2>2. Rendimentos CPF — '+ano+'</h2><div class="grid2"><div class="dado"><div class="dl">⭐ Dist. Lucros (ISENTO IR)</div><div class="dv g">'+fmt(cpRet-ir.av)+'</div></div><div class="dado"><div class="dl">⚠️ Retiradas avulsas (tributável)</div><div class="dv r">'+fmt(ir.av)+'</div></div><div class="dado"><div class="dl">Outras entradas CPF</div><div class="dv b">'+fmt(ir.oc)+'</div></div><div class="dado"><div class="dl">Outras rendas</div><div class="dv b">'+fmt(ir.ob)+'</div></div><div class="dado"><div class="dl">(-) Gastos pessoais</div><div class="dv r">'+fmt(cpSai)+'</div></div><div class="dado"><div class="dl">Saldo acumulado CPF</div><div class="dv b">'+fmt(cpRet+cpEnt-cpSai)+'</div></div></div><div class="irpf-box"><div style="font-weight:800;color:#2d6fd4;margin-bottom:8px;font-size:13px">Resumo IRPF para o contador</div><div class="irpf-row"><span>Base tributável estimada</span><span style="color:'+(ir.base>33888?'#e55555':'#00a374')+';font-weight:700">'+fmt(ir.base)+'</span></div><div class="irpf-row"><span>Faixa do IR</span><span>'+faixaLabel+'</span></div><div class="irpf-row"><span>IR estimado a pagar</span><span style="color:'+(ir.impL>0?'#e55555':'#00a374')+'">'+fmt(ir.impL)+'</span></div><div class="irpf-row"><span style="color:#00a374">⭐ Lançar em "Rendimentos Isentos"</span><span style="color:#00a374;font-weight:700">'+fmt(cpRet-ir.av)+'</span></div></div><h2>3. Gastos pessoais por categoria</h2><table><tr><th>Categoria</th><th style="text-align:right">Valor</th></tr>'+tCats+'</table><h2>4. Documentos guardados</h2>'+(S.docs.cpf.length?S.docs.cpf.map(function(d){return'<div class="check"><span>📄</span><span>'+d.nome+' ('+d.data+')</span></div>';}).join(''):'<div style="color:#888">Nenhum documento</div>')+'<h2>5. Checklist para o contador</h2>'+checks.map(function(c){return'<div class="check"><span>'+(c.ok?'✅':'⚠️')+'</span><span style="color:'+(c.ok?'#333':'#cc8800')+'">'+c.txt+'</span></div>';}).join('')+'<div class="aviso"><strong>⚠️ Importante:</strong> Valores de IR são estimativas sem deduções de saúde, educação e dependentes. Validar com o contador antes da declaração.</div><div class="footer">Relatório gerado pelo MEIFácil • '+new Date().toLocaleDateString('pt-BR')+' • Ano-base: '+ano+'</div></div></body></html>';
+  var w=window.open('','_blank');if(w){w.document.write(html);w.document.close();}else{alert('Permita pop-ups para este site.');}
+}
 
-  // tabela meses
-  var tMeses='',acumPdf=0;
-  MES.forEach(function(m,i){
-    var e=sumMes('cnpj','entrada',i,ano),d=sumMes('cnpj','saida',i,ano),r=sumMes('cnpj','retirada',i,ano);
-    if(e>0||d>0||r>0){acumPdf+=e-d-r;tMeses+='<tr><td>'+m+'/'+ano+'</td><td class="g">'+fmt(e)+'</td><td class="r">'+fmt(d)+'</td><td class="p">'+fmt(r)+'</td><td class="b">'+fmt(e-d-r)+'</td><td class="az" style="font-weight:700">'+fmt(acumPdf)+'</td></tr>';}
-  });
-  if(!tMeses)tMeses='<tr><td colspan="6" style="text-align:center;color:#888">Nenhum lançamento em '+ano+'</td></tr>';
+// ── RELATÓRIO MENSAL CNPJ ──
+function voltarRelMensalCnpj(){document.getElementById('rel-mcnpj-acoes').classList.remove('hidden');document.getElementById('rel-mcnpj-conteudo').classList.add('hidden');}
+function gerarRelMensalCnpj(){
+  var ano=relAnoMCnpj,mes=relMesMCnpj,teto=calcTeto();
+  var rec=sumMes('cnpj','entrada',mes,ano),des=sumMes('cnpj','saida',mes,ano),ret=sumMes('cnpj','retirada',mes,ano),luc=rec-des-ret;
+  var mesLabel=MES[mes]+'/'+ano;
+  document.getElementById('rel-mcnpj-nome-topo').textContent=S.nome;
+  document.getElementById('rel-mcnpj-tipo-topo').textContent=(S.tipo==='caminhoneiro'?'MEI Caminhoneiro':'MEI Comum')+' • '+S.negocio;
+  document.getElementById('rel-mcnpj-data-topo').textContent='Gerado em '+new Date().toLocaleDateString('pt-BR')+' — '+mesLabel;
+  document.getElementById('rel-mcnpj-nome').textContent=S.nome;
+  document.getElementById('rel-mcnpj-tipo').textContent=S.tipo==='caminhoneiro'?'MEI Caminhoneiro':'MEI Comum';
+  document.getElementById('rel-mcnpj-mes').textContent=mesLabel;
+  document.getElementById('rel-mcnpj-teto').textContent=fmt(teto);
+  document.getElementById('rel-mcnpj-rec').textContent=fmt(rec);
+  document.getElementById('rel-mcnpj-des').textContent=fmt(des);
+  document.getElementById('rel-mcnpj-ret').textContent=fmt(ret);
+  document.getElementById('rel-mcnpj-luc').textContent=fmt(luc);
+  document.getElementById('rel-mcnpj-margem').textContent=rec>0?(luc/rec*100).toFixed(1)+'%':'—';
+  document.getElementById('rel-mcnpj-pct').textContent=rec>0?((rec/teto)*100).toFixed(1)+'%':'0%';
+  var cats={};S.lancs.filter(function(l){return l.cart==='cnpj'&&l.tipo==='saida'&&l.cat&&matchMes(l,mes,ano);}).forEach(function(l){cats[l.cat]=(cats[l.cat]||0)+l.val;});
+  var rc=document.getElementById('rel-mcnpj-cats'),kc=Object.keys(cats);
+  rc.innerHTML=kc.length?kc.map(function(k){return'<div class="dr"><span class="drl">'+k+'</span><span class="drv r">'+fmt(cats[k])+'</span></div>';}).join(''):'<div class="empty" style="padding:.3rem 0">Nenhuma despesa categorizada</div>';
+  var docsMes=S.docs.cnpj.filter(function(d){var dt=new Date(d.data.split('/').reverse().join('-'));return dt.getMonth()===mes&&dt.getFullYear()===ano;});
+  document.getElementById('rel-mcnpj-docs').innerHTML=docsMes.length?docsMes.map(function(d){return'<div style="padding:.3rem 0;border-bottom:1px solid var(--borda)">📄 '+d.nome+' <span style="color:var(--texto2);font-size:.68rem">('+d.data+')</span></div>';}).join(''):'<span style="color:var(--texto2)">Nenhum documento salvo neste mês</span>';
+  var checks=[{ok:rec>0,txt:'Faturamento do mês registrado'},{ok:des>0,txt:'Despesas do mês registradas'},{ok:ret>0,txt:'Retiradas do mês registradas'},{ok:docsMes.length>0,txt:'Documentos do mês salvos'},{ok:false,txt:'PENDENTE — Comprovante DAS do mês'}];
+  document.getElementById('rel-mcnpj-checklist').innerHTML=checks.map(function(c){return'<div style="display:flex;align-items:flex-start;gap:.5rem;padding:.45rem 0;border-bottom:1px solid var(--borda);font-size:.78rem"><span style="flex-shrink:0">'+(c.ok?'✅':'⚠️')+'</span><span style="color:'+(c.ok?'var(--texto)':'var(--amarelo)')+'">'+c.txt+'</span></div>';}).join('');
+  document.getElementById('rel-mcnpj-acoes').classList.add('hidden');
+  document.getElementById('rel-mcnpj-conteudo').classList.remove('hidden');
+}
+function compartilharWppMensalCnpj(){
+  var ano=relAnoMCnpj,mes=relMesMCnpj,teto=calcTeto(),mesLabel=MES[mes]+'/'+ano;
+  var rec=sumMes('cnpj','entrada',mes,ano),des=sumMes('cnpj','saida',mes,ano),ret=sumMes('cnpj','retirada',mes,ano),luc=rec-des-ret;
+  var txt='📅 *RELATÓRIO MENSAL CNPJ — '+mesLabel+'*\nGerado: '+new Date().toLocaleDateString('pt-BR')+' | App MEIFácil\n\n'+'👤 *'+S.nome+'*\n\n'+'━━━━━━━━━━━━━━━━━━\n'+'🏪 *DRE CNPJ — '+mesLabel+'*\n'+'━━━━━━━━━━━━━━━━━━\n'+'Faturamento: *'+fmt(rec)+'*\n'+'(-) Despesas: '+fmt(des)+'\n'+'(-) Retiradas: '+fmt(ret)+'\n'+'Lucro do mês: *'+fmt(luc)+'*\n'+'Margem: '+(rec>0?(luc/rec*100).toFixed(1):'0')+'%\n'+'% do teto: '+(rec>0?((rec/teto)*100).toFixed(1):'0')+'%\n\n'+'⚠️ Comprovante DAS do mês pendente\n\n_Gerado pelo app MEIFácil_';
+  window.open('https://wa.me/?text='+encodeURIComponent(txt),'_blank');
+}
+function baixarPDFMensalCnpj(){
+  var ano=relAnoMCnpj,mes=relMesMCnpj,teto=calcTeto(),mesLabel=MES[mes]+'/'+ano;
+  var rec=sumMes('cnpj','entrada',mes,ano),des=sumMes('cnpj','saida',mes,ano),ret=sumMes('cnpj','retirada',mes,ano),luc=rec-des-ret;
+  var cats={};S.lancs.filter(function(l){return l.cart==='cnpj'&&l.tipo==='saida'&&l.cat&&matchMes(l,mes,ano);}).forEach(function(l){cats[l.cat]=(cats[l.cat]||0)+l.val;});
+  var tCats=Object.keys(cats).map(function(k){return'<tr><td>'+k+'</td><td class="r" style="text-align:right">'+fmt(cats[k])+'</td></tr>';}).join('');
+  if(!tCats)tCats='<tr><td colspan="2" style="text-align:center;color:#888">Sem categorias</td></tr>';
+  var style='*{margin:0;padding:0;box-sizing:border-box;}body{font-family:Arial,sans-serif;color:#1a1a1a;background:#f5f5f5;font-size:13px;}.page{max-width:820px;margin:0 auto;background:#fff;padding:36px;}.no-print{text-align:center;padding:16px;background:#f5f5f5;}.btn-print{background:#00C48C;color:#0E1720;border:none;border-radius:8px;padding:10px 24px;font-size:14px;font-weight:800;cursor:pointer;}.header{background:linear-gradient(135deg,#0d2e1a,#1a5c38);color:#fff;padding:24px 28px;border-radius:10px;margin-bottom:24px;display:flex;justify-content:space-between;align-items:center;}.header h1{font-size:20px;margin-bottom:3px;}.header .sub{font-size:11px;opacity:.75;}.badge{background:rgba(255,255,255,.15);padding:8px 14px;border-radius:8px;text-align:center;font-size:12px;}h2{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:#555;border-bottom:2px solid #00C48C;padding-bottom:5px;margin:20px 0 12px;}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}.dado{background:#f8f9fa;border-radius:7px;padding:10px 12px;}.dl{font-size:10px;color:#888;text-transform:uppercase;letter-spacing:.3px;margin-bottom:3px;}.dv{font-size:14px;font-weight:700;}.g{color:#00a374;}.r{color:#e55555;}.p{color:#8845cc;}table{width:100%;border-collapse:collapse;margin-bottom:14px;}th{background:#f0f0f0;padding:7px 9px;text-align:left;font-size:10px;text-transform:uppercase;color:#555;}td{padding:7px 9px;border-bottom:1px solid #f0f0f0;font-size:12px;}.check{display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-bottom:1px solid #f0f0f0;font-size:12px;}.aviso{background:#fff8e6;border:1px solid #ffd166;border-radius:7px;padding:12px;font-size:11px;color:#664400;line-height:1.6;margin-top:16px;}.footer{text-align:center;font-size:10px;color:#aaa;margin-top:20px;padding-top:14px;border-top:1px solid #eee;}@media print{body{background:#fff;}.page{padding:18px;}.no-print{display:none!important;}}';
+  var checks=[{ok:rec>0,txt:'Faturamento do mês registrado'},{ok:des>0,txt:'Despesas do mês registradas'},{ok:false,txt:'PENDENTE — Comprovante DAS do mês'}];
+  var html='<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Relatório Mensal CNPJ '+mesLabel+'</title><style>'+style+'</style></head><body><div class="no-print"><button class="btn-print" onclick="window.print()">🖨️ Imprimir / Salvar PDF</button></div><div class="page"><div class="header"><div><h1>🏪 Relatório Mensal CNPJ</h1><div class="sub">Gerado em '+new Date().toLocaleDateString('pt-BR')+' pelo app MEIFácil</div><div class="sub" style="margin-top:3px">Mês de referência: '+mesLabel+'</div></div><div class="badge"><div style="font-size:18px;margin-bottom:3px">📅</div><div style="font-weight:700">'+S.nome+'</div><div style="opacity:.75;margin-top:2px">'+mesLabel+'</div></div></div><h2>1. Dados do MEI</h2><div class="grid2"><div class="dado"><div class="dl">Nome</div><div class="dv">'+S.nome+'</div></div><div class="dado"><div class="dl">Tipo</div><div class="dv">'+(S.tipo==='caminhoneiro'?'MEI Caminhoneiro':'MEI Comum')+'</div></div><div class="dado"><div class="dl">Mês</div><div class="dv">'+mesLabel+'</div></div><div class="dado"><div class="dl">Teto anual</div><div class="dv g">'+fmt(teto)+'</div></div></div><h2>2. DRE Mensal — CNPJ</h2><div class="grid2"><div class="dado"><div class="dl">Faturamento do mês</div><div class="dv g">'+fmt(rec)+'</div></div><div class="dado"><div class="dl">(-) Despesas</div><div class="dv r">'+fmt(des)+'</div></div><div class="dado"><div class="dl">(-) Retiradas</div><div class="dv p">'+fmt(ret)+'</div></div><div class="dado"><div class="dl">Lucro do mês</div><div class="dv g">'+fmt(luc)+'</div></div><div class="dado"><div class="dl">Margem</div><div class="dv">'+(rec>0?(luc/rec*100).toFixed(1):0)+'%</div></div><div class="dado"><div class="dl">% do teto</div><div class="dv">'+(rec>0?((rec/teto)*100).toFixed(1):0)+'%</div></div></div><h2>3. Despesas por categoria</h2><table><tr><th>Categoria</th><th style="text-align:right">Valor</th></tr>'+tCats+'</table><h2>4. Checklist do mês</h2>'+checks.map(function(c){return'<div class="check"><span>'+(c.ok?'✅':'⚠️')+'</span><span style="color:'+(c.ok?'#333':'#cc8800')+'">'+c.txt+'</span></div>';}).join('')+'<div class="aviso"><strong>⚠️ Aviso:</strong> Relatório mensal gerado pelo app MEIFácil. Validar valores com o contador.</div><div class="footer">Relatório gerado pelo MEIFácil • '+new Date().toLocaleDateString('pt-BR')+' • '+mesLabel+'</div></div></body></html>';
+  var w=window.open('','_blank');if(w){w.document.write(html);w.document.close();}else{alert('Permita pop-ups para este site.');}
+}
 
-  // cats cnpj
-  var catsCnpj={};S.lancs.filter(function(l){return l.cart==='cnpj'&&l.tipo==='saida'&&l.cat&&matchAno(l,ano);}).forEach(function(l){catsCnpj[l.cat]=(catsCnpj[l.cat]||0)+l.val;});
-  var tCatsCnpj=Object.keys(catsCnpj).map(function(k){return'<tr><td>'+k+'</td><td class="r" style="text-align:right">'+fmt(catsCnpj[k])+'</td><td style="text-align:right;color:#888">'+(des>0?((catsCnpj[k]/des)*100).toFixed(1):0)+'%</td></tr>';}).join('');
-  if(!tCatsCnpj)tCatsCnpj='<tr><td colspan="3" style="text-align:center;color:#888">Sem categorias</td></tr>';
-
-  // cats cpf
-  var catsCpf={};S.lancs.filter(function(l){return l.cart==='cpf'&&l.tipo==='saida'&&l.cat&&matchAno(l,ano);}).forEach(function(l){catsCpf[l.cat]=(catsCpf[l.cat]||0)+l.val;});
-  var tCatsCpf=Object.keys(catsCpf).map(function(k){return'<tr><td>'+k+'</td><td class="r" style="text-align:right">'+fmt(catsCpf[k])+'</td></tr>';}).join('');
-  if(!tCatsCpf)tCatsCpf='<tr><td colspan="2" style="text-align:center;color:#888">Sem categorias</td></tr>';
-
-  var checks=[
-    {ok:rec>0,txt:'Faturamento CNPJ registrado'},{ok:des>0,txt:'Despesas registradas'},{ok:ret>0,txt:'Retiradas registradas'},
-    {ok:S.docs.cnpj.length>0,txt:'Comprovantes CNPJ salvos'},{ok:S.docs.cpf.length>0,txt:'Docs CPF salvos'},
-    {ok:false,txt:'PENDENTE — Extrato bancário CNPJ'},{ok:false,txt:'PENDENTE — Informe de rendimentos'},{ok:false,txt:'PENDENTE — Comprovantes DAS mensais'},
-  ];
-
-  var html='<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Relatório MEI '+ano+'</title>'+
-  '<style>*{margin:0;padding:0;box-sizing:border-box;}body{font-family:Arial,sans-serif;color:#1a1a1a;background:#f5f5f5;font-size:13px;}'+
-  '.page{max-width:820px;margin:0 auto;background:#fff;padding:36px;}.no-print{text-align:center;padding:16px;background:#f5f5f5;display:flex;gap:10px;justify-content:center;}'+
-  '.btn-print{background:#00C48C;color:#0E1720;border:none;border-radius:8px;padding:10px 24px;font-size:14px;font-weight:800;cursor:pointer;}'+
-  '.header{background:linear-gradient(135deg,#0d2e1a,#1a5c38);color:#fff;padding:24px 28px;border-radius:10px;margin-bottom:24px;display:flex;justify-content:space-between;align-items:center;}'+
-  '.header h1{font-size:20px;margin-bottom:3px;}.header .sub{font-size:11px;opacity:.75;}.badge{background:rgba(255,255,255,.15);padding:8px 14px;border-radius:8px;text-align:center;font-size:12px;}'+
-  'h2{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:#555;border-bottom:2px solid #00C48C;padding-bottom:5px;margin:20px 0 12px;}'+
-  '.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}.dado{background:#f8f9fa;border-radius:7px;padding:10px 12px;}'+
-  '.dl{font-size:10px;color:#888;text-transform:uppercase;letter-spacing:.3px;margin-bottom:3px;}.dv{font-size:14px;font-weight:700;}'+
-  '.g{color:#00a374;}.r{color:#e55555;}.p{color:#8845cc;}.b{color:#2d6fd4;}.az{color:#2d6fd4;}'+
-  'table{width:100%;border-collapse:collapse;margin-bottom:14px;}th{background:#f0f0f0;padding:7px 9px;text-align:left;font-size:10px;text-transform:uppercase;color:#555;letter-spacing:.3px;}'+
-  'td{padding:7px 9px;border-bottom:1px solid #f0f0f0;font-size:12px;}tr:last-child td{border-bottom:none;}'+
-  '.irpf-box{background:#f0faf5;border:1px solid #b3e8d4;border-radius:8px;padding:14px;margin-bottom:14px;}'+
-  '.irpf-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #d0edd8;font-size:12px;}.irpf-row:last-child{border-bottom:none;font-weight:700;}'+
-  '.check{display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-bottom:1px solid #f0f0f0;font-size:12px;}'+
-  '.aviso{background:#fff8e6;border:1px solid #ffd166;border-radius:7px;padding:12px;font-size:11px;color:#664400;line-height:1.6;margin-top:16px;}'+
-  '.footer{text-align:center;font-size:10px;color:#aaa;margin-top:20px;padding-top:14px;border-top:1px solid #eee;}'+
-  '@media print{body{background:#fff;}.page{padding:18px;box-shadow:none;}.no-print{display:none!important;}}'+
-  '</style></head><body>'+
-  '<div class="no-print"><button class="btn-print" onclick="window.print()">🖨️ Imprimir / Salvar PDF</button></div>'+
-  '<div class="page">'+
-  '<div class="header"><div><h1>📄 Relatório Anual MEI</h1><div class="sub">Gerado em '+new Date().toLocaleDateString('pt-BR')+' pelo app MEIFácil</div><div class="sub" style="margin-top:3px">Ano-base: '+ano+'</div></div>'+
-  '<div class="badge"><div style="font-size:18px;margin-bottom:3px">🏪</div><div style="font-weight:700">'+S.nome+'</div><div style="opacity:.75;margin-top:2px">'+(S.tipo==='caminhoneiro'?'MEI Caminhoneiro':'MEI Comum')+'</div></div></div>'+
-
-  '<h2>1. Dados do MEI</h2>'+
-  '<div class="grid2">'+
-  '<div class="dado"><div class="dl">Nome</div><div class="dv">'+S.nome+'</div></div>'+
-  '<div class="dado"><div class="dl">Tipo de MEI</div><div class="dv">'+(S.tipo==='caminhoneiro'?'MEI Caminhoneiro':'MEI Comum')+'</div></div>'+
-  '<div class="dado"><div class="dl">Tipo de negócio</div><div class="dv" style="text-transform:capitalize">'+S.negocio+'</div></div>'+
-  '<div class="dado"><div class="dl">Data de abertura</div><div class="dv">'+(S.dataAbertura?S.dataAbertura.toLocaleDateString('pt-BR'):'Não informada')+'</div></div>'+
-  '<div class="dado"><div class="dl">Teto anual</div><div class="dv g">'+fmt(teto)+'</div></div>'+
-  '<div class="dado"><div class="dl">Ano de referência</div><div class="dv">'+ano+'</div></div>'+
-  '</div>'+
-
-  '<h2>2. DRE — CNPJ '+ano+'</h2>'+
-  '<div class="grid2">'+
-  '<div class="dado"><div class="dl">Faturamento total</div><div class="dv g">'+fmt(rec)+'</div></div>'+
-  '<div class="dado"><div class="dl">(-) Despesas</div><div class="dv r">'+fmt(des)+'</div></div>'+
-  '<div class="dado"><div class="dl">(-) Retirado como lucros</div><div class="dv p">'+fmt(ret)+'</div></div>'+
-  '<div class="dado"><div class="dl">Lucro retido CNPJ</div><div class="dv g">'+fmt(luc)+'</div></div>'+
-  '<div class="dado"><div class="dl">Margem de lucro</div><div class="dv">'+(rec>0?(luc/rec*100).toFixed(1):0)+'%</div></div>'+
-  '<div class="dado"><div class="dl">% teto utilizado</div><div class="dv">'+(rec>0?((rec/teto)*100).toFixed(1):0)+'%</div></div>'+
-  '</div>'+
-
-  '<h2>Movimentação mês a mês — CNPJ</h2>'+
-  '<table><tr><th>Mês</th><th>Entradas</th><th>Despesas</th><th>Retiradas</th><th>Lucro mês</th><th>Acumulado</th></tr>'+tMeses+'</table>'+
-
-  '<h2>Despesas por categoria — CNPJ</h2>'+
-  '<table><tr><th>Categoria</th><th style="text-align:right">Valor</th><th style="text-align:right">% do total</th></tr>'+tCatsCnpj+'</table>'+
-
-  '<h2>3. Rendimentos CPF — '+ano+'</h2>'+
-  '<div class="grid2">'+
-  '<div class="dado"><div class="dl">⭐ Dist. Lucros (ISENTO IR)</div><div class="dv g">'+fmt(cpRet-ir.av)+'</div></div>'+
-  '<div class="dado"><div class="dl">⚠️ Retiradas avulsas (tributável)</div><div class="dv r">'+fmt(ir.av)+'</div></div>'+
-  '<div class="dado"><div class="dl">Outras entradas CPF</div><div class="dv b">'+fmt(ir.oc)+'</div></div>'+
-  '<div class="dado"><div class="dl">Outras rendas informadas</div><div class="dv b">'+fmt(ir.ob)+'</div></div>'+
-  '<div class="dado"><div class="dl">(-) Gastos pessoais</div><div class="dv r">'+fmt(cpSai)+'</div></div>'+
-  '<div class="dado"><div class="dl">Saldo acumulado CPF</div><div class="dv b">'+fmt(cpRet+cpEnt-cpSai)+'</div></div>'+
-  '</div>'+
-
-  '<div class="irpf-box"><div style="font-weight:800;color:#00a374;margin-bottom:8px;font-size:13px">Resumo para declaração do IRPF</div>'+
-  '<div class="irpf-row"><span>Base tributável estimada</span><span style="color:'+(ir.base>33888?'#e55555':'#00a374')+';font-weight:700">'+fmt(ir.base)+'</span></div>'+
-  '<div class="irpf-row"><span>Faixa do IR</span><span>'+faixaLabel+'</span></div>'+
-  '<div class="irpf-row"><span>IR estimado a pagar</span><span style="color:'+(ir.impL>0?'#e55555':'#00a374')+'">'+fmt(ir.impL)+'</span></div>'+
-  '<div class="irpf-row"><span style="color:#00a374">⭐ Lançar em "Rendimentos Isentos e Não Tributáveis"</span><span style="color:#00a374;font-weight:700">'+fmt(cpRet-ir.av)+'</span></div>'+
-  '</div>'+
-
-  '<h2>Gastos pessoais por categoria — CPF</h2>'+
-  '<table><tr><th>Categoria</th><th style="text-align:right">Valor</th></tr>'+tCatsCpf+'</table>'+
-
-  '<h2>4. Documentos guardados</h2>'+
-  '<div class="grid2">'+
-  '<div><div style="font-weight:700;color:#555;margin-bottom:6px;font-size:12px">🏪 CNPJ ('+S.docs.cnpj.length+')</div>'+
-  (S.docs.cnpj.length?S.docs.cnpj.map(function(d){return'<div style="font-size:11px;padding:3px 0;border-bottom:1px solid #f0f0f0">📄 '+d.nome+' ('+d.data+')</div>';}).join(''):'<div style="color:#888;font-size:11px">Nenhum documento</div>')+'</div>'+
-  '<div><div style="font-weight:700;color:#555;margin-bottom:6px;font-size:12px">👤 CPF ('+S.docs.cpf.length+')</div>'+
-  (S.docs.cpf.length?S.docs.cpf.map(function(d){return'<div style="font-size:11px;padding:3px 0;border-bottom:1px solid #f0f0f0">📄 '+d.nome+' ('+d.data+')</div>';}).join(''):'<div style="color:#888;font-size:11px">Nenhum documento</div>')+'</div>'+
-  '</div>'+
-
-  '<h2>5. Checklist para o contador</h2>'+
-  '<div>'+checks.map(function(c){return'<div class="check"><span>'+(c.ok?'✅':'⚠️')+'</span><span style="color:'+(c.ok?'#333':'#cc8800')+'">'+c.txt+'</span></div>';}).join('')+'</div>'+
-
-  '<div class="aviso"><strong>⚠️ Importante:</strong> Relatório gerado pelo app MEIFácil com base nos lançamentos informados. Valores de IR são estimativas sem considerar deduções com saúde, educação e dependentes. A distribuição de lucros isenta requer escrituração contábil e comprovantes de despesas. Validar todos os valores antes da declaração oficial.</div>'+
-  '<div class="footer">Relatório gerado pelo MEIFácil • '+new Date().toLocaleDateString('pt-BR')+' • Ano-base: '+ano+'</div>'+
-  '</div></body></html>';
-
-  var w=window.open('','_blank');
-  if(w){w.document.write(html);w.document.close();}
-  else{alert('Seu navegador bloqueou a janela. Permita pop-ups para este site e tente novamente.');}
+// ── RELATÓRIO MENSAL CPF ──
+function voltarRelMensalCpf(){document.getElementById('rel-mcpf-acoes').classList.remove('hidden');document.getElementById('rel-mcpf-conteudo').classList.add('hidden');}
+function gerarRelMensalCpf(){
+  var ano=relAnoMCpf,mes=relMesMCpf,mesLabel=MES[mes]+'/'+ano;
+  var cpRet=sumMes('cpf','retirada_entrada',mes,ano),cpEnt=sumMes('cpf','entrada',mes,ano),cpSai=sumMes('cpf','saida',mes,ano);
+  document.getElementById('rel-mcpf-nome-topo').textContent=S.nome;
+  document.getElementById('rel-mcpf-subtopo').textContent='Rendimentos Pessoais — CPF';
+  document.getElementById('rel-mcpf-data-topo').textContent='Gerado em '+new Date().toLocaleDateString('pt-BR')+' — '+mesLabel;
+  document.getElementById('rel-mcpf-nome').textContent=S.nome;
+  document.getElementById('rel-mcpf-mes').textContent=mesLabel;
+  document.getElementById('rel-mcpf-lc').textContent=fmt(cpRet);
+  document.getElementById('rel-mcpf-av').textContent=fmt(0);
+  document.getElementById('rel-mcpf-oc').textContent=fmt(cpEnt);
+  document.getElementById('rel-mcpf-gas').textContent=fmt(cpSai);
+  document.getElementById('rel-mcpf-sal').textContent=fmt(cpRet+cpEnt-cpSai);
+  var cats={};S.lancs.filter(function(l){return l.cart==='cpf'&&l.tipo==='saida'&&l.cat&&matchMes(l,mes,ano);}).forEach(function(l){cats[l.cat]=(cats[l.cat]||0)+l.val;});
+  var rc=document.getElementById('rel-mcpf-cats'),kc=Object.keys(cats);
+  rc.innerHTML=kc.length?kc.map(function(k){return'<div class="dr"><span class="drl">'+k+'</span><span class="drv r">'+fmt(cats[k])+'</span></div>';}).join(''):'<div class="empty" style="padding:.3rem 0">Nenhum gasto categorizado</div>';
+  var docsMes=S.docs.cpf.filter(function(d){var dt=new Date(d.data.split('/').reverse().join('-'));return dt.getMonth()===mes&&dt.getFullYear()===ano;});
+  document.getElementById('rel-mcpf-docs').innerHTML=docsMes.length?docsMes.map(function(d){return'<div style="padding:.3rem 0;border-bottom:1px solid var(--borda)">📄 '+d.nome+' <span style="color:var(--texto2);font-size:.68rem">('+d.data+')</span></div>';}).join(''):'<span style="color:var(--texto2)">Nenhum documento salvo neste mês</span>';
+  var checks=[{ok:cpRet>0,txt:'Retiradas do mês registradas'},{ok:cpEnt>0,txt:'Outras entradas CPF do mês registradas'},{ok:cpSai>0,txt:'Gastos pessoais do mês registrados'},{ok:docsMes.length>0,txt:'Documentos CPF do mês salvos'}];
+  document.getElementById('rel-mcpf-checklist').innerHTML=checks.map(function(c){return'<div style="display:flex;align-items:flex-start;gap:.5rem;padding:.45rem 0;border-bottom:1px solid var(--borda);font-size:.78rem"><span style="flex-shrink:0">'+(c.ok?'✅':'⚠️')+'</span><span style="color:'+(c.ok?'var(--texto)':'var(--amarelo)')+'">'+c.txt+'</span></div>';}).join('');
+  document.getElementById('rel-mcpf-acoes').classList.add('hidden');
+  document.getElementById('rel-mcpf-conteudo').classList.remove('hidden');
+}
+function compartilharWppMensalCpf(){
+  var ano=relAnoMCpf,mes=relMesMCpf,mesLabel=MES[mes]+'/'+ano;
+  var cpRet=sumMes('cpf','retirada_entrada',mes,ano),cpEnt=sumMes('cpf','entrada',mes,ano),cpSai=sumMes('cpf','saida',mes,ano);
+  var txt='📅 *RELATÓRIO MENSAL CPF — '+mesLabel+'*\nGerado: '+new Date().toLocaleDateString('pt-BR')+' | App MEIFácil\n\n'+'👤 *'+S.nome+'*\n\n'+'━━━━━━━━━━━━━━━━━━\n'+'💰 *RENDIMENTOS CPF — '+mesLabel+'*\n'+'━━━━━━━━━━━━━━━━━━\n'+'⭐ Retiradas de lucro: *'+fmt(cpRet)+'*\n'+'Outras entradas CPF: '+fmt(cpEnt)+'\n'+'(-) Gastos pessoais: '+fmt(cpSai)+'\n'+'Saldo do mês CPF: *'+fmt(cpRet+cpEnt-cpSai)+'*\n\n_Gerado pelo app MEIFácil_';
+  window.open('https://wa.me/?text='+encodeURIComponent(txt),'_blank');
+}
+function baixarPDFMensalCpf(){
+  var ano=relAnoMCpf,mes=relMesMCpf,mesLabel=MES[mes]+'/'+ano;
+  var cpRet=sumMes('cpf','retirada_entrada',mes,ano),cpEnt=sumMes('cpf','entrada',mes,ano),cpSai=sumMes('cpf','saida',mes,ano);
+  var cats={};S.lancs.filter(function(l){return l.cart==='cpf'&&l.tipo==='saida'&&l.cat&&matchMes(l,mes,ano);}).forEach(function(l){cats[l.cat]=(cats[l.cat]||0)+l.val;});
+  var tCats=Object.keys(cats).map(function(k){return'<tr><td>'+k+'</td><td class="r" style="text-align:right">'+fmt(cats[k])+'</td></tr>';}).join('');
+  if(!tCats)tCats='<tr><td colspan="2" style="text-align:center;color:#888">Sem categorias</td></tr>';
+  var style='*{margin:0;padding:0;box-sizing:border-box;}body{font-family:Arial,sans-serif;color:#1a1a1a;background:#f5f5f5;font-size:13px;}.page{max-width:820px;margin:0 auto;background:#fff;padding:36px;}.no-print{text-align:center;padding:16px;background:#f5f5f5;}.btn-print{background:#2d6fd4;color:#fff;border:none;border-radius:8px;padding:10px 24px;font-size:14px;font-weight:800;cursor:pointer;}.header{background:linear-gradient(135deg,#0d1e3a,#1a3a5c);color:#fff;padding:24px 28px;border-radius:10px;margin-bottom:24px;display:flex;justify-content:space-between;align-items:center;}.header h1{font-size:20px;margin-bottom:3px;}.header .sub{font-size:11px;opacity:.75;}.badge{background:rgba(255,255,255,.15);padding:8px 14px;border-radius:8px;text-align:center;font-size:12px;}h2{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:#555;border-bottom:2px solid #2d6fd4;padding-bottom:5px;margin:20px 0 12px;}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}.dado{background:#f8f9fa;border-radius:7px;padding:10px 12px;}.dl{font-size:10px;color:#888;text-transform:uppercase;letter-spacing:.3px;margin-bottom:3px;}.dv{font-size:14px;font-weight:700;}.g{color:#00a374;}.r{color:#e55555;}.b{color:#2d6fd4;}table{width:100%;border-collapse:collapse;margin-bottom:14px;}th{background:#f0f0f0;padding:7px 9px;text-align:left;font-size:10px;text-transform:uppercase;color:#555;}td{padding:7px 9px;border-bottom:1px solid #f0f0f0;font-size:12px;}.check{display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-bottom:1px solid #f0f0f0;font-size:12px;}.aviso{background:#fff8e6;border:1px solid #ffd166;border-radius:7px;padding:12px;font-size:11px;color:#664400;line-height:1.6;margin-top:16px;}.footer{text-align:center;font-size:10px;color:#aaa;margin-top:20px;padding-top:14px;border-top:1px solid #eee;}@media print{body{background:#fff;}.page{padding:18px;}.no-print{display:none!important;}}';
+  var checks=[{ok:cpRet>0,txt:'Retiradas do mês registradas'},{ok:cpEnt>0,txt:'Outras entradas CPF registradas'},{ok:cpSai>0,txt:'Gastos pessoais registrados'}];
+  var html='<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Relatório Mensal CPF '+mesLabel+'</title><style>'+style+'</style></head><body><div class="no-print"><button class="btn-print" onclick="window.print()">🖨️ Imprimir / Salvar PDF</button></div><div class="page"><div class="header"><div><h1>👤 Relatório Mensal CPF</h1><div class="sub">Gerado em '+new Date().toLocaleDateString('pt-BR')+' pelo app MEIFácil</div><div class="sub" style="margin-top:3px">Mês de referência: '+mesLabel+'</div></div><div class="badge"><div style="font-size:18px;margin-bottom:3px">📅</div><div style="font-weight:700">'+S.nome+'</div><div style="opacity:.75;margin-top:2px">'+mesLabel+'</div></div></div><h2>1. Identificação</h2><div class="grid2"><div class="dado"><div class="dl">Nome</div><div class="dv">'+S.nome+'</div></div><div class="dado"><div class="dl">Mês</div><div class="dv">'+mesLabel+'</div></div></div><h2>2. Rendimentos do mês — CPF</h2><div class="grid2"><div class="dado"><div class="dl">⭐ Retiradas de lucro</div><div class="dv g">'+fmt(cpRet)+'</div></div><div class="dado"><div class="dl">Outras entradas CPF</div><div class="dv b">'+fmt(cpEnt)+'</div></div><div class="dado"><div class="dl">(-) Gastos pessoais</div><div class="dv r">'+fmt(cpSai)+'</div></div><div class="dado"><div class="dl">Saldo do mês CPF</div><div class="dv b">'+fmt(cpRet+cpEnt-cpSai)+'</div></div></div><h2>3. Gastos por categoria</h2><table><tr><th>Categoria</th><th style="text-align:right">Valor</th></tr>'+tCats+'</table><h2>4. Checklist do mês</h2>'+checks.map(function(c){return'<div class="check"><span>'+(c.ok?'✅':'⚠️')+'</span><span style="color:'+(c.ok?'#333':'#cc8800')+'">'+c.txt+'</span></div>';}).join('')+'<div class="aviso"><strong>⚠️ Aviso:</strong> Relatório mensal gerado pelo app MEIFácil. Valores estimados — validar com o contador.</div><div class="footer">Relatório gerado pelo MEIFácil • '+new Date().toLocaleDateString('pt-BR')+' • '+mesLabel+'</div></div></body></html>';
+  var w=window.open('','_blank');if(w){w.document.write(html);w.document.close();}else{alert('Permita pop-ups para este site.');}
 }
 
 // ── GUIAS ──
