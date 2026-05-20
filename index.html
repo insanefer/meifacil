@@ -444,6 +444,27 @@ input[type=date]{color-scheme:dark;}
 </div>
 
 <!-- AUTH -->
+<!-- PAYWALL -->
+<div id="scr-paywall" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:9999;flex-direction:column;align-items:center;justify-content:center;padding:2rem;text-align:center;">
+  <div style="font-size:2.2rem;font-weight:900;letter-spacing:-2px;color:var(--verde);margin-bottom:.2rem;">MEI <span style="color:var(--texto)">Financeiro</span></div>
+  <p style="color:var(--texto2);font-size:.88rem;margin-bottom:2rem;">CNPJ e CPF sob controle — tudo em um lugar</p>
+  <div style="background:var(--card);border:1px solid var(--borda);border-radius:22px;padding:1.8rem;width:100%;max-width:400px;">
+    <div style="font-size:2rem;margin-bottom:.5rem;">🔒</div>
+    <h2 style="font-size:1.2rem;font-weight:800;margin-bottom:.5rem;">Acesso bloqueado</h2>
+    <p style="color:var(--texto2);font-size:.83rem;margin-bottom:1.5rem;line-height:1.5;">Sua assinatura está inativa. Assine agora para continuar usando o MEI Financeiro.</p>
+    <div style="background:rgba(0,196,140,.08);border:1px solid rgba(0,196,140,.2);border-radius:12px;padding:1rem;margin-bottom:1.2rem;">
+      <div style="font-size:1.5rem;font-weight:900;color:var(--verde);">R$ 19,90</div>
+      <div style="font-size:.75rem;color:var(--texto2);">no primeiro mês · depois R$ 99,90/mês</div>
+    </div>
+    <a href="https://pay.kiwify.com.br/AMVS9ie" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:.5rem;width:100%;background:var(--verde);color:#0E1720;border:none;border-radius:12px;padding:.9rem;font-weight:800;font-size:.9rem;cursor:pointer;min-height:48px;text-decoration:none;margin-bottom:.75rem;">
+      🚀 Assinar agora
+    </a>
+    <button onclick="fazerLogout()" style="width:100%;background:transparent;border:1px solid var(--borda);color:var(--texto2);border-radius:12px;padding:.75rem;font-size:.82rem;cursor:pointer;">
+      Sair da conta
+    </button>
+  </div>
+</div>
+
 <div id="auth">
   <div class="auth-logo">MEI <span>Financeiro</span></div>
   <p class="auth-tag">CNPJ e CPF sob controle — tudo em um lugar</p>
@@ -1650,6 +1671,7 @@ async function fazerLogout(){
   S={nome:'',tipo:'',negocio:'',dataAbertura:null,outrasVal:0,lancs:[],agenda:[],docs:{cnpj:[],cpf:[]},mes:new Date().getMonth(),lancTab:'cnpj',dreTab:'cnpj',docTab:'cnpj'};
   document.getElementById('app').style.display='none';
   document.getElementById('onboarding').style.display='none';
+  document.getElementById('scr-paywall').style.display='none';
   document.getElementById('auth').style.display='flex';
 }
 
@@ -1690,6 +1712,17 @@ async function carregarDadosUsuario(){
       return;
     }
     if(perfil){
+      // ── VERIFICAÇÃO DE ASSINATURA ──
+      if(!perfil.assinante_ativo){
+        clearTimeout(tSeg);
+        hideLoad();
+        carregando=false;
+        document.getElementById('auth').style.display='none';
+        document.getElementById('onboarding').style.display='none';
+        document.getElementById('app').style.display='none';
+        document.getElementById('scr-paywall').style.display='flex';
+        return;
+      }
       S.nome=perfil.nome||'';
       S.tipo=perfil.tipo_mei||'comum';
       S.negocio=perfil.negocio||'servico';
