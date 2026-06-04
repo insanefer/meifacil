@@ -366,6 +366,7 @@ input[type=date]{color-scheme:dark;}
 .alerta-agenda{border-radius:11px;padding:.65rem .85rem;font-size:.76rem;margin-bottom:.5rem;cursor:pointer;}
 .alerta-agenda.venc{background:rgba(255,107,107,.09);border:1px solid rgba(255,107,107,.25);color:var(--vermelho);}
 .alerta-agenda.prox{background:rgba(255,209,102,.09);border:1px solid rgba(255,209,102,.25);color:var(--amarelo);}
+.alerta-agenda.laranja{background:rgba(255,149,0,.10);border:1px solid rgba(255,149,0,.30);color:#FF9500;}
 /* MENU MAIS */
 .menu-mais-overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);z-index:150;display:none;align-items:flex-end;}
 .menu-mais-overlay.op{display:flex;}
@@ -522,7 +523,10 @@ input[type=date]{color-scheme:dark;}
       <input type="text" id="ob-nome" placeholder="Ex: Maria Silva"/>
       <label class="lbl">Tipo de MEI</label>
       <div class="tipo-grid">
-        <div class="tipo-btn" onclick="sTM('comum',this)"><div class="ti">🏪</div><div class="tn">MEI Comum</div><div class="tt">Teto R$81.000/ano</div></div>
+        <div class="tipo-btn" onclick="sTM('servico',this)"><div class="ti">🔧</div><div class="tn">MEI Serviço</div><div class="tt">Teto R$81.000/ano</div></div>
+        <div class="tipo-btn" onclick="sTM('comercio',this)"><div class="ti">🛒</div><div class="tn">MEI Comércio</div><div class="tt">Teto R$81.000/ano</div></div>
+        <div class="tipo-btn" onclick="sTM('industria',this)"><div class="ti">🏭</div><div class="tn">MEI Indústria</div><div class="tt">Teto R$81.000/ano</div></div>
+        <div class="tipo-btn" onclick="sTM('misto',this)"><div class="ti">🔧🛒</div><div class="tn">MEI Misto</div><div class="tt">Serviço + Comércio</div></div>
         <div class="tipo-btn" onclick="sTM('caminhoneiro',this)"><div class="ti">🚛</div><div class="tn">MEI Caminhoneiro</div><div class="tt">Teto R$251.600/ano</div></div>
       </div>
       <label class="lbl">Tipo de negócio</label>
@@ -585,6 +589,7 @@ input[type=date]{color-scheme:dark;}
     <div class="sub" id="d-sub">MEI Comum · 2025</div>
     <div id="d-ag-venc" class="alerta-agenda venc" style="display:none" onclick="goTo('agenda')"></div>
     <div id="d-ag-prox" class="alerta-agenda prox" style="display:none" onclick="goTo('agenda')"></div>
+    <div id="d-ag-laranja" class="alerta-agenda laranja" style="display:none" onclick="goTo('agenda')"></div>
     <div id="d-aw" class="alerta w" style="display:none"></div>
     <div id="d-ad" class="alerta d" style="display:none"></div>
     <div id="d-renovacao" style="display:none;background:rgba(255,193,7,.1);border:1px solid rgba(255,193,7,.3);border-radius:12px;padding:.75rem 1rem;font-size:.8rem;color:#ffc107;margin-bottom:.5rem;text-align:center;cursor:pointer;" onclick="goTo('assinatura')">⚠️ <span id="d-renovacao-txt"></span></div>
@@ -605,6 +610,9 @@ input[type=date]{color-scheme:dark;}
         <div class="sc-mini"><div class="sm-l">Saídas mês</div><div class="sm-v r" id="cn-sm">R$ 0</div></div>
       </div>
     </div>
+
+    <!-- ALERTA LIMITE DE COMPRAS 80% (só comércio/indústria/misto) -->
+    <div id="d-compras-alerta" style="display:none;border-radius:14px;padding:.85rem 1rem;margin-bottom:.6rem"></div>
 
     <!-- CARD CPF -->
     <div class="sum-card cpf">
@@ -1405,9 +1413,12 @@ input[type=date]{color-scheme:dark;}
       </div>
       <div class="perfil-field">
         <label>Tipo de MEI</label>
-        <div class="rg">
-          <div class="rb" id="rb-mei-comum" onclick="setTipoMEI('comum',this)">🏪 MEI Geral</div>
-          <div class="rb" id="rb-mei-caminhoneiro" onclick="setTipoMEI('caminhoneiro',this)">🚛 MEI Caminhoneiro</div>
+        <div class="rg" style="flex-wrap:wrap">
+          <div class="rb" id="rb-mei-servico" onclick="setTipoMEI('servico',this)">🔧 Serviço</div>
+          <div class="rb" id="rb-mei-comercio" onclick="setTipoMEI('comercio',this)">🛒 Comércio</div>
+          <div class="rb" id="rb-mei-industria" onclick="setTipoMEI('industria',this)">🏭 Indústria</div>
+          <div class="rb" id="rb-mei-misto" onclick="setTipoMEI('misto',this)">🔧🛒 Misto</div>
+          <div class="rb" id="rb-mei-caminhoneiro" onclick="setTipoMEI('caminhoneiro',this)">🚛 Caminhoneiro</div>
         </div>
       </div>
       <div class="perfil-field">
@@ -1506,12 +1517,7 @@ input[type=date]{color-scheme:dark;}
       <label class="lbl" id="cat-label">Categoria</label>
 
       <!-- ENTRADA CNPJ -->
-      <div id="cats-ent-cnpj" class="rg-cats" style="display:none">
-        <div class="rb" onclick="setCat('🛠 Prestação de Serviço')">🛠 Prestação de Serviço</div>
-        <div class="rb" onclick="setCat('💵 Venda de Produto')">💵 Venda de Produto</div>
-        <div class="rb" onclick="setCat('💳 Adiantamento de Cliente')">💳 Adiantamento de Cliente</div>
-        <div class="rb" onclick="setCat('📦 Outros')">📦 Outros</div>
-      </div>
+      <div id="cats-ent-cnpj" class="rg-cats" style="display:none"></div>
 
       <!-- ENTRADA CPF -->
       <div id="cats-ent-cpf" class="rg-cats" style="display:none">
@@ -1535,16 +1541,7 @@ input[type=date]{color-scheme:dark;}
       </div>
 
       <!-- SAÍDA CNPJ -->
-      <div id="cats-cnpj" class="rg-cats" style="display:none">
-        <div class="rb" onclick="setCat('🧾 DAS')">🧾 DAS</div>
-        <div class="rb" onclick="setCat('📱 Tel/Internet')">📱 Tel/Internet</div>
-        <div class="rb" onclick="setCat('🚗 Transporte')">🚗 Transporte</div>
-        <div class="rb" onclick="setCat('🛒 Fornecedores/Materiais')">🛒 Fornecedores/Materiais</div>
-        <div class="rb" onclick="setCat('💻 Equipamentos')">💻 Equipamentos</div>
-        <div class="rb" onclick="setCat('🏠 Aluguel')">🏠 Aluguel</div>
-        <div class="rb" onclick="setCat('📣 Marketing')">📣 Marketing</div>
-        <div class="rb" onclick="setCat('📦 Outros')">📦 Outros</div>
-      </div>
+      <div id="cats-cnpj" class="rg-cats" style="display:none"></div>
     </div>
     <label class="lbl">Descrição</label>
     <input type="text" id="l-desc" placeholder="Ex: Venda de serviço"/>
@@ -1873,7 +1870,56 @@ window.addEventListener('load',async function(){
 });
 
 var S={nome:'',tipo:'',negocio:'',dataAbertura:null,outrasVal:0,lancs:[],agenda:[],docs:{cnpj:[],cpf:[]},mes:new Date().getMonth(),cnpj:'',razaoSocial:'',nomeFantasia:'',fotoPerfil:null,lancTab:'cnpj',dreTab:'cnpj',docTab:'cnpj'};
-var TETOS={comum:81000,caminhoneiro:251600};
+var TETOS={servico:81000,comercio:81000,industria:81000,misto:81000,caminhoneiro:251600,comum:81000};
+
+// ── TIPOS DE MEI ──
+var MEI_TIPOS={
+  servico:{nome:'MEI Serviço',emoji:'🔧',compras:false},
+  comercio:{nome:'MEI Comércio',emoji:'🛒',compras:true,catCompra:'🛒 Compra de Mercadoria'},
+  industria:{nome:'MEI Indústria',emoji:'🏭',compras:true,catCompra:'🛒 Compra de Insumos'},
+  misto:{nome:'MEI Misto',emoji:'🔧🛒',compras:true,catCompra:'🛒 Compra de Mercadoria'},
+  caminhoneiro:{nome:'MEI Caminhoneiro',emoji:'🚛',compras:false}
+};
+function tipoMeiAtual(){
+  var t=S.tipo;
+  if(t==='comum')t='servico'; // compatibilidade com cadastros antigos
+  if(!MEI_TIPOS[t])t='servico';
+  return t;
+}
+function nomeMeiAtual(){return MEI_TIPOS[tipoMeiAtual()].nome;}
+
+// ── CATEGORIAS DINÂMICAS POR TIPO DE MEI ──
+// Lançamentos (entrada/saída) e Agenda (receber/pagar) do CNPJ
+var CAT_CNPJ={
+  servico:{
+    entrada:['🛠 Prestação de Serviço','💳 Adiantamento de Cliente','📦 Outros'],
+    saida:['🧾 DAS','📱 Tel/Internet','🚗 Transporte','💻 Equipamentos','🏠 Aluguel','📣 Marketing','📦 Outros'],
+    receber:['👤 Cliente','🛠️ Serviço Prestado','💰 Outros']
+  },
+  comercio:{
+    entrada:['💵 Venda de Produto','🌐 Venda Online','💳 Adiantamento de Cliente','📦 Outros'],
+    saida:['🧾 DAS','🛒 Compra de Mercadoria','📱 Tel/Internet','🚗 Transporte','💻 Equipamentos','🏠 Aluguel','📣 Marketing','📦 Outros'],
+    receber:['👤 Cliente','📦 Produto Vendido','🌐 Venda Online','💰 Outros']
+  },
+  industria:{
+    entrada:['💵 Venda de Produto','🌐 Venda Online','💳 Adiantamento de Cliente','📦 Outros'],
+    saida:['🧾 DAS','🛒 Compra de Insumos','📱 Tel/Internet','🚗 Transporte','💻 Equipamentos','🏠 Aluguel','📣 Marketing','📦 Outros'],
+    receber:['👤 Cliente','📦 Produto Vendido','🌐 Venda Online','💰 Outros']
+  },
+  misto:{
+    entrada:['🛠 Prestação de Serviço','💵 Venda de Produto','🌐 Venda Online','💳 Adiantamento de Cliente','📦 Outros'],
+    saida:['🧾 DAS','🛒 Compra de Mercadoria','📱 Tel/Internet','🚗 Transporte','💻 Equipamentos','🏠 Aluguel','📣 Marketing','📦 Outros'],
+    receber:['👤 Cliente','🛠️ Serviço Prestado','📦 Produto Vendido','🌐 Venda Online','💰 Outros']
+  },
+  caminhoneiro:{
+    entrada:['🚛 Frete','📱 Repasse de Aplicativo','📅 Diária/Ajuda de Custo','💳 Adiantamento de Cliente','📦 Outros'],
+    saida:['🧾 DAS','⛽ Combustível','🔧 Manutenção do Veículo','🛣️ Pedágio','🍽️ Alimentação','📱 Taxa do Aplicativo','📱 Tel/Internet','💻 Equipamentos','📦 Outros'],
+    receber:['👤 Cliente','🚛 Frete','📱 Repasse de Aplicativo','💰 Outros']
+  }
+};
+function catsCnpj(fluxo){ // fluxo: 'entrada' | 'saida' | 'receber'
+  return CAT_CNPJ[tipoMeiAtual()][fluxo];
+}
 var MES=['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
 var IR_F=[{min:0,max:33888,aliq:0,ded:0},{min:33889,max:45012,aliq:.075,ded:2541.6},{min:45013,max:55976,aliq:.15,ded:5808.06},{min:55977,max:82469,aliq:.225,ded:9997.56},{min:82470,max:Infinity,aliq:.275,ded:14101.19}];
 var mCart='cnpj',mTipo='entrada',mSub='lucros',mCat='📦 Outros',curScr='home',relAno=new Date().getFullYear()-1;
@@ -2009,10 +2055,11 @@ function setTipoMEI(t,el){
 }
 
 function setTipoMEIVisual(t){
-  var comum=document.getElementById('rb-mei-comum');
-  var cam=document.getElementById('rb-mei-caminhoneiro');
-  if(comum)comum.className='rb'+(t==='comum'?' sg':'');
-  if(cam)cam.className='rb'+(t==='caminhoneiro'?' sg':'');
+  if(t==='comum')t='servico'; // compatibilidade
+  ['servico','comercio','industria','misto','caminhoneiro'].forEach(function(tp){
+    var el=document.getElementById('rb-mei-'+tp);
+    if(el)el.className='rb'+(t===tp?' sg':'');
+  });
 }
 
 function escolherFotoPerfil(){
@@ -2077,6 +2124,7 @@ async function salvarPerfilCompleto(){
     var dNome=document.getElementById('d-nome');
     if(hNome)hNome.textContent=S.nome;
     if(dNome)dNome.textContent=S.nome;
+    atualizar(); // reflete novo tipo de MEI: teto, categorias, alerta de compras
     hideLoad();
     alert('Perfil salvo com sucesso! ✅');
   }catch(e){
@@ -2437,6 +2485,7 @@ function calcSaldoAcum(cart,mesAte,ano){
 
 function atualizar(){
   atualizarAlertasAgenda();
+  atualizarAlertaCompras();
   var ano=new Date().getFullYear();
   var teto=calcTeto();
   var anual=sumAno('cnpj','entrada',ano);
@@ -2469,7 +2518,7 @@ function atualizar(){
   document.getElementById('cp-em').textContent=fmt(cpE+cpR);
   document.getElementById('cp-sm').textContent=fmt(cpS);
   document.getElementById('cp-rm').textContent=fmt(cpR);
-  document.getElementById('d-sub').textContent=(S.tipo==='caminhoneiro'?'MEI Caminhoneiro':'MEI Comum')+' · '+ano;
+  document.getElementById('d-sub').textContent=nomeMeiAtual()+' · '+ano;
 
   // Banner de renovação — aparece 5 dias antes
   var bannerRenov=document.getElementById('d-renovacao');
@@ -2745,10 +2794,20 @@ function atualizarMUI(){
 
   if(isEntrada){
     // Mostra grupo de entrada correto
-    document.getElementById(mCart==='cnpj' ? 'cats-ent-cnpj' : 'cats-ent-cpf').style.display='grid';
+    if(mCart==='cnpj'){
+      document.getElementById('cats-ent-cnpj').innerHTML=catsCnpj('entrada').map(function(c){return'<div class="rb" onclick="setCat(\''+c+'\')">'+c+'</div>';}).join('');
+      document.getElementById('cats-ent-cnpj').style.display='grid';
+    } else {
+      document.getElementById('cats-ent-cpf').style.display='grid';
+    }
   } else if(isSaida){
     // Mostra grupo de saída correto
-    document.getElementById(mCart==='cnpj' ? 'cats-cnpj' : 'cats-cpf').style.display='grid';
+    if(mCart==='cnpj'){
+      document.getElementById('cats-cnpj').innerHTML=catsCnpj('saida').map(function(c){return'<div class="rb" onclick="setCat(\''+c+'\')">'+c+'</div>';}).join('');
+      document.getElementById('cats-cnpj').style.display='grid';
+    } else {
+      document.getElementById('cats-cpf').style.display='grid';
+    }
   }
 
   if(isSaida || isEntrada){
@@ -2973,10 +3032,10 @@ function gerarRelCnpj(){
   var teto=calcTeto();
   var rec=sumAno('cnpj','entrada',ano),des=sumAno('cnpj','saida',ano),ret=sumAno('cnpj','retirada',ano),luc=rec-des-ret;
   document.getElementById('rel-cnpj-nome-topo').textContent=S.nome;
-  document.getElementById('rel-cnpj-tipo-topo').textContent=(S.tipo==='caminhoneiro'?'MEI Caminhoneiro':'MEI Comum')+' • '+S.negocio;
+  document.getElementById('rel-cnpj-tipo-topo').textContent=nomeMeiAtual()+' • '+S.negocio;
   document.getElementById('rel-cnpj-data-topo').textContent='Gerado em '+new Date().toLocaleDateString('pt-BR')+' — Ano-base: '+ano;
   document.getElementById('rel-cnpj-nome').textContent=S.nome;
-  document.getElementById('rel-cnpj-tipo').textContent=S.tipo==='caminhoneiro'?'MEI Caminhoneiro':'MEI Comum';
+  document.getElementById('rel-cnpj-tipo').textContent=nomeMeiAtual();
   document.getElementById('rel-cnpj-neg').textContent=S.negocio;
   document.getElementById('rel-cnpj-abertura').textContent=S.dataAbertura?S.dataAbertura.toLocaleDateString('pt-BR'):'Não informada';
   document.getElementById('rel-cnpj-teto').textContent=fmt(teto);
@@ -3011,7 +3070,7 @@ function compartilharWppCnpj(){
   var rec=sumAno('cnpj','entrada',ano),des=sumAno('cnpj','saida',ano),ret=sumAno('cnpj','retirada',ano),luc=rec-des-ret;
   var linhasMes='';
   MES.forEach(function(m,i){var e=sumMes('cnpj','entrada',i,ano),d=sumMes('cnpj','saida',i,ano),r=sumMes('cnpj','retirada',i,ano);if(e>0||d>0||r>0)linhasMes+='• '+m+': Ent '+fmt(e)+' | Desp '+fmt(d)+' | Ret '+fmt(r)+' | Lucro '+fmt(e-d-r)+'\n';});
-  var txt='📄 *RELATÓRIO ANUAL CNPJ '+ano+'*\nGerado: '+new Date().toLocaleDateString('pt-BR')+' | App MEI Financeiro\n\n'+'👤 *'+S.nome+' — '+(S.tipo==='caminhoneiro'?'MEI Caminhoneiro':'MEI Comum')+'*\n\n'+'━━━━━━━━━━━━━━━━━━\n'+'🏪 *DRE CNPJ — '+ano+'*\n'+'━━━━━━━━━━━━━━━━━━\n'+'Faturamento total: *'+fmt(rec)+'*\n'+'(-) Despesas: '+fmt(des)+'\n'+'(-) Retiradas como lucros: '+fmt(ret)+'\n'+'Lucro retido CNPJ: *'+fmt(luc)+'*\n'+'Margem: '+(rec>0?(luc/rec*100).toFixed(1):'0')+'%\n'+'Teto utilizado: '+(rec>0?((rec/teto)*100).toFixed(1):'0')+'%\n\n'+'📅 *Mês a mês:*\n'+linhasMes+'\n'+'━━━━━━━━━━━━━━━━━━\n'+'📋 *PENDÊNCIAS:*\n'+'━━━━━━━━━━━━━━━━━━\n'+'⚠️ Enviar extrato bancário CNPJ\n'+'⚠️ Enviar comprovantes de DAS\n'+(S.docs.cnpj.length?'✅ '+S.docs.cnpj.length+' docs CNPJ salvos\n':'⚠️ Nenhum doc CNPJ salvo\n')+'\n_Gerado pelo app MEI Financeiro_';
+  var txt='📄 *RELATÓRIO ANUAL CNPJ '+ano+'*\nGerado: '+new Date().toLocaleDateString('pt-BR')+' | App MEI Financeiro\n\n'+'👤 *'+S.nome+' — '+nomeMeiAtual()+'*\n\n'+'━━━━━━━━━━━━━━━━━━\n'+'🏪 *DRE CNPJ — '+ano+'*\n'+'━━━━━━━━━━━━━━━━━━\n'+'Faturamento total: *'+fmt(rec)+'*\n'+'(-) Despesas: '+fmt(des)+'\n'+'(-) Retiradas como lucros: '+fmt(ret)+'\n'+'Lucro retido CNPJ: *'+fmt(luc)+'*\n'+'Margem: '+(rec>0?(luc/rec*100).toFixed(1):'0')+'%\n'+'Teto utilizado: '+(rec>0?((rec/teto)*100).toFixed(1):'0')+'%\n\n'+'📅 *Mês a mês:*\n'+linhasMes+'\n'+'━━━━━━━━━━━━━━━━━━\n'+'📋 *PENDÊNCIAS:*\n'+'━━━━━━━━━━━━━━━━━━\n'+'⚠️ Enviar extrato bancário CNPJ\n'+'⚠️ Enviar comprovantes de DAS\n'+(S.docs.cnpj.length?'✅ '+S.docs.cnpj.length+' docs CNPJ salvos\n':'⚠️ Nenhum doc CNPJ salvo\n')+'\n_Gerado pelo app MEI Financeiro_';
   window.open('https://wa.me/?text='+encodeURIComponent(txt),'_blank');
 }
 function baixarPDFCnpj(){
@@ -3025,7 +3084,7 @@ function baixarPDFCnpj(){
   if(!tCats)tCats='<tr><td colspan="3" style="text-align:center;color:#888">Sem categorias</td></tr>';
   var style='*{margin:0;padding:0;box-sizing:border-box;}body{font-family:Arial,sans-serif;color:#1a1a1a;background:#f5f5f5;font-size:13px;}.page{max-width:820px;margin:0 auto;background:#fff;padding:36px;}.no-print{text-align:center;padding:16px;background:#f5f5f5;display:flex;gap:10px;justify-content:center;}.btn-print{background:#00C48C;color:#0E1720;border:none;border-radius:8px;padding:10px 24px;font-size:14px;font-weight:800;cursor:pointer;}.header{background:linear-gradient(135deg,#0d2e1a,#1a5c38);color:#fff;padding:24px 28px;border-radius:10px;margin-bottom:24px;display:flex;justify-content:space-between;align-items:center;}.header h1{font-size:20px;margin-bottom:3px;}.header .sub{font-size:11px;opacity:.75;}.badge{background:rgba(255,255,255,.15);padding:8px 14px;border-radius:8px;text-align:center;font-size:12px;}h2{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:#555;border-bottom:2px solid #00C48C;padding-bottom:5px;margin:20px 0 12px;}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}.dado{background:#f8f9fa;border-radius:7px;padding:10px 12px;}.dl{font-size:10px;color:#888;text-transform:uppercase;letter-spacing:.3px;margin-bottom:3px;}.dv{font-size:14px;font-weight:700;}.g{color:#00a374;}.r{color:#e55555;}.p{color:#8845cc;}.b{color:#2d6fd4;}.az{color:#2d6fd4;}table{width:100%;border-collapse:collapse;margin-bottom:14px;}th{background:#f0f0f0;padding:7px 9px;text-align:left;font-size:10px;text-transform:uppercase;color:#555;letter-spacing:.3px;}td{padding:7px 9px;border-bottom:1px solid #f0f0f0;font-size:12px;}tr:last-child td{border-bottom:none;}.check{display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-bottom:1px solid #f0f0f0;font-size:12px;}.aviso{background:#fff8e6;border:1px solid #ffd166;border-radius:7px;padding:12px;font-size:11px;color:#664400;line-height:1.6;margin-top:16px;}.footer{text-align:center;font-size:10px;color:#aaa;margin-top:20px;padding-top:14px;border-top:1px solid #eee;}@media print{body{background:#fff;}.page{padding:18px;box-shadow:none;}.no-print{display:none!important;}}';
   var checks=[{ok:rec>0,txt:'Faturamento CNPJ registrado'},{ok:des>0,txt:'Despesas registradas'},{ok:ret>0,txt:'Retiradas registradas'},{ok:S.docs.cnpj.length>0,txt:'Comprovantes CNPJ salvos'},{ok:false,txt:'PENDENTE — Extrato bancário CNPJ'},{ok:false,txt:'PENDENTE — Comprovantes DAS mensais'}];
-  var html='<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Relatório CNPJ '+ano+'</title><style>'+style+'</style></head><body>'+'<div class="no-print"><button class="btn-print" onclick="window.print()">🖨️ Imprimir / Salvar PDF</button></div>'+'<div class="page">'+'<div class="header"><div><h1>🏪 Relatório Anual CNPJ</h1><div class="sub">Gerado em '+new Date().toLocaleDateString('pt-BR')+' pelo app MEI Financeiro</div><div class="sub" style="margin-top:3px">Ano-base: '+ano+'</div></div><div class="badge"><div style="font-size:18px;margin-bottom:3px">🏪</div><div style="font-weight:700">'+S.nome+'</div><div style="opacity:.75;margin-top:2px">'+(S.tipo==='caminhoneiro'?'MEI Caminhoneiro':'MEI Comum')+'</div></div></div>'+'<h2>1. Dados do MEI</h2><div class="grid2"><div class="dado"><div class="dl">Nome</div><div class="dv">'+S.nome+'</div></div><div class="dado"><div class="dl">Tipo</div><div class="dv">'+(S.tipo==='caminhoneiro'?'MEI Caminhoneiro':'MEI Comum')+'</div></div><div class="dado"><div class="dl">Negócio</div><div class="dv">'+S.negocio+'</div></div><div class="dado"><div class="dl">Abertura</div><div class="dv">'+(S.dataAbertura?S.dataAbertura.toLocaleDateString('pt-BR'):'Não informada')+'</div></div><div class="dado"><div class="dl">Teto anual</div><div class="dv g">'+fmt(teto)+'</div></div><div class="dado"><div class="dl">Ano</div><div class="dv">'+ano+'</div></div></div>'+'<h2>2. DRE — CNPJ '+ano+'</h2><div class="grid2"><div class="dado"><div class="dl">Faturamento total</div><div class="dv g">'+fmt(rec)+'</div></div><div class="dado"><div class="dl">(-) Despesas</div><div class="dv r">'+fmt(des)+'</div></div><div class="dado"><div class="dl">(-) Retirado como lucros</div><div class="dv p">'+fmt(ret)+'</div></div><div class="dado"><div class="dl">Lucro retido CNPJ</div><div class="dv g">'+fmt(luc)+'</div></div><div class="dado"><div class="dl">Margem de lucro</div><div class="dv">'+(rec>0?(luc/rec*100).toFixed(1):0)+'%</div></div><div class="dado"><div class="dl">% teto utilizado</div><div class="dv">'+(rec>0?((rec/teto)*100).toFixed(1):0)+'%</div></div></div>'+'<h2>Movimentação mês a mês — CNPJ</h2><table><tr><th>Mês</th><th>Entradas</th><th>Despesas</th><th>Retiradas</th><th>Lucro mês</th><th>Acumulado</th></tr>'+tMeses+'</table>'+'<h2>Despesas por categoria — CNPJ</h2><table><tr><th>Categoria</th><th style="text-align:right">Valor</th><th style="text-align:right">% do total</th></tr>'+tCats+'</table>'+'<h2>3. Documentos guardados</h2>'+(S.docs.cnpj.length?S.docs.cnpj.map(function(d){return'<div class="check"><span>📄</span><span>'+d.nome+' ('+d.data+')</span></div>';}).join(''):'<div style="color:#888">Nenhum documento</div>')+'<h2>4. Checklist para o contador</h2>'+checks.map(function(c){return'<div class="check"><span>'+(c.ok?'✅':'⚠️')+'</span><span style="color:'+(c.ok?'#333':'#cc8800')+'">'+c.txt+'</span></div>';}).join('')+'<div class="aviso"><strong>⚠️ Importante:</strong> Relatório gerado pelo app MEI Financeiro. Validar todos os valores antes da declaração oficial.</div><div class="footer">Relatório gerado pelo MEI Financeiro • '+new Date().toLocaleDateString('pt-BR')+' • Ano-base: '+ano+'</div></div></body></html>';
+  var html='<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Relatório CNPJ '+ano+'</title><style>'+style+'</style></head><body>'+'<div class="no-print"><button class="btn-print" onclick="window.print()">🖨️ Imprimir / Salvar PDF</button></div>'+'<div class="page">'+'<div class="header"><div><h1>🏪 Relatório Anual CNPJ</h1><div class="sub">Gerado em '+new Date().toLocaleDateString('pt-BR')+' pelo app MEI Financeiro</div><div class="sub" style="margin-top:3px">Ano-base: '+ano+'</div></div><div class="badge"><div style="font-size:18px;margin-bottom:3px">🏪</div><div style="font-weight:700">'+S.nome+'</div><div style="opacity:.75;margin-top:2px">'+nomeMeiAtual()+'</div></div></div>'+'<h2>1. Dados do MEI</h2><div class="grid2"><div class="dado"><div class="dl">Nome</div><div class="dv">'+S.nome+'</div></div><div class="dado"><div class="dl">Tipo</div><div class="dv">'+nomeMeiAtual()+'</div></div><div class="dado"><div class="dl">Negócio</div><div class="dv">'+S.negocio+'</div></div><div class="dado"><div class="dl">Abertura</div><div class="dv">'+(S.dataAbertura?S.dataAbertura.toLocaleDateString('pt-BR'):'Não informada')+'</div></div><div class="dado"><div class="dl">Teto anual</div><div class="dv g">'+fmt(teto)+'</div></div><div class="dado"><div class="dl">Ano</div><div class="dv">'+ano+'</div></div></div>'+'<h2>2. DRE — CNPJ '+ano+'</h2><div class="grid2"><div class="dado"><div class="dl">Faturamento total</div><div class="dv g">'+fmt(rec)+'</div></div><div class="dado"><div class="dl">(-) Despesas</div><div class="dv r">'+fmt(des)+'</div></div><div class="dado"><div class="dl">(-) Retirado como lucros</div><div class="dv p">'+fmt(ret)+'</div></div><div class="dado"><div class="dl">Lucro retido CNPJ</div><div class="dv g">'+fmt(luc)+'</div></div><div class="dado"><div class="dl">Margem de lucro</div><div class="dv">'+(rec>0?(luc/rec*100).toFixed(1):0)+'%</div></div><div class="dado"><div class="dl">% teto utilizado</div><div class="dv">'+(rec>0?((rec/teto)*100).toFixed(1):0)+'%</div></div></div>'+'<h2>Movimentação mês a mês — CNPJ</h2><table><tr><th>Mês</th><th>Entradas</th><th>Despesas</th><th>Retiradas</th><th>Lucro mês</th><th>Acumulado</th></tr>'+tMeses+'</table>'+'<h2>Despesas por categoria — CNPJ</h2><table><tr><th>Categoria</th><th style="text-align:right">Valor</th><th style="text-align:right">% do total</th></tr>'+tCats+'</table>'+'<h2>3. Documentos guardados</h2>'+(S.docs.cnpj.length?S.docs.cnpj.map(function(d){return'<div class="check"><span>📄</span><span>'+d.nome+' ('+d.data+')</span></div>';}).join(''):'<div style="color:#888">Nenhum documento</div>')+'<h2>4. Checklist para o contador</h2>'+checks.map(function(c){return'<div class="check"><span>'+(c.ok?'✅':'⚠️')+'</span><span style="color:'+(c.ok?'#333':'#cc8800')+'">'+c.txt+'</span></div>';}).join('')+'<div class="aviso"><strong>⚠️ Importante:</strong> Relatório gerado pelo app MEI Financeiro. Validar todos os valores antes da declaração oficial.</div><div class="footer">Relatório gerado pelo MEI Financeiro • '+new Date().toLocaleDateString('pt-BR')+' • Ano-base: '+ano+'</div></div></body></html>';
   var w=window.open('','_blank');if(w){w.document.write(html);w.document.close();}else{alert('Permita pop-ups para este site.');}
 }
 
@@ -3098,10 +3157,10 @@ function gerarRelMensalCnpj(){
   var rec=sumMes('cnpj','entrada',mes,ano),des=sumMes('cnpj','saida',mes,ano),ret=sumMes('cnpj','retirada',mes,ano),luc=rec-des-ret;
   var mesLabel=MES[mes]+'/'+ano;
   document.getElementById('rel-mcnpj-nome-topo').textContent=S.nome;
-  document.getElementById('rel-mcnpj-tipo-topo').textContent=(S.tipo==='caminhoneiro'?'MEI Caminhoneiro':'MEI Comum')+' • '+S.negocio;
+  document.getElementById('rel-mcnpj-tipo-topo').textContent=nomeMeiAtual()+' • '+S.negocio;
   document.getElementById('rel-mcnpj-data-topo').textContent='Gerado em '+new Date().toLocaleDateString('pt-BR')+' — '+mesLabel;
   document.getElementById('rel-mcnpj-nome').textContent=S.nome;
-  document.getElementById('rel-mcnpj-tipo').textContent=S.tipo==='caminhoneiro'?'MEI Caminhoneiro':'MEI Comum';
+  document.getElementById('rel-mcnpj-tipo').textContent=nomeMeiAtual();
   document.getElementById('rel-mcnpj-mes').textContent=mesLabel;
   document.getElementById('rel-mcnpj-teto').textContent=fmt(teto);
   document.getElementById('rel-mcnpj-rec').textContent=fmt(rec);
@@ -3134,7 +3193,7 @@ function baixarPDFMensalCnpj(){
   if(!tCats)tCats='<tr><td colspan="2" style="text-align:center;color:#888">Sem categorias</td></tr>';
   var style='*{margin:0;padding:0;box-sizing:border-box;}body{font-family:Arial,sans-serif;color:#1a1a1a;background:#f5f5f5;font-size:13px;}.page{max-width:820px;margin:0 auto;background:#fff;padding:36px;}.no-print{text-align:center;padding:16px;background:#f5f5f5;}.btn-print{background:#00C48C;color:#0E1720;border:none;border-radius:8px;padding:10px 24px;font-size:14px;font-weight:800;cursor:pointer;}.header{background:linear-gradient(135deg,#0d2e1a,#1a5c38);color:#fff;padding:24px 28px;border-radius:10px;margin-bottom:24px;display:flex;justify-content:space-between;align-items:center;}.header h1{font-size:20px;margin-bottom:3px;}.header .sub{font-size:11px;opacity:.75;}.badge{background:rgba(255,255,255,.15);padding:8px 14px;border-radius:8px;text-align:center;font-size:12px;}h2{font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.5px;color:#555;border-bottom:2px solid #00C48C;padding-bottom:5px;margin:20px 0 12px;}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}.dado{background:#f8f9fa;border-radius:7px;padding:10px 12px;}.dl{font-size:10px;color:#888;text-transform:uppercase;letter-spacing:.3px;margin-bottom:3px;}.dv{font-size:14px;font-weight:700;}.g{color:#00a374;}.r{color:#e55555;}.p{color:#8845cc;}table{width:100%;border-collapse:collapse;margin-bottom:14px;}th{background:#f0f0f0;padding:7px 9px;text-align:left;font-size:10px;text-transform:uppercase;color:#555;}td{padding:7px 9px;border-bottom:1px solid #f0f0f0;font-size:12px;}.check{display:flex;align-items:flex-start;gap:8px;padding:6px 0;border-bottom:1px solid #f0f0f0;font-size:12px;}.aviso{background:#fff8e6;border:1px solid #ffd166;border-radius:7px;padding:12px;font-size:11px;color:#664400;line-height:1.6;margin-top:16px;}.footer{text-align:center;font-size:10px;color:#aaa;margin-top:20px;padding-top:14px;border-top:1px solid #eee;}@media print{body{background:#fff;}.page{padding:18px;}.no-print{display:none!important;}}';
   var checks=[{ok:rec>0,txt:'Faturamento do mês registrado'},{ok:des>0,txt:'Despesas do mês registradas'},{ok:false,txt:'PENDENTE — Comprovante DAS do mês'}];
-  var html='<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Relatório Mensal CNPJ '+mesLabel+'</title><style>'+style+'</style></head><body><div class="no-print"><button class="btn-print" onclick="window.print()">🖨️ Imprimir / Salvar PDF</button></div><div class="page"><div class="header"><div><h1>🏪 Relatório Mensal CNPJ</h1><div class="sub">Gerado em '+new Date().toLocaleDateString('pt-BR')+' pelo app MEI Financeiro</div><div class="sub" style="margin-top:3px">Mês de referência: '+mesLabel+'</div></div><div class="badge"><div style="font-size:18px;margin-bottom:3px">📅</div><div style="font-weight:700">'+S.nome+'</div><div style="opacity:.75;margin-top:2px">'+mesLabel+'</div></div></div><h2>1. Dados do MEI</h2><div class="grid2"><div class="dado"><div class="dl">Nome</div><div class="dv">'+S.nome+'</div></div><div class="dado"><div class="dl">Tipo</div><div class="dv">'+(S.tipo==='caminhoneiro'?'MEI Caminhoneiro':'MEI Comum')+'</div></div><div class="dado"><div class="dl">Mês</div><div class="dv">'+mesLabel+'</div></div><div class="dado"><div class="dl">Teto anual</div><div class="dv g">'+fmt(teto)+'</div></div></div><h2>2. DRE Mensal — CNPJ</h2><div class="grid2"><div class="dado"><div class="dl">Faturamento do mês</div><div class="dv g">'+fmt(rec)+'</div></div><div class="dado"><div class="dl">(-) Despesas</div><div class="dv r">'+fmt(des)+'</div></div><div class="dado"><div class="dl">(-) Retiradas</div><div class="dv p">'+fmt(ret)+'</div></div><div class="dado"><div class="dl">Lucro do mês</div><div class="dv g">'+fmt(luc)+'</div></div><div class="dado"><div class="dl">Margem</div><div class="dv">'+(rec>0?(luc/rec*100).toFixed(1):0)+'%</div></div><div class="dado"><div class="dl">% do teto</div><div class="dv">'+(rec>0?((rec/teto)*100).toFixed(1):0)+'%</div></div></div><h2>3. Despesas por categoria</h2><table><tr><th>Categoria</th><th style="text-align:right">Valor</th></tr>'+tCats+'</table><h2>4. Checklist do mês</h2>'+checks.map(function(c){return'<div class="check"><span>'+(c.ok?'✅':'⚠️')+'</span><span style="color:'+(c.ok?'#333':'#cc8800')+'">'+c.txt+'</span></div>';}).join('')+'<div class="aviso"><strong>⚠️ Aviso:</strong> Relatório mensal gerado pelo app MEI Financeiro. Validar valores com o contador.</div><div class="footer">Relatório gerado pelo MEI Financeiro • '+new Date().toLocaleDateString('pt-BR')+' • '+mesLabel+'</div></div></body></html>';
+  var html='<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><title>Relatório Mensal CNPJ '+mesLabel+'</title><style>'+style+'</style></head><body><div class="no-print"><button class="btn-print" onclick="window.print()">🖨️ Imprimir / Salvar PDF</button></div><div class="page"><div class="header"><div><h1>🏪 Relatório Mensal CNPJ</h1><div class="sub">Gerado em '+new Date().toLocaleDateString('pt-BR')+' pelo app MEI Financeiro</div><div class="sub" style="margin-top:3px">Mês de referência: '+mesLabel+'</div></div><div class="badge"><div style="font-size:18px;margin-bottom:3px">📅</div><div style="font-weight:700">'+S.nome+'</div><div style="opacity:.75;margin-top:2px">'+mesLabel+'</div></div></div><h2>1. Dados do MEI</h2><div class="grid2"><div class="dado"><div class="dl">Nome</div><div class="dv">'+S.nome+'</div></div><div class="dado"><div class="dl">Tipo</div><div class="dv">'+nomeMeiAtual()+'</div></div><div class="dado"><div class="dl">Mês</div><div class="dv">'+mesLabel+'</div></div><div class="dado"><div class="dl">Teto anual</div><div class="dv g">'+fmt(teto)+'</div></div></div><h2>2. DRE Mensal — CNPJ</h2><div class="grid2"><div class="dado"><div class="dl">Faturamento do mês</div><div class="dv g">'+fmt(rec)+'</div></div><div class="dado"><div class="dl">(-) Despesas</div><div class="dv r">'+fmt(des)+'</div></div><div class="dado"><div class="dl">(-) Retiradas</div><div class="dv p">'+fmt(ret)+'</div></div><div class="dado"><div class="dl">Lucro do mês</div><div class="dv g">'+fmt(luc)+'</div></div><div class="dado"><div class="dl">Margem</div><div class="dv">'+(rec>0?(luc/rec*100).toFixed(1):0)+'%</div></div><div class="dado"><div class="dl">% do teto</div><div class="dv">'+(rec>0?((rec/teto)*100).toFixed(1):0)+'%</div></div></div><h2>3. Despesas por categoria</h2><table><tr><th>Categoria</th><th style="text-align:right">Valor</th></tr>'+tCats+'</table><h2>4. Checklist do mês</h2>'+checks.map(function(c){return'<div class="check"><span>'+(c.ok?'✅':'⚠️')+'</span><span style="color:'+(c.ok?'#333':'#cc8800')+'">'+c.txt+'</span></div>';}).join('')+'<div class="aviso"><strong>⚠️ Aviso:</strong> Relatório mensal gerado pelo app MEI Financeiro. Validar valores com o contador.</div><div class="footer">Relatório gerado pelo MEI Financeiro • '+new Date().toLocaleDateString('pt-BR')+' • '+mesLabel+'</div></div></body></html>';
   var w=window.open('','_blank');if(w){w.document.write(html);w.document.close();}else{alert('Permita pop-ups para este site.');}
 }
 
@@ -3199,11 +3258,16 @@ var magCat='📦 Outros';
 var agEditId=null;
 
 var CATS_AG={
-  cnpj:{pagar:['🧾 DAS','📱 Tel/Internet','🚗 Transporte','🛒 Fornecedores','💻 Equipamentos','🏠 Aluguel','📣 Marketing','📦 Outros'],
-        receber:['👤 Cliente','🛠️ Serviço Prestado','📦 Produto Vendido','💰 Outros']},
   cpf:{pagar:['🏠 Moradia','🍽️ Alimentação','💊 Saúde','🚗 Transporte','🎉 Lazer','📚 Educação','📦 Outros'],
        receber:['💼 Salário','🖥️ Freelance','🏠 Aluguel Recebido','💰 Outros']}
 };
+// Categorias da agenda: CNPJ é dinâmico por tipo de MEI, CPF é fixo
+function catsAgenda(cart,tipo){
+  if(cart==='cnpj'){
+    return tipo==='pagar'?catsCnpj('saida'):catsCnpj('receber');
+  }
+  return CATS_AG.cpf[tipo];
+}
 
 function setAgTab(t){
   agTab=t;
@@ -3227,7 +3291,7 @@ function setAgStatus(st){
 }
 
 function atualizarCatsModal(){
-  var cats=CATS_AG[magCart][magTipo];
+  var cats=catsAgenda(magCart,magTipo);
   magCat=cats[cats.length-1]; // padrão = último (Outros)
   var wrap=document.getElementById('mag-cats');
   wrap.innerHTML=cats.map(function(c){
@@ -3261,6 +3325,29 @@ function abrirModalAgenda(){
 }
 
 function fecharModalAgenda(){document.getElementById('modal-agenda').classList.remove('op');}
+
+function editarAgenda(id){
+  var item=S.agenda.find(function(a){return a.id===id;});
+  if(!item)return;
+  agEditId=id;
+  document.getElementById('mag-titulo').textContent='Editar conta';
+  document.getElementById('mag-desc').value=item.desc;
+  document.getElementById('mag-val').value=item.val.toFixed(2).replace('.',',');
+  document.getElementById('mag-data').value=item.vencimento;
+  // Recorrência fica travada em "única" na edição (não recria parcelas)
+  document.getElementById('mag-rec').value='unica';
+  document.getElementById('mag-parcelas-wrap').style.display='none';
+  magCart=item.cart;magTipo=item.tipo;
+  setMagCart(magCart);setMagTipo(magTipo);
+  // seleciona a categoria existente
+  magCat=item.cat;
+  setTimeout(function(){
+    document.querySelectorAll('#mag-cats .rb').forEach(function(b){
+      if(b.textContent===item.cat)b.className='rb sb';else b.className='rb';
+    });
+  },0);
+  document.getElementById('modal-agenda').classList.add('op');
+}
 
 function setMagCart(c){
   magCart=c;
@@ -3354,6 +3441,20 @@ async function salvarAgenda(){
   var rec=document.getElementById('mag-rec').value;
   if(!desc||isNaN(val)||val<=0||!data){alert('Preencha todos os campos!');return;}
 
+  // ── MODO EDIÇÃO ──
+  if(agEditId!==null){
+    var item=S.agenda.find(function(a){return a.id===agEditId;});
+    if(item){
+      item.desc=desc;item.val=val;item.vencimento=data;item.cat=magCat;item.cart=magCart;item.tipo=magTipo;
+      showLoad('Salvando alterações...');
+      await salvarAgendaDB(item,false);
+      hideLoad();
+    }
+    agEditId=null;
+    fecharModalAgenda();renderAgenda();atualizar();
+    return;
+  }
+
   if(rec==='parcelado'){
     var nParc=parseInt(document.getElementById('mag-parcelas').value)||0;
     if(nParc<2){alert('Informe o número de parcelas (mínimo 2)!');return;}
@@ -3394,7 +3495,10 @@ async function salvarAgendaDB(item,isNew){
       }).select().single();
       if(novo)item.id=novo.id;
     } else {
-      await supa.from('agenda').update({pago:item.pago}).eq('id',item.id).eq('user_id',usuarioAtual.id);
+      await supa.from('agenda').update({
+        descricao:item.desc,valor:item.val,vencimento:item.vencimento,
+        categoria:item.cat,cart:item.cart,tipo:item.tipo,pago:item.pago
+      }).eq('id',item.id).eq('user_id',usuarioAtual.id);
     }
   }catch(e){console.error('Agenda DB:',e);}
 }
@@ -3662,10 +3766,13 @@ function renderAgenda(){
           '</div></div>'+
           '<div class="ag-val '+corVal+'" style="margin-left:.5rem">'+sinalVal+fmt(item.val)+'</div>'+
         '</div>'+
-        '<div class="ag-btns">'+
-          (item.pago?'<button class="ag-btn pago" disabled>✅ '+(item.tipo==='pagar'?'Pago':'Recebido')+'</button>':
-            '<button class="ag-btn pagar" onclick="marcarPago('+item.id+')">✅ '+(item.tipo==='pagar'?'Pago':'Recebido')+'</button>')+
-          '<button class="ag-btn del" onclick="'+(item.pago?'excluirAgendaPago('+item.id+')':'excluirAgenda('+item.id+')')+'">🗑</button>'+
+        '<div class="ag-btns" style="flex-direction:column">'+
+          '<div style="display:flex;gap:.4rem;width:100%">'+
+            (item.pago?'':'<button class="ag-btn" style="background:rgba(75,139,245,.14);color:var(--azul)" onclick="editarAgenda('+item.id+')">✏️ Editar</button>')+
+            '<button class="ag-btn del" onclick="'+(item.pago?'excluirAgendaPago('+item.id+')':'excluirAgenda('+item.id+')')+'"'+(item.pago?'':' style="flex:0 0 auto;min-width:52px"')+'>🗑</button>'+
+          '</div>'+
+          (item.pago?'<button class="ag-btn pago" disabled style="width:100%">✅ '+(item.tipo==='pagar'?'Pago':'Recebido')+'</button>':
+            '<button class="ag-btn pagar" onclick="marcarPago('+item.id+')" style="width:100%">✅ '+(item.tipo==='pagar'?'Pago':'Recebido')+'</button>')+
         '</div></div>';
     } else {
       var gr=entry.items; // todas as parcelas do grupo
@@ -3706,19 +3813,67 @@ function renderAgenda(){
   }).join('');
 }
 
+function atualizarAlertaCompras(){
+  var el=document.getElementById('d-compras-alerta');
+  if(!el)return;
+  var tipo=tipoMeiAtual();
+  var info=MEI_TIPOS[tipo];
+  // Só aparece para quem compra mercadoria/insumo
+  if(!info.compras){el.style.display='none';return;}
+  var ano=new Date().getFullYear();
+  // Faturamento do ano (entradas CNPJ)
+  var fat=sumAno('cnpj','entrada',ano);
+  // Total de compras no ano: categoria específica de compra
+  var catCompra=info.catCompra;
+  var compras=S.lancs.filter(function(l){
+    return l.cart==='cnpj'&&l.tipo==='saida'&&l.cat===catCompra&&matchAno(l,ano);
+  }).reduce(function(s,l){return s+l.val;},0);
+  if(fat<=0&&compras<=0){el.style.display='none';return;}
+  var pct=fat>0?(compras/fat*100):0;
+  var pctTxt=pct.toFixed(1).replace('.',',');
+  // Limite legal 80% do faturamento
+  var limite=fat*0.8;
+  var cor,bg,bd,emoji,msg;
+  if(pct<=60){
+    cor='#00C48C';bg='rgba(0,196,140,.08)';bd='rgba(0,196,140,.25)';emoji='🟢';
+    msg='Compras saudáveis — dentro da margem segura.';
+  } else if(pct<=75){
+    cor='#FF9500';bg='rgba(255,149,0,.10)';bd='rgba(255,149,0,.30)';emoji='🟡';
+    msg='Atenção: aproximando-se do limite. Acompanhe de perto.';
+  } else {
+    cor='#FF6B6B';bg='rgba(255,107,107,.10)';bd='rgba(255,107,107,.30)';emoji='🔴';
+    msg='Risco de desenquadramento! O limite legal é 80% do faturamento.';
+  }
+  el.style.background=bg;
+  el.style.border='1px solid '+bd;
+  el.style.display='block';
+  el.innerHTML='<div style="font-size:.78rem;font-weight:800;color:'+cor+';margin-bottom:.3rem">'+emoji+' Limite de Compras — '+info.nome+'</div>'+
+    '<div style="font-size:.74rem;color:var(--texto);line-height:1.45">Você comprou <strong>'+fmt(compras)+'</strong> este ano, o que representa <strong style="color:'+cor+'">'+pctTxt+'%</strong> do seu faturamento de '+fmt(fat)+'.</div>'+
+    '<div style="margin:.45rem 0 .35rem"><div style="height:7px;background:rgba(255,255,255,.08);border-radius:5px;overflow:hidden"><div style="height:100%;width:'+Math.min(pct,100)+'%;background:'+cor+';border-radius:5px"></div></div></div>'+
+    '<div style="font-size:.68rem;color:var(--texto2)">Limite seguro (80%): '+fmt(limite)+' · '+msg+'</div>';
+}
+
 function atualizarAlertasAgenda(){
   if(S.agenda.some(function(a){return a.rec==='mensal';}))gerarMensais();
-  var vencidas=S.agenda.filter(function(a){return!a.pago&&diasParaVencer(a.vencimento)<0;});
-  var proximas=S.agenda.filter(function(a){return!a.pago&&diasParaVencer(a.vencimento)>=0&&diasParaVencer(a.vencimento)<=5;});
+  // Considera apenas contas NÃO pagas
+  var pend=S.agenda.filter(function(a){return!a.pago;});
+  var vencidas=pend.filter(function(a){return diasParaVencer(a.vencimento)<0;});
+  var amarelas=pend.filter(function(a){var d=diasParaVencer(a.vencimento);return d>=0&&d<=3;}); // 0-3 dias
+  var laranjas=pend.filter(function(a){var d=diasParaVencer(a.vencimento);return d>=4&&d<=5;}); // 4-5 dias
   var elV=document.getElementById('d-ag-venc');
   var elP=document.getElementById('d-ag-prox');
+  var elL=document.getElementById('d-ag-laranja');
   if(elV){
-    if(vencidas.length){elV.style.display='block';elV.textContent='🔴 '+vencidas.length+' conta(s) vencida(s)! Toque para ver →';}
+    if(vencidas.length){elV.style.display='block';elV.textContent='🔴 '+vencidas.length+' conta(s) em atraso! Toque para ver →';}
     else elV.style.display='none';
   }
   if(elP){
-    if(proximas.length){elP.style.display='block';elP.textContent='🟡 '+proximas.length+' conta(s) vencendo nos próximos 5 dias → Toque para ver';}
+    if(amarelas.length){elP.style.display='block';elP.textContent='🟡 '+amarelas.length+' conta(s) vencendo em até 3 dias → Toque para ver';}
     else elP.style.display='none';
+  }
+  if(elL){
+    if(laranjas.length){elL.style.display='block';elL.textContent='🟠 '+laranjas.length+' conta(s) vencendo em 4-5 dias → Toque para ver';}
+    else elL.style.display='none';
   }
 }
 
