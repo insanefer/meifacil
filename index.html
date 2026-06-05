@@ -446,24 +446,19 @@ input[type=date]{color-scheme:dark;}
 
 <!-- AUTH -->
 <!-- PAYWALL -->
-<div id="scr-paywall" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:9999;flex-direction:column;align-items:center;justify-content:center;padding:2rem;text-align:center;">
-  <div style="font-size:2.2rem;font-weight:900;letter-spacing:-2px;color:var(--verde);margin-bottom:.2rem;">MEI <span style="color:var(--texto)">Financeiro</span></div>
-  <p style="color:var(--texto2);font-size:.88rem;margin-bottom:2rem;">CNPJ e CPF sob controle — tudo em um lugar</p>
-  <div style="background:var(--card);border:1px solid var(--borda);border-radius:22px;padding:1.8rem;width:100%;max-width:400px;">
-    <div style="font-size:2rem;margin-bottom:.5rem;">🔒</div>
-    <h2 style="font-size:1.2rem;font-weight:800;margin-bottom:.5rem;">Acesso bloqueado</h2>
-    <p style="color:var(--texto2);font-size:.83rem;margin-bottom:1.5rem;line-height:1.5;">Sua assinatura está inativa. Assine agora para continuar usando o MEI Financeiro.</p>
-    <div style="background:rgba(0,196,140,.08);border:1px solid rgba(0,196,140,.2);border-radius:12px;padding:1rem;margin-bottom:1.2rem;">
-      <div style="font-size:1.5rem;font-weight:900;color:var(--verde);">R$ 99,90</div>
-      <div style="font-size:.75rem;color:var(--texto2);">por mês · cancele quando quiser</div>
-    </div>
-    <a href="https://pay.kiwify.com.br/Po2jCIY" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:.5rem;width:100%;background:var(--verde);color:#0E1720;border:none;border-radius:12px;padding:.9rem;font-weight:800;font-size:.9rem;cursor:pointer;min-height:48px;text-decoration:none;margin-bottom:.75rem;">
-      🚀 Assinar agora
-    </a>
-    <button onclick="fazerLogout()" style="width:100%;background:transparent;border:1px solid var(--borda);color:var(--texto2);border-radius:12px;padding:.75rem;font-size:.82rem;cursor:pointer;">
+<div id="scr-paywall" style="display:none;position:fixed;inset:0;background:var(--bg);z-index:9999;flex-direction:column;align-items:center;justify-content:flex-start;padding:2rem 1.2rem;text-align:center;overflow-y:auto;">
+  <div style="font-size:2.2rem;font-weight:900;letter-spacing:-2px;color:var(--verde);margin-bottom:.2rem;margin-top:.5rem;">MEI <span style="color:var(--texto)">Financeiro</span></div>
+  <p style="color:var(--texto2);font-size:.88rem;margin-bottom:1.2rem;">CNPJ e CPF sob controle — tudo em um lugar</p>
+  <div style="background:var(--card);border:1px solid var(--borda);border-radius:22px;padding:1.5rem 1.2rem;width:100%;max-width:440px;">
+    <div style="font-size:1.8rem;margin-bottom:.4rem;">🔒</div>
+    <h2 style="font-size:1.15rem;font-weight:800;margin-bottom:.4rem;">Escolha seu plano</h2>
+    <p style="color:var(--texto2);font-size:.82rem;margin-bottom:1.3rem;line-height:1.5;">Assine para continuar usando o MEI Financeiro. Cancele quando quiser.</p>
+    <div id="paywall-planos"></div>
+    <button onclick="fazerLogout()" style="width:100%;background:transparent;border:1px solid var(--borda);color:var(--texto2);border-radius:12px;padding:.75rem;font-size:.82rem;cursor:pointer;margin-top:1rem;">
       Sair da conta
     </button>
   </div>
+  <div style="height:2rem"></div>
 </div>
 
 <div id="auth">
@@ -1439,12 +1434,14 @@ input[type=date]{color-scheme:dark;}
         <div class="ass-status-dot" id="ass-dot"></div>
         <div class="ass-status-txt" id="ass-status-txt">Plano Ativo</div>
       </div>
-      <div class="ass-valor">R$ 99,90<span style="font-size:.85rem;font-weight:400;color:var(--texto2)">/mês</span></div>
+      <div class="ass-valor">Assinatura Ativa</div>
       <div class="ass-desc">MEI Financeiro — CNPJ e CPF sob controle</div>
     </div>
     <button class="ass-wpp-btn" onclick="abrirSuporteWpp()">
       <span>💬</span> Precisa de ajuda? Fale conosco
     </button>
+    <div style="margin:1.2rem 0 .6rem;font-size:.82rem;font-weight:800;color:var(--texto2);text-transform:uppercase;letter-spacing:.5px">Trocar de plano</div>
+    <div id="assinatura-planos"></div>
     <div class="ass-politica">
       <div class="ass-politica-titulo">📋 Política de dados</div>
       <div class="ass-politica-txt">
@@ -1716,6 +1713,7 @@ async function carregarDadosUsuario(){
         document.getElementById('onboarding').style.display='none';
         document.getElementById('app').style.display='none';
         document.getElementById('scr-paywall').style.display='flex';
+        renderPlanos('paywall-planos');
         return;
       }
       S.nome=perfil.nome||'';
@@ -1888,6 +1886,34 @@ function tipoMeiAtual(){
 }
 function nomeMeiAtual(){return MEI_TIPOS[tipoMeiAtual()].nome;}
 
+// ── PLANOS DE ASSINATURA ──
+var PLANOS=[
+  {id:'mensal',nome:'Mensal',mes:'R$ 99,90',cobranca:'R$ 99,90/mês',economia:'',destaque:false,link:'https://pay.kiwify.com.br/47827YE'},
+  {id:'trimestral',nome:'Trimestral',mes:'R$ 92,90',cobranca:'R$ 278,70 a cada 3 meses',economia:'economize R$ 21',destaque:false,link:'https://pay.kiwify.com.br/3SkLORe'},
+  {id:'semestral',nome:'Semestral',mes:'R$ 87,90',cobranca:'R$ 527,40 a cada 6 meses',economia:'economize R$ 72',destaque:false,link:'https://pay.kiwify.com.br/Bl3PHGc'},
+  {id:'anual',nome:'Anual',mes:'R$ 82,90',cobranca:'R$ 994,80 por ano',economia:'economize R$ 204',destaque:true,link:'https://pay.kiwify.com.br/qLZ9XCQ'}
+];
+function renderPlanos(containerId){
+  var el=document.getElementById(containerId);
+  if(!el)return;
+  el.innerHTML=PLANOS.map(function(p){
+    var ouro='#C9A84C';
+    var borda=p.destaque?ouro:'var(--borda)';
+    var bg=p.destaque?'rgba(201,168,76,.07)':'var(--bg)';
+    var selo=p.destaque
+      ?'<div style="position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:'+ouro+';color:#0E1720;font-size:.62rem;font-weight:800;padding:.2rem .7rem;border-radius:20px;white-space:nowrap">⭐ MAIS POPULAR</div>'
+      :(p.economia?'<div style="position:absolute;top:.7rem;right:.7rem;background:rgba(0,196,140,.15);color:var(--verde);font-size:.62rem;font-weight:800;padding:.18rem .5rem;border-radius:20px">'+p.economia+'</div>':'');
+    var corBtn=p.destaque?ouro:'var(--verde)';
+    return '<div style="position:relative;border:1.5px solid '+borda+';background:'+bg+';border-radius:16px;padding:1.1rem 1rem;margin-bottom:.7rem;text-align:left">'+
+      selo+
+      '<div style="font-size:.7rem;font-weight:800;color:var(--texto2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.3rem">'+p.nome+'</div>'+
+      '<div style="font-size:1.45rem;font-weight:900;color:'+(p.destaque?ouro:'var(--verde)')+';line-height:1">'+p.mes+'<span style="font-size:.78rem;font-weight:400;color:var(--texto2)">/mês</span></div>'+
+      '<div style="font-size:.74rem;color:var(--texto2);margin:.3rem 0 .9rem">'+p.cobranca+'</div>'+
+      '<a href="'+p.link+'" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:.4rem;width:100%;background:'+corBtn+';color:#0E1720;border:none;border-radius:11px;padding:.8rem;font-weight:800;font-size:.85rem;cursor:pointer;min-height:46px;text-decoration:none">🚀 Assinar '+p.nome+'</a>'+
+    '</div>';
+  }).join('');
+}
+
 // ── CATEGORIAS DINÂMICAS POR TIPO DE MEI ──
 // Lançamentos (entrada/saída) e Agenda (receber/pagar) do CNPJ
 var CAT_CNPJ={
@@ -1967,6 +1993,7 @@ function goTo(id){
   if(id==='ir')atualizarIR();
   if(id==='agenda'){inicializarFiltroAgenda();renderAgenda();}
   if(id==='perfil')abrirPerfil();
+  if(id==='assinatura')renderPlanos('assinatura-planos');
   if(id==='relatorio-anual-cnpj'){
     var w=document.getElementById('rel-cnpj-anos');
     if(w&&w.children.length===0)inicializarSeletorAno('rel-cnpj-anos',function(yr){relAnoCnpj=yr;});
