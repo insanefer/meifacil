@@ -1888,27 +1888,28 @@ function nomeMeiAtual(){return MEI_TIPOS[tipoMeiAtual()].nome;}
 
 // ── PLANOS DE ASSINATURA ──
 var PLANOS=[
-  {id:'mensal',nome:'Mensal',mes:'R$ 99,90',cobranca:'R$ 99,90/mês',economia:'',destaque:false,link:'https://pay.kiwify.com.br/47827YE'},
-  {id:'trimestral',nome:'Trimestral',mes:'R$ 92,90',cobranca:'R$ 278,70 a cada 3 meses',economia:'economize R$ 21',destaque:false,link:'https://pay.kiwify.com.br/3SkLORe'},
-  {id:'semestral',nome:'Semestral',mes:'R$ 87,90',cobranca:'R$ 527,40 a cada 6 meses',economia:'economize R$ 72',destaque:false,link:'https://pay.kiwify.com.br/Bl3PHGc'},
-  {id:'anual',nome:'Anual',mes:'R$ 82,90',cobranca:'R$ 994,80 por ano',economia:'economize R$ 204',destaque:true,link:'https://pay.kiwify.com.br/qLZ9XCQ'}
+  {id:'mensal',nome:'Mensal',valor:'R$ 99,90',cobranca:'por mês',destaque:false,link:'https://pay.kiwify.com.br/47827YE'},
+  {id:'trimestral',nome:'Trimestral',valor:'R$ 278,70',cobranca:'a cada 3 meses',destaque:false,link:'https://pay.kiwify.com.br/3SkLORe'},
+  {id:'semestral',nome:'Semestral',valor:'R$ 527,40',cobranca:'a cada 6 meses',destaque:false,link:'https://pay.kiwify.com.br/Bl3PHGc'},
+  {id:'anual',nome:'Anual',valor:'R$ 994,80',cobranca:'por ano',destaque:true,link:'https://pay.kiwify.com.br/qLZ9XCQ'}
 ];
 function renderPlanos(containerId){
   var el=document.getElementById(containerId);
   if(!el)return;
+  var ouro='#C9A84C';
   el.innerHTML=PLANOS.map(function(p){
-    var ouro='#C9A84C';
     var borda=p.destaque?ouro:'var(--borda)';
     var bg=p.destaque?'rgba(201,168,76,.07)':'var(--bg)';
+    var corValor=p.destaque?ouro:'var(--verde)';
+    var corBtn=p.destaque?ouro:'var(--verde)';
     var selo=p.destaque
       ?'<div style="position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:'+ouro+';color:#0E1720;font-size:.62rem;font-weight:800;padding:.2rem .7rem;border-radius:20px;white-space:nowrap">⭐ MAIS POPULAR</div>'
-      :(p.economia?'<div style="position:absolute;top:.7rem;right:.7rem;background:rgba(0,196,140,.15);color:var(--verde);font-size:.62rem;font-weight:800;padding:.18rem .5rem;border-radius:20px">'+p.economia+'</div>':'');
-    var corBtn=p.destaque?ouro:'var(--verde)';
-    return '<div style="position:relative;border:1.5px solid '+borda+';background:'+bg+';border-radius:16px;padding:1.1rem 1rem;margin-bottom:.7rem;text-align:left">'+
+      :'';
+    return '<div style="position:relative;border:1.5px solid '+borda+';background:'+bg+';border-radius:16px;padding:1.1rem 1rem '+(p.destaque?'1.1rem':'1.1rem')+';margin-bottom:.7rem;text-align:left">'+
       selo+
-      '<div style="font-size:.7rem;font-weight:800;color:var(--texto2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.3rem">'+p.nome+'</div>'+
-      '<div style="font-size:1.45rem;font-weight:900;color:'+(p.destaque?ouro:'var(--verde)')+';line-height:1">'+p.mes+'<span style="font-size:.78rem;font-weight:400;color:var(--texto2)">/mês</span></div>'+
-      '<div style="font-size:.74rem;color:var(--texto2);margin:.3rem 0 .9rem">'+p.cobranca+'</div>'+
+      '<div style="font-size:.7rem;font-weight:800;color:var(--texto2);text-transform:uppercase;letter-spacing:.5px;margin-bottom:.4rem">'+p.nome+'</div>'+
+      '<div style="font-size:1.6rem;font-weight:900;color:'+corValor+';line-height:1.1">'+p.valor+'</div>'+
+      '<div style="font-size:.76rem;color:var(--texto2);margin:.3rem 0 .9rem">'+p.cobranca+'</div>'+
       '<a href="'+p.link+'" target="_blank" style="display:flex;align-items:center;justify-content:center;gap:.4rem;width:100%;background:'+corBtn+';color:#0E1720;border:none;border-radius:11px;padding:.8rem;font-weight:800;font-size:.85rem;cursor:pointer;min-height:46px;text-decoration:none">🚀 Assinar '+p.nome+'</a>'+
     '</div>';
   }).join('');
